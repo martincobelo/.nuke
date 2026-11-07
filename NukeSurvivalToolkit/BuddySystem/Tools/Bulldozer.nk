@@ -1,0 +1,658 @@
+set cut_paste_input [stack 0]
+version 12.2 v11
+BackdropNode {
+ inputs 0
+ name BackdropNode190
+ tile_color 0x886936ff
+ note_font_size 171
+ selected true
+ xpos -3063
+ ypos -12193
+ bdwidth 1067
+ bdheight 769
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode192
+ tile_color 0x545454ff
+ note_font_size 171
+ selected true
+ xpos -2107
+ ypos -12242
+ bdwidth 254
+ bdheight 51
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode193
+ tile_color 0x545454ff
+ note_font_size 171
+ selected true
+ xpos -2150
+ ypos -11426
+ bdwidth 254
+ bdheight 51
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode194
+ tile_color 0x232323ff
+ note_font_size 171
+ selected true
+ xpos -3059
+ ypos -12424
+ bdwidth 1062
+ bdheight 147
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode195
+ tile_color 0x886936ff
+ note_font_size 171
+ selected true
+ xpos -3063
+ ypos -12281
+ bdwidth 1067
+ bdheight 33
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode196
+ tile_color 0x886936ff
+ note_font_size 171
+ selected true
+ xpos -3063
+ ypos -11369
+ bdwidth 1067
+ bdheight 33
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode197
+ tile_color 0x886936ff
+ note_font_size 171
+ selected true
+ xpos -3063
+ ypos -12449
+ bdwidth 1067
+ bdheight 33
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode198
+ tile_color 0x886936ff
+ note_font_size 171
+ selected true
+ xpos -3063
+ ypos -11187
+ bdwidth 1067
+ bdheight 33
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode199
+ tile_color 0x232323ff
+ note_font_size 171
+ selected true
+ xpos -3058
+ ypos -11335
+ bdwidth 1062
+ bdheight 147
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode200
+ tile_color 0x666666ff
+ note_font_size 171
+ selected true
+ xpos -2066
+ ypos -12414
+ bdwidth 60
+ bdheight 132
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode201
+ tile_color 0x666666ff
+ note_font_size 171
+ selected true
+ xpos -2137
+ ypos -12414
+ bdwidth 60
+ bdheight 132
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode202
+ tile_color 0x666666ff
+ note_font_size 171
+ selected true
+ xpos -2207
+ ypos -12414
+ bdwidth 60
+ bdheight 132
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode203
+ tile_color 0x666666ff
+ note_font_size 171
+ selected true
+ xpos -2278
+ ypos -12414
+ bdwidth 60
+ bdheight 132
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode204
+ tile_color 0x666666ff
+ note_font_size 171
+ selected true
+ xpos -2349
+ ypos -12414
+ bdwidth 60
+ bdheight 132
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode205
+ tile_color 0x666666ff
+ note_font_size 171
+ selected true
+ xpos -2419
+ ypos -12414
+ bdwidth 60
+ bdheight 132
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode206
+ tile_color 0x666666ff
+ note_font_size 171
+ selected true
+ xpos -2490
+ ypos -12414
+ bdwidth 60
+ bdheight 132
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode207
+ tile_color 0x666666ff
+ note_font_size 171
+ selected true
+ xpos -2560
+ ypos -12414
+ bdwidth 60
+ bdheight 132
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode208
+ tile_color 0x666666ff
+ note_font_size 171
+ selected true
+ xpos -2631
+ ypos -12414
+ bdwidth 60
+ bdheight 132
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode209
+ tile_color 0x666666ff
+ note_font_size 171
+ selected true
+ xpos -2702
+ ypos -12414
+ bdwidth 60
+ bdheight 132
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode210
+ tile_color 0x666666ff
+ note_font_size 171
+ selected true
+ xpos -2772
+ ypos -12414
+ bdwidth 60
+ bdheight 132
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode211
+ tile_color 0x666666ff
+ note_font_size 171
+ selected true
+ xpos -2843
+ ypos -12414
+ bdwidth 60
+ bdheight 132
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode212
+ tile_color 0x666666ff
+ note_font_size 171
+ selected true
+ xpos -2914
+ ypos -12414
+ bdwidth 60
+ bdheight 132
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode213
+ tile_color 0x666666ff
+ note_font_size 171
+ selected true
+ xpos -2984
+ ypos -12414
+ bdwidth 60
+ bdheight 132
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode214
+ tile_color 0x666666ff
+ note_font_size 171
+ selected true
+ xpos -3055
+ ypos -12414
+ bdwidth 60
+ bdheight 132
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode215
+ tile_color 0x666666ff
+ note_font_size 171
+ selected true
+ xpos -2057
+ ypos -11329
+ bdwidth 60
+ bdheight 132
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode216
+ tile_color 0x666666ff
+ note_font_size 171
+ selected true
+ xpos -2128
+ ypos -11329
+ bdwidth 60
+ bdheight 132
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode217
+ tile_color 0x666666ff
+ note_font_size 171
+ selected true
+ xpos -2198
+ ypos -11329
+ bdwidth 60
+ bdheight 132
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode218
+ tile_color 0x666666ff
+ note_font_size 171
+ selected true
+ xpos -2269
+ ypos -11329
+ bdwidth 60
+ bdheight 132
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode219
+ tile_color 0x666666ff
+ note_font_size 171
+ selected true
+ xpos -2340
+ ypos -11329
+ bdwidth 60
+ bdheight 132
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode220
+ tile_color 0x666666ff
+ note_font_size 171
+ selected true
+ xpos -2410
+ ypos -11329
+ bdwidth 60
+ bdheight 132
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode221
+ tile_color 0x666666ff
+ note_font_size 171
+ selected true
+ xpos -2481
+ ypos -11329
+ bdwidth 60
+ bdheight 132
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode222
+ tile_color 0x666666ff
+ note_font_size 171
+ selected true
+ xpos -2551
+ ypos -11329
+ bdwidth 60
+ bdheight 132
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode223
+ tile_color 0x666666ff
+ note_font_size 171
+ selected true
+ xpos -2622
+ ypos -11329
+ bdwidth 60
+ bdheight 132
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode224
+ tile_color 0x666666ff
+ note_font_size 171
+ selected true
+ xpos -2693
+ ypos -11329
+ bdwidth 60
+ bdheight 132
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode225
+ tile_color 0x666666ff
+ note_font_size 171
+ selected true
+ xpos -2763
+ ypos -11329
+ bdwidth 60
+ bdheight 132
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode226
+ tile_color 0x666666ff
+ note_font_size 171
+ selected true
+ xpos -2834
+ ypos -11329
+ bdwidth 60
+ bdheight 132
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode227
+ tile_color 0x666666ff
+ note_font_size 171
+ selected true
+ xpos -2905
+ ypos -11329
+ bdwidth 60
+ bdheight 132
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode228
+ tile_color 0x666666ff
+ note_font_size 171
+ selected true
+ xpos -2975
+ ypos -11329
+ bdwidth 60
+ bdheight 132
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode229
+ tile_color 0x666666ff
+ note_font_size 171
+ selected true
+ xpos -3046
+ ypos -11329
+ bdwidth 60
+ bdheight 132
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode247
+ tile_color 0xa17c40ff
+ note_font_size 171
+ selected true
+ xpos -3046
+ ypos -12098
+ bdwidth 182
+ bdheight 580
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode191
+ tile_color 0x888888ff
+ note_font_size 171
+ selected true
+ xpos -1944
+ ypos -12337
+ bdwidth 199
+ bdheight 1105
+ z_order 1
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode230
+ tile_color 0x777777ff
+ note_font_size 171
+ selected true
+ xpos -1873
+ ypos -12292
+ bdwidth 129
+ bdheight 1034
+ z_order 1
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode231
+ tile_color 0x777777ff
+ note_font_size 171
+ selected true
+ xpos -1754
+ ypos -12274
+ bdwidth 40
+ bdheight 20
+ z_order 1
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode232
+ tile_color 0x777777ff
+ note_font_size 171
+ selected true
+ xpos -1754
+ ypos -12191
+ bdwidth 40
+ bdheight 20
+ z_order 1
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode233
+ tile_color 0x777777ff
+ note_font_size 171
+ selected true
+ xpos -1754
+ ypos -12108
+ bdwidth 40
+ bdheight 20
+ z_order 1
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode234
+ tile_color 0x777777ff
+ note_font_size 171
+ selected true
+ xpos -1754
+ ypos -12025
+ bdwidth 40
+ bdheight 20
+ z_order 1
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode235
+ tile_color 0x777777ff
+ note_font_size 171
+ selected true
+ xpos -1754
+ ypos -11942
+ bdwidth 40
+ bdheight 20
+ z_order 1
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode236
+ tile_color 0x777777ff
+ note_font_size 171
+ selected true
+ xpos -1754
+ ypos -11859
+ bdwidth 40
+ bdheight 20
+ z_order 1
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode237
+ tile_color 0x777777ff
+ note_font_size 171
+ selected true
+ xpos -1754
+ ypos -11776
+ bdwidth 40
+ bdheight 20
+ z_order 1
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode238
+ tile_color 0x777777ff
+ note_font_size 171
+ selected true
+ xpos -1754
+ ypos -11693
+ bdwidth 40
+ bdheight 20
+ z_order 1
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode239
+ tile_color 0x777777ff
+ note_font_size 171
+ selected true
+ xpos -1754
+ ypos -11610
+ bdwidth 40
+ bdheight 20
+ z_order 1
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode240
+ tile_color 0x777777ff
+ note_font_size 171
+ selected true
+ xpos -1754
+ ypos -11527
+ bdwidth 40
+ bdheight 20
+ z_order 1
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode241
+ tile_color 0x777777ff
+ note_font_size 171
+ selected true
+ xpos -1754
+ ypos -11444
+ bdwidth 40
+ bdheight 20
+ z_order 1
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode242
+ tile_color 0x777777ff
+ note_font_size 171
+ selected true
+ xpos -1754
+ ypos -11361
+ bdwidth 40
+ bdheight 20
+ z_order 1
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode243
+ tile_color 0x777777ff
+ note_font_size 171
+ selected true
+ xpos -1754
+ ypos -11278
+ bdwidth 40
+ bdheight 20
+ z_order 1
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode244
+ tile_color 0x888888ff
+ note_font_size 171
+ selected true
+ xpos -2772
+ ypos -12040
+ bdwidth 533
+ bdheight 463
+ z_order 1
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode245
+ tile_color 0x444444ff
+ note_font_size 171
+ selected true
+ xpos -2829
+ ypos -12060
+ bdwidth 158
+ bdheight 504
+ z_order 1
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode246
+ tile_color 0x444444ff
+ note_font_size 171
+ selected true
+ xpos -2330
+ ypos -11916
+ bdwidth 40
+ bdheight 264
+ z_order 1
+}

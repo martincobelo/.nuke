@@ -1,0 +1,24 @@
+Preferences {
+ inputs 0
+ name Preferences
+ AutoSaveName "\[expr \[string length \[value root.name]]>1?\{\[getenv NUKE_TEMP_DIR]\[file join \[file dirname \[value root.name]] autosave \[file tail \[value root.name]]].\}:\{\[getenv NUKE_TEMP_DIR]/\}]\[clock format \[clock seconds] -format \"%Y%m%d+%H%M%S\"].autosave"
+ localCachePath /Volumes/raid/nuke_TMP
+ LocalizationSizeLimit 89.5
+ localizationMode manual
+ DiskCachePath /Volumes/raid/nuke_TMP
+ diskCacheGB 20.2
+ PaintCacheGB 10.8
+ selectedGPUDeviceName "NVIDIA Quadro M4000"
+ platformPathRemaps ""
+ expression_arrows false
+ link_knob_arrows false
+ clone_arrows false
+ defaultFlipbook "Flipbook Viewer"
+ addUserKnob {20 RodeoFX}
+ addUserKnob {6 rdo_localise_threaded l "Localise threaded" t "Rodeo custom localization system. It will allow you to localize multiple read nodes in parallel while being able to work. It also allows you to better handle what's localized or not.\n\nNote that the default behavior of nuke only localizes one node at a time. So by activating this option, you get faster localization !" +STARTLINE}
+ rdo_localise_threaded true
+ addUserKnob {6 rdo_autosave_local l "Store autosave locally (on your computer)" t "Stores autosaves locally on your computer instead of on the network. Look in the terminal you used to launch nuke in order to know where autosaves are stored." +STARTLINE}
+ rdo_autosave_local true
+ addUserKnob {4 rdo_write_hotkey l "Default Write Node" t "Default Write node called when using the `W` hotkey" M {WriteRdo WriteNukleus}}
+ rdo_write_hotkey WriteNukleus
+}

@@ -1,0 +1,1410 @@
+Group {
+ name MaskBuddy
+ inputs 2
+ tile_color 0x47d2ffff
+ label "\[value aovSelectionCHNKNB]"
+ addUserKnob {20 optionsTAB l Options}
+ addUserKnob {41 aovSelectionCHNKNB l AOV T AOV.in}
+ addUserKnob {6 enableInputAOVsCHK l All -STARTLINE}
+ enableInputAOVsCHK true
+ addUserKnob {6 previewToggleCHK l Preview +STARTLINE}
+ previewToggleCHK true
+ addUserKnob {6 edgeBlurCHK l "Edge Blur" -STARTLINE}
+ addUserKnob {6 edgeFixCHK l "Precision Fix" -STARTLINE}
+ addUserKnob {26 S1TXT l "<b><p style=\"color:#4CB6C7\">Shape 1</p></b>"}
+ addUserKnob {41 typeS1PDC l Type T ShapesS1.shapeTypesPDC}
+ addUserKnob {6 invertS1CHK l Invert -STARTLINE}
+ addUserKnob {41 rampStartS1CKNB l "Start (White)" +HIDDEN T ShapesS1.rampStartCKNB}
+ addUserKnob {41 rampEndS1CKNB l "End (Black)" +HIDDEN T ShapesS1.rampEndCKNB}
+ addUserKnob {41 maskCenterS1CKNB l Center T CenterS1.maskCenterCKNB}
+ addUserKnob {7 radiusS1SLD l Radius R 0.001 10}
+ radiusS1SLD 1
+ addUserKnob {41 minorRadiusS1SLD l "Minor Radius" +HIDDEN T ShapesS1.minorRadiusSLD}
+ addUserKnob {13 scaleS13DKNB l Scale}
+ scaleS13DKNB {1 1 1}
+ addUserKnob {13 rotationS13DKNB l Rotation}
+ addUserKnob {7 falloffS1SLD l Falloff R 0.01 1}
+ falloffS1SLD 1
+ addUserKnob {41 falloffTypeS1PDC l "" -STARTLINE T FalloffTypesS1.falloffTypesPDC}
+ addUserKnob {41 advancedFalloffS1LUT l "&nbsp;" +HIDDEN T AdvancedS1.lut}
+ addUserKnob {7 valueS1SLD l Value}
+ valueS1SLD 1
+ addUserKnob {22 addS1BTN l <b>+</b> t "Adds a new shape" -STARTLINE T "node = nuke.thisNode()\nshape = \"S2\"\nuserChoice = nuke.thisNode().knob(\"type\"+shape+\"PDC\").value()\nknob_list = \[\n    \"maskCenter\"+shape+\"CKNB\", shape+\"TXT\", \"type\"+shape+\"PDC\", \"operation\"+shape+\"PDC\",\n    \"invert\"+shape+\"CHK\", \"maskCenter\"+shape+\"CKNB\", \"radius\"+shape+\"SLD\", \"scale\"+shape+\"3DKNB\",\n    \"rotation\"+shape+\"3DKNB\", \"falloff\"+shape+\"SLD\", \"add\"+shape+\"BTN\", \"remove\"+shape+\"BTN\",\n    \"falloffType\"+shape+\"PDC\", \"value\"+shape+\"SLD\", \"minorRadius\"+shape+\"SLD\", \n    \"rampStart\"+shape+\"CKNB\", \"rampEnd\"+shape+\"CKNB\",\n    ]\n    \ndef set_knobs_visible():\n    for k in knob_list:\n        node.knobs()\[k].setVisible(True)\n    \nif userChoice == \"Sphere (2 Points)\":\n    set_knobs_visible()\n    node.knobs()\[\"minorRadius\"+shape+\"SLD\"].setVisible(False)\n    node.knobs()\[\"maskCenter\"+shape+\"CKNB\"].setVisible(False)\n    node.knobs()\[\"radius\"+shape+\"SLD\"].setVisible(False)\nelif (userChoice == \"Sphere (Hollow)\" or userChoice == \"Torus\"):\n    set_knobs_visible()\n    node.knobs()\[\"rampStart\"+shape+\"CKNB\"].setVisible(False)\n    node.knobs()\[\"rampEnd\"+shape+\"CKNB\"].setVisible(False)\nelif userChoice == \"Ramp\":\n    set_knobs_visible()\n    node.knobs()\[\"radius\"+shape+\"SLD\"].setVisible(False)\n    node.knobs()\[\"minorRadius\"+shape+\"SLD\"].setVisible(False)\n    node.knobs()\[\"maskCenter\"+shape+\"CKNB\"].setVisible(False)\n    node.knobs()\[\"rotation\"+shape+\"3DKNB\"].setVisible(False)\n    node.knobs()\[\"scale\"+shape+\"3DKNB\"].setVisible(False)\nelse:\n    set_knobs_visible()\n    node.knobs()\[\"minorRadius\"+shape+\"SLD\"].setVisible(False)\n    node.knobs()\[\"rampStart\"+shape+\"CKNB\"].setVisible(False)\n    node.knobs()\[\"rampEnd\"+shape+\"CKNB\"].setVisible(False)\n\n\nnuke.toNode(\"Merge\"+shape).knob('disable').setValue(0)"}
+ addUserKnob {26 S2TXT l "<b><p style=\"color:#4CB6C7\">Shape 2</p></b>" +HIDDEN}
+ addUserKnob {41 typeS2PDC l Type +HIDDEN T ShapesS2.shapeTypesPDC}
+ addUserKnob {41 operationS2PDC l "" -STARTLINE +HIDDEN T MergeS2.mergeOps}
+ addUserKnob {6 invertS2CHK l Invert -STARTLINE +HIDDEN}
+ addUserKnob {41 maskCenterS2CKNB l Center +HIDDEN T CenterS2.maskCenterCKNB}
+ addUserKnob {41 rampStartS2CKNB l "Start (White)" +HIDDEN T ShapesS2.rampStartCKNB}
+ addUserKnob {41 rampEndS2CKNB l "End (Black)" +HIDDEN T ShapesS2.rampEndCKNB}
+ addUserKnob {7 radiusS2SLD l Radius +HIDDEN R 0.001 10}
+ radiusS2SLD 1
+ addUserKnob {41 minorRadiusS2SLD l "Minor Radius" +HIDDEN T ShapesS2.minorRadiusSLD}
+ addUserKnob {13 scaleS23DKNB l Scale +HIDDEN}
+ scaleS23DKNB {1 1 1}
+ addUserKnob {13 rotationS23DKNB l Rotation +HIDDEN}
+ addUserKnob {7 falloffS2SLD l Falloff +HIDDEN R 0.01 1}
+ falloffS2SLD 1
+ addUserKnob {41 falloffTypeS2PDC l "" -STARTLINE +HIDDEN T FalloffTypesS2.falloffTypesPDC}
+ addUserKnob {7 valueS2SLD l Value +HIDDEN}
+ valueS2SLD 1
+ addUserKnob {22 addS2BTN l <b>+</b> t "Adds a new shape" -STARTLINE +HIDDEN T "node = nuke.thisNode()\nshape = \"S3\"\nuserChoice = nuke.thisNode().knob(\"type\"+shape+\"PDC\").value()\nknob_list = \[\n    \"maskCenter\"+shape+\"CKNB\", shape+\"TXT\", \"type\"+shape+\"PDC\", \"operation\"+shape+\"PDC\",\n    \"invert\"+shape+\"CHK\", \"maskCenter\"+shape+\"CKNB\", \"radius\"+shape+\"SLD\", \"scale\"+shape+\"3DKNB\",\n    \"rotation\"+shape+\"3DKNB\", \"falloff\"+shape+\"SLD\", \"add\"+shape+\"BTN\", \"remove\"+shape+\"BTN\",\n    \"falloffType\"+shape+\"PDC\", \"value\"+shape+\"SLD\", \"minorRadius\"+shape+\"SLD\", \n    \"rampStart\"+shape+\"CKNB\", \"rampEnd\"+shape+\"CKNB\",\n    ]\n    \ndef set_knobs_visible():\n    for k in knob_list:\n        node.knobs()\[k].setVisible(True)\n    \nif userChoice == \"Sphere (2 Points)\":\n    set_knobs_visible()\n    node.knobs()\[\"minorRadius\"+shape+\"SLD\"].setVisible(False)\n    node.knobs()\[\"maskCenter\"+shape+\"CKNB\"].setVisible(False)\n    node.knobs()\[\"radius\"+shape+\"SLD\"].setVisible(False)\nelif (userChoice == \"Sphere (Hollow)\" or userChoice == \"Torus\"):\n    set_knobs_visible()\n    node.knobs()\[\"rampStart\"+shape+\"CKNB\"].setVisible(False)\n    node.knobs()\[\"rampEnd\"+shape+\"CKNB\"].setVisible(False)\nelif userChoice == \"Ramp\":\n    set_knobs_visible()\n    node.knobs()\[\"radius\"+shape+\"SLD\"].setVisible(False)\n    node.knobs()\[\"minorRadius\"+shape+\"SLD\"].setVisible(False)\n    node.knobs()\[\"maskCenter\"+shape+\"CKNB\"].setVisible(False)\n    node.knobs()\[\"rotation\"+shape+\"3DKNB\"].setVisible(False)\n    node.knobs()\[\"scale\"+shape+\"3DKNB\"].setVisible(False)\nelse:\n    set_knobs_visible()\n    node.knobs()\[\"minorRadius\"+shape+\"SLD\"].setVisible(False)\n    node.knobs()\[\"rampStart\"+shape+\"CKNB\"].setVisible(False)\n    node.knobs()\[\"rampEnd\"+shape+\"CKNB\"].setVisible(False)\n\n\nnuke.toNode(\"Merge\"+shape).knob('disable').setValue(0)"}
+ addUserKnob {22 removeS2BTN l <small><b>--</b> t "Remove this shape" -STARTLINE +HIDDEN T "node = nuke.thisNode()\nshape = \"S2\"\n\nnode.knobs()\[\"maskCenter\"+shape+\"CKNB\"].setVisible(False)\nnode.knob(shape+\"TXT\").setVisible(False)\nnode.knobs()\[\"type\"+shape+\"PDC\"].setVisible(False)\nnode.knobs()\[\"operation\"+shape+\"PDC\"].setVisible(False)\nnode.knob(\"invert\"+shape+\"CHK\").setVisible(False)\nnode.knobs()\[\"maskCenter\"+shape+\"CKNB\"].setVisible(False)\nnode.knob(\"radius\"+shape+\"SLD\").setVisible(False)\nnode.knob(\"scale\"+shape+\"3DKNB\").setVisible(False)\nnode.knob(\"rotation\"+shape+\"3DKNB\").setVisible(False)\nnode.knob(\"falloff\"+shape+\"SLD\").setVisible(False)\nnode.knob(\"add\"+shape+\"BTN\").setVisible(False)\nnode.knob(\"remove\"+shape+\"BTN\").setVisible(False)\nnode.knobs()\[\"falloffType\"+shape+\"PDC\"].setVisible(False)\nnode.knob(\"value\"+shape+\"SLD\").setVisible(False)\n\nnode.knobs()\[\"rampStart\"+shape+\"CKNB\"].setVisible(False)\nnode.knobs()\[\"rampEnd\"+shape+\"CKNB\"].setVisible(False)\nnode.knobs()\[\"minorRadius\"+shape+\"SLD\"].setVisible(False)\n\nnuke.toNode(\"Merge\"+shape).knob('disable').setValue(1)\n"}
+ addUserKnob {26 S3TXT l "<b><p style=\"color:#4CB6C7\">Shape 3</p></b>" +HIDDEN}
+ addUserKnob {41 typeS3PDC l Type +HIDDEN T ShapesS3.shapeTypesPDC}
+ addUserKnob {41 operationS3PDC l "" -STARTLINE +HIDDEN T MergeS3.mergeOps}
+ addUserKnob {6 invertS3CHK l Invert -STARTLINE +HIDDEN}
+ addUserKnob {41 maskCenterS3CKNB l Center +HIDDEN T CenterS3.maskCenterCKNB}
+ addUserKnob {41 rampStartS3CKNB l Center +HIDDEN T ShapesS3.rampStartCKNB}
+ addUserKnob {41 rampEndS3CKNB l Edge +HIDDEN T ShapesS3.rampEndCKNB}
+ addUserKnob {7 radiusS3SLD l Radius +HIDDEN R 0.001 10}
+ radiusS3SLD 1
+ addUserKnob {41 minorRadiusS3SLD l "Minor Radius" +HIDDEN T ShapesS3.minorRadiusSLD}
+ addUserKnob {13 scaleS33DKNB l Scale +HIDDEN}
+ scaleS33DKNB {1 1 1}
+ addUserKnob {13 rotationS33DKNB l Rotation +HIDDEN}
+ addUserKnob {7 falloffS3SLD l Falloff +HIDDEN R 0.01 1}
+ falloffS3SLD 1
+ addUserKnob {41 falloffTypeS3PDC l "" -STARTLINE +HIDDEN T FalloffTypesS3.falloffTypesPDC}
+ addUserKnob {7 valueS3SLD l Value +HIDDEN}
+ valueS3SLD 1
+ addUserKnob {22 addS3BTN l <b>+</b> t "Adds a new shape" -STARTLINE +HIDDEN T "node = nuke.thisNode()\nshape = \"S4\"\nuserChoice = nuke.thisNode().knob(\"type\"+shape+\"PDC\").value()\nknob_list = \[\n    \"maskCenter\"+shape+\"CKNB\", shape+\"TXT\", \"type\"+shape+\"PDC\", \"operation\"+shape+\"PDC\",\n    \"invert\"+shape+\"CHK\", \"maskCenter\"+shape+\"CKNB\", \"radius\"+shape+\"SLD\", \"scale\"+shape+\"3DKNB\",\n    \"rotation\"+shape+\"3DKNB\", \"falloff\"+shape+\"SLD\", \"add\"+shape+\"BTN\", \"remove\"+shape+\"BTN\",\n    \"falloffType\"+shape+\"PDC\", \"value\"+shape+\"SLD\", \"minorRadius\"+shape+\"SLD\", \n    \"rampStart\"+shape+\"CKNB\", \"rampEnd\"+shape+\"CKNB\",\n    ]\n    \ndef set_knobs_visible():\n    for k in knob_list:\n        node.knobs()\[k].setVisible(True)\n    \nif userChoice == \"Sphere (2 Points)\":\n    set_knobs_visible()\n    node.knobs()\[\"minorRadius\"+shape+\"SLD\"].setVisible(False)\n    node.knobs()\[\"maskCenter\"+shape+\"CKNB\"].setVisible(False)\n    node.knobs()\[\"radius\"+shape+\"SLD\"].setVisible(False)\nelif (userChoice == \"Sphere (Hollow)\" or userChoice == \"Torus\"):\n    set_knobs_visible()\n    node.knobs()\[\"rampStart\"+shape+\"CKNB\"].setVisible(False)\n    node.knobs()\[\"rampEnd\"+shape+\"CKNB\"].setVisible(False)\nelif userChoice == \"Ramp\":\n    set_knobs_visible()\n    node.knobs()\[\"radius\"+shape+\"SLD\"].setVisible(False)\n    node.knobs()\[\"minorRadius\"+shape+\"SLD\"].setVisible(False)\n    node.knobs()\[\"maskCenter\"+shape+\"CKNB\"].setVisible(False)\n    node.knobs()\[\"rotation\"+shape+\"3DKNB\"].setVisible(False)\n    node.knobs()\[\"scale\"+shape+\"3DKNB\"].setVisible(False)\nelse:\n    set_knobs_visible()\n    node.knobs()\[\"minorRadius\"+shape+\"SLD\"].setVisible(False)\n    node.knobs()\[\"rampStart\"+shape+\"CKNB\"].setVisible(False)\n    node.knobs()\[\"rampEnd\"+shape+\"CKNB\"].setVisible(False)\n\n\nnuke.toNode(\"Merge\"+shape).knob('disable').setValue(0)"}
+ addUserKnob {22 removeS3BTN l <small><b>--</b> t "Removes this mask" -STARTLINE +HIDDEN T "node = nuke.thisNode()\nshape = \"S3\"\n\nnode.knobs()\[\"maskCenter\"+shape+\"CKNB\"].setVisible(False)\nnode.knob(shape+\"TXT\").setVisible(False)\nnode.knobs()\[\"type\"+shape+\"PDC\"].setVisible(False)\nnode.knobs()\[\"operation\"+shape+\"PDC\"].setVisible(False)\nnode.knob(\"invert\"+shape+\"CHK\").setVisible(False)\nnode.knobs()\[\"maskCenter\"+shape+\"CKNB\"].setVisible(False)\nnode.knob(\"radius\"+shape+\"SLD\").setVisible(False)\nnode.knob(\"scale\"+shape+\"3DKNB\").setVisible(False)\nnode.knob(\"rotation\"+shape+\"3DKNB\").setVisible(False)\nnode.knob(\"falloff\"+shape+\"SLD\").setVisible(False)\nnode.knob(\"add\"+shape+\"BTN\").setVisible(False)\nnode.knob(\"remove\"+shape+\"BTN\").setVisible(False)\nnode.knobs()\[\"falloffType\"+shape+\"PDC\"].setVisible(False)\nnode.knob(\"value\"+shape+\"SLD\").setVisible(False)\n\nnode.knobs()\[\"rampStart\"+shape+\"CKNB\"].setVisible(False)\nnode.knobs()\[\"rampEnd\"+shape+\"CKNB\"].setVisible(False)\nnode.knobs()\[\"minorRadius\"+shape+\"SLD\"].setVisible(False)\n\nnuke.toNode(\"Merge\"+shape).knob('disable').setValue(1)\n"}
+ addUserKnob {26 S4TXT l "<b><p style=\"color:#4CB6C7\">Shape 4</p></b>" +HIDDEN}
+ addUserKnob {41 typeS4PDC l Type +HIDDEN T ShapesS4.shapeTypesPDC}
+ addUserKnob {41 operationS4PDC l "" -STARTLINE +HIDDEN T MergeS4.mergeOps}
+ addUserKnob {6 invertS4CHK l Invert -STARTLINE +HIDDEN}
+ addUserKnob {41 maskCenterS4CKNB l Center +HIDDEN T CenterS4.maskCenterCKNB}
+ addUserKnob {7 radiusS4SLD l Radius +HIDDEN R 0.001 10}
+ radiusS4SLD 1
+ addUserKnob {41 minorRadiusS4SLD l "Minor Radius" +HIDDEN T ShapesS4.minorRadiusSLD}
+ addUserKnob {41 rampStartS4CKNB l Center +HIDDEN T ShapesS4.rampStartCKNB}
+ addUserKnob {41 rampEndS4CKNB l Edge +HIDDEN T ShapesS4.rampEndCKNB}
+ addUserKnob {13 scaleS43DKNB l Scale +HIDDEN}
+ scaleS43DKNB {1 1 1}
+ addUserKnob {13 rotationS43DKNB l Rotation +HIDDEN}
+ addUserKnob {7 falloffS4SLD l Falloff +HIDDEN R 0.01 1}
+ falloffS4SLD 1
+ addUserKnob {41 falloffTypeS4PDC l "" -STARTLINE +HIDDEN T FalloffTypesS4.falloffTypesPDC}
+ addUserKnob {7 valueS4SLD l Value +HIDDEN}
+ valueS4SLD 1
+ addUserKnob {22 addS4BTN l <b>+</b> t "Adds a new shape" -STARTLINE +HIDDEN T "node = nuke.thisNode()\nshape = \"S5\"\nuserChoice = nuke.thisNode().knob(\"type\"+shape+\"PDC\").value()\nknob_list = \[\n    \"maskCenter\"+shape+\"CKNB\", shape+\"TXT\", \"type\"+shape+\"PDC\", \"operation\"+shape+\"PDC\",\n    \"invert\"+shape+\"CHK\", \"maskCenter\"+shape+\"CKNB\", \"radius\"+shape+\"SLD\", \"scale\"+shape+\"3DKNB\",\n    \"rotation\"+shape+\"3DKNB\", \"falloff\"+shape+\"SLD\", \"add\"+shape+\"BTN\", \"remove\"+shape+\"BTN\",\n    \"falloffType\"+shape+\"PDC\", \"value\"+shape+\"SLD\", \"minorRadius\"+shape+\"SLD\", \n    \"rampStart\"+shape+\"CKNB\", \"rampEnd\"+shape+\"CKNB\",\n    ]\n    \ndef set_knobs_visible():\n    for k in knob_list:\n        node.knobs()\[k].setVisible(True)\n    \nif userChoice == \"Sphere (2 Points)\":\n    set_knobs_visible()\n    node.knobs()\[\"minorRadius\"+shape+\"SLD\"].setVisible(False)\n    node.knobs()\[\"maskCenter\"+shape+\"CKNB\"].setVisible(False)\n    node.knobs()\[\"radius\"+shape+\"SLD\"].setVisible(False)\nelif (userChoice == \"Sphere (Hollow)\" or userChoice == \"Torus\"):\n    set_knobs_visible()\n    node.knobs()\[\"rampStart\"+shape+\"CKNB\"].setVisible(False)\n    node.knobs()\[\"rampEnd\"+shape+\"CKNB\"].setVisible(False)\nelif userChoice == \"Ramp\":\n    set_knobs_visible()\n    node.knobs()\[\"radius\"+shape+\"SLD\"].setVisible(False)\n    node.knobs()\[\"minorRadius\"+shape+\"SLD\"].setVisible(False)\n    node.knobs()\[\"maskCenter\"+shape+\"CKNB\"].setVisible(False)\n    node.knobs()\[\"rotation\"+shape+\"3DKNB\"].setVisible(False)\n    node.knobs()\[\"scale\"+shape+\"3DKNB\"].setVisible(False)\nelse:\n    set_knobs_visible()\n    node.knobs()\[\"minorRadius\"+shape+\"SLD\"].setVisible(False)\n    node.knobs()\[\"rampStart\"+shape+\"CKNB\"].setVisible(False)\n    node.knobs()\[\"rampEnd\"+shape+\"CKNB\"].setVisible(False)\n\n\nnuke.toNode(\"Merge\"+shape).knob('disable').setValue(0)"}
+ addUserKnob {22 removeS4BTN l <small><b>--</b> t "Removes this mask" -STARTLINE +HIDDEN T "node = nuke.thisNode()\nshape = \"S4\"\n\nnode.knobs()\[\"maskCenter\"+shape+\"CKNB\"].setVisible(False)\nnode.knob(shape+\"TXT\").setVisible(False)\nnode.knobs()\[\"type\"+shape+\"PDC\"].setVisible(False)\nnode.knobs()\[\"operation\"+shape+\"PDC\"].setVisible(False)\nnode.knob(\"invert\"+shape+\"CHK\").setVisible(False)\nnode.knobs()\[\"maskCenter\"+shape+\"CKNB\"].setVisible(False)\nnode.knob(\"radius\"+shape+\"SLD\").setVisible(False)\nnode.knob(\"scale\"+shape+\"3DKNB\").setVisible(False)\nnode.knob(\"rotation\"+shape+\"3DKNB\").setVisible(False)\nnode.knob(\"falloff\"+shape+\"SLD\").setVisible(False)\nnode.knob(\"add\"+shape+\"BTN\").setVisible(False)\nnode.knob(\"remove\"+shape+\"BTN\").setVisible(False)\nnode.knobs()\[\"falloffType\"+shape+\"PDC\"].setVisible(False)\nnode.knob(\"value\"+shape+\"SLD\").setVisible(False)\n\nnode.knobs()\[\"rampStart\"+shape+\"CKNB\"].setVisible(False)\nnode.knobs()\[\"rampEnd\"+shape+\"CKNB\"].setVisible(False)\nnode.knobs()\[\"minorRadius\"+shape+\"SLD\"].setVisible(False)\n\nnuke.toNode(\"Merge\"+shape).knob('disable').setValue(1)\n"}
+ addUserKnob {26 S5TXT l "<b><p style=\"color:#4CB6C7\">Shape 5</p></b>" +HIDDEN}
+ addUserKnob {41 typeS5PDC l Type +HIDDEN T ShapesS5.shapeTypesPDC}
+ addUserKnob {41 operationS5PDC l "" -STARTLINE +HIDDEN T MergeS5.mergeOps}
+ addUserKnob {6 invertS5CHK l Invert -STARTLINE +HIDDEN}
+ addUserKnob {41 maskCenterS5CKNB l Center +HIDDEN T CenterS5.maskCenterCKNB}
+ addUserKnob {7 radiusS5SLD l Radius +HIDDEN R 0.001 10}
+ radiusS5SLD 1
+ addUserKnob {41 minorRadiusS5SLD l "Minor Radius" +HIDDEN T ShapesS5.minorRadiusSLD}
+ addUserKnob {41 rampStartS5CKNB l Center +HIDDEN T ShapesS5.rampStartCKNB}
+ addUserKnob {41 rampEndS5CKNB l Edge +HIDDEN T ShapesS5.rampEndCKNB}
+ addUserKnob {13 scaleS53DKNB l Scale +HIDDEN}
+ scaleS53DKNB {1 1 1}
+ addUserKnob {13 rotationS53DKNB l Rotation +HIDDEN}
+ addUserKnob {7 falloffS5SLD l Falloff +HIDDEN R 0.01 1}
+ falloffS5SLD 1
+ addUserKnob {41 falloffTypeS5PDC l "" -STARTLINE +HIDDEN T FalloffTypesS5.falloffTypesPDC}
+ addUserKnob {7 valueS5SLD l Value +HIDDEN}
+ valueS5SLD 1
+ addUserKnob {22 addS5BTN l <b>+</b> t "Adds a new shape" -STARTLINE +HIDDEN T "node = nuke.thisNode()\nshape = \"S6\"\nuserChoice = nuke.thisNode().knob(\"type\"+shape+\"PDC\").value()\nknob_list = \[\n    \"maskCenter\"+shape+\"CKNB\", shape+\"TXT\", \"type\"+shape+\"PDC\", \"operation\"+shape+\"PDC\",\n    \"invert\"+shape+\"CHK\", \"maskCenter\"+shape+\"CKNB\", \"radius\"+shape+\"SLD\", \"scale\"+shape+\"3DKNB\",\n    \"rotation\"+shape+\"3DKNB\", \"falloff\"+shape+\"SLD\", \"remove\"+shape+\"BTN\",\n    \"falloffType\"+shape+\"PDC\", \"value\"+shape+\"SLD\", \"minorRadius\"+shape+\"SLD\", \n    \"rampStart\"+shape+\"CKNB\", \"rampEnd\"+shape+\"CKNB\",\n    ]\n    \ndef set_knobs_visible():\n    for k in knob_list:\n        node.knobs()\[k].setVisible(True)\n    \nif userChoice == \"Sphere (2 Points)\":\n    set_knobs_visible()\n    node.knobs()\[\"minorRadius\"+shape+\"SLD\"].setVisible(False)\n    node.knobs()\[\"maskCenter\"+shape+\"CKNB\"].setVisible(False)\n    node.knobs()\[\"radius\"+shape+\"SLD\"].setVisible(False)\nelif (userChoice == \"Sphere (Hollow)\" or userChoice == \"Torus\"):\n    set_knobs_visible()\n    node.knobs()\[\"rampStart\"+shape+\"CKNB\"].setVisible(False)\n    node.knobs()\[\"rampEnd\"+shape+\"CKNB\"].setVisible(False)\nelif userChoice == \"Ramp\":\n    set_knobs_visible()\n    node.knobs()\[\"radius\"+shape+\"SLD\"].setVisible(False)\n    node.knobs()\[\"minorRadius\"+shape+\"SLD\"].setVisible(False)\n    node.knobs()\[\"maskCenter\"+shape+\"CKNB\"].setVisible(False)\n    node.knobs()\[\"rotation\"+shape+\"3DKNB\"].setVisible(False)\n    node.knobs()\[\"scale\"+shape+\"3DKNB\"].setVisible(False)\nelse:\n    set_knobs_visible()\n    node.knobs()\[\"minorRadius\"+shape+\"SLD\"].setVisible(False)\n    node.knobs()\[\"rampStart\"+shape+\"CKNB\"].setVisible(False)\n    node.knobs()\[\"rampEnd\"+shape+\"CKNB\"].setVisible(False)\n\n\nnuke.toNode(\"Merge\"+shape).knob('disable').setValue(0)"}
+ addUserKnob {22 removeS5BTN l <small><b>--</b> t "Removes this mask" -STARTLINE +HIDDEN T "node = nuke.thisNode()\nshape = \"S5\"\n\nnode.knobs()\[\"maskCenter\"+shape+\"CKNB\"].setVisible(False)\nnode.knob(shape+\"TXT\").setVisible(False)\nnode.knobs()\[\"type\"+shape+\"PDC\"].setVisible(False)\nnode.knobs()\[\"operation\"+shape+\"PDC\"].setVisible(False)\nnode.knob(\"invert\"+shape+\"CHK\").setVisible(False)\nnode.knobs()\[\"maskCenter\"+shape+\"CKNB\"].setVisible(False)\nnode.knob(\"radius\"+shape+\"SLD\").setVisible(False)\nnode.knob(\"scale\"+shape+\"3DKNB\").setVisible(False)\nnode.knob(\"rotation\"+shape+\"3DKNB\").setVisible(False)\nnode.knob(\"falloff\"+shape+\"SLD\").setVisible(False)\nnode.knob(\"add\"+shape+\"BTN\").setVisible(False)\nnode.knob(\"remove\"+shape+\"BTN\").setVisible(False)\nnode.knobs()\[\"falloffType\"+shape+\"PDC\"].setVisible(False)\nnode.knob(\"value\"+shape+\"SLD\").setVisible(False)\n\nnode.knobs()\[\"rampStart\"+shape+\"CKNB\"].setVisible(False)\nnode.knobs()\[\"rampEnd\"+shape+\"CKNB\"].setVisible(False)\nnode.knobs()\[\"minorRadius\"+shape+\"SLD\"].setVisible(False)\n\nnuke.toNode(\"Merge\"+shape).knob('disable').setValue(1)\n"}
+ addUserKnob {26 S6TXT l "<b><p style=\"color:#4CB6C7\">Shape 6</p></b>" +HIDDEN}
+ addUserKnob {41 typeS6PDC l Type +HIDDEN T ShapesS6.shapeTypesPDC}
+ addUserKnob {41 operationS6PDC l "" -STARTLINE +HIDDEN T MergeS6.mergeOps}
+ addUserKnob {6 invertS6CHK l Invert -STARTLINE +HIDDEN}
+ addUserKnob {41 maskCenterS6CKNB l Center +HIDDEN T CenterS6.maskCenterCKNB}
+ addUserKnob {7 radiusS6SLD l Radius +HIDDEN R 0.001 10}
+ radiusS6SLD 1
+ addUserKnob {41 minorRadiusS6SLD l "Minor Radius" +HIDDEN T ShapesS6.minorRadiusSLD}
+ addUserKnob {41 rampStartS6CKNB l Center +HIDDEN T ShapesS6.rampStartCKNB}
+ addUserKnob {41 rampEndS6CKNB l Edge +HIDDEN T ShapesS6.rampEndCKNB}
+ addUserKnob {13 scaleS63DKNB l Scale +HIDDEN}
+ scaleS63DKNB {1 1 1}
+ addUserKnob {13 rotationS63DKNB l Rotation +HIDDEN}
+ addUserKnob {7 falloffS6SLD l Falloff +HIDDEN R 0.01 1}
+ falloffS6SLD 1
+ addUserKnob {41 falloffTypeS6PDC l "" -STARTLINE +HIDDEN T FalloffTypesS6.falloffTypesPDC}
+ addUserKnob {7 valueS6SLD l Value +HIDDEN}
+ valueS6SLD 1
+ addUserKnob {22 removeS6BTN l <small><b>--</b> t "Removes this mask" -STARTLINE +HIDDEN T "node = nuke.thisNode()\nshape = \"S6\"\n\nnode.knobs()\[\"maskCenter\"+shape+\"CKNB\"].setVisible(False)\nnode.knob(shape+\"TXT\").setVisible(False)\nnode.knobs()\[\"type\"+shape+\"PDC\"].setVisible(False)\nnode.knobs()\[\"operation\"+shape+\"PDC\"].setVisible(False)\nnode.knob(\"invert\"+shape+\"CHK\").setVisible(False)\nnode.knobs()\[\"maskCenter\"+shape+\"CKNB\"].setVisible(False)\nnode.knob(\"radius\"+shape+\"SLD\").setVisible(False)\nnode.knob(\"scale\"+shape+\"3DKNB\").setVisible(False)\nnode.knob(\"rotation\"+shape+\"3DKNB\").setVisible(False)\nnode.knob(\"falloff\"+shape+\"SLD\").setVisible(False)\nnode.knob(\"remove\"+shape+\"BTN\").setVisible(False)\nnode.knobs()\[\"falloffType\"+shape+\"PDC\"].setVisible(False)\nnode.knob(\"value\"+shape+\"SLD\").setVisible(False)\n\nnode.knobs()\[\"rampStart\"+shape+\"CKNB\"].setVisible(False)\nnode.knobs()\[\"rampEnd\"+shape+\"CKNB\"].setVisible(False)\nnode.knobs()\[\"minorRadius\"+shape+\"SLD\"].setVisible(False)\n\nnuke.toNode(\"Merge\"+shape).knob('disable').setValue(1)"}
+ addUserKnob {26 maskTXT l "<b><p style=\"color:#4CB6C7\">Mask</p></b>"}
+ addUserKnob {41 maskSelectionCHNKNB l "&nbsp;" T MultMask.maskChannelMask}
+ addUserKnob {6 invertMaskCHK l Invert -STARTLINE}
+ addUserKnob {7 maskValueSLD l Value}
+ addUserKnob {20 advancedTAB l Advanced}
+ addUserKnob {26 fixesTXT l "<b><p style=\"color:#4CB6C7\">Fixes</p></b>"}
+ addUserKnob {7 dilateFixSizeSLD l Erode R -10 10}
+ addUserKnob {7 edgeBlurSLD l "Edge Blur" R 0 10}
+ edgeBlurSLD 2
+ addUserKnob {7 edgeFixFalloffSLD l "Blur Falloff"}
+ edgeFixFalloffSLD 0.2
+ addUserKnob {7 softenDataSLD l Smooth R 0 100}
+ addUserKnob {26 previewTXT l "<b><p style=\"color:#4CB6C7\">Preview</p></b>"}
+ addUserKnob {6 previewBwCHK l "Black And White" +STARTLINE}
+ previewBwCHK true
+ addUserKnob {6 previewClampCHK l Clamp -STARTLINE}
+ addUserKnob {18 previewColourCKNB l Colour}
+ previewColourCKNB {0 0.7 1}
+ addUserKnob {6 previewColourCKNB_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {26 inputAOVsTXT l "<b><p style=\"color:#4CB6C7\">Input AOVs</p></b>"}
+ addUserKnob {6 unpremultCHK l Unpremult +STARTLINE}
+ addUserKnob {41 inputAOV2CHKNB_1 l "&nbsp;" T InputAOVs.channels}
+ addUserKnob {41 inputAOV2CHKNB l "&nbsp;" T InputAOVs.channels2}
+ addUserKnob {41 inputAOV3CHKNB l "&nbsp;" T InputAOVs.channels3}
+ addUserKnob {41 inputAOV4CHKNB l "&nbsp;" T InputAOVs.channels4}
+ addUserKnob {26 calibrationTXT l "<b><p style=\"color:#4CB6C7\">Calibration</p></b>"}
+ addUserKnob {6 worldSpaceCHK l "Convert \"Z Up\" to \"Y Up\"" +STARTLINE}
+ addUserKnob {7 globalScaleSLD l "Global Scale" R 0.01 100}
+ globalScaleSLD 1
+ addUserKnob {4 radiusScalePDC l "Slider Scale" M {Normalized Small Medium Large Custom ""}}
+ radiusScalePDC Small
+ addUserKnob {22 setSliderScaleBTN l Set -STARTLINE T "userChoice = nuke.thisNode().knob('radiusScalePDC').value()\nnode = nuke.thisNode()\nif userChoice == \"Normalized\":    \n    for knob in node.knobs():\n        if knob.startswith('radiusS'):\n            node.knob(knob).setRange(0.001,1)\nelif userChoice == \"Small\":\n    for knob in node.knobs():\n        if knob.startswith('radiusS'):\n            node.knob(knob).setRange(0.001,10)\nelif userChoice == \"Medium\":\n    for knob in node.knobs():\n        if knob.startswith('radiusS'):\n            node.knob(knob).setRange(0.001,100)\nelif userChoice == \"Large\":\n    for knob in node.knobs():\n        if knob.startswith('radiusS'):\n            node.knob(knob).setRange(0.001,1000)\nelif userChoice == \"Custom\":\n    custom = nuke.getInput(\"Max Size (any number above 1)\", \"\")\n    if custom.isdigit():\n        for knob in node.knobs():\n            if knob.startswith('radiusS'):\n                node.knob(knob).setRange(0.001,float(custom))\n    else:\n        nuke.message(\"Please use whole numbers only\")"}
+ addUserKnob {20 infoTAB l Info}
+ addUserKnob {26 aboutTXT l "&nbsp;" T "<h3>About</h3> \n<p>This is a tool that can create multiple 3D masks in world position/pref/normals \n<br>Useful for complex masks, or adding sticky shapes to environments or characters</p> \n<hr>\n <h3>How To Use</h3> \n<p>Step 1: Connect the primary input to a render or pipe that contains P/Pref/N data</p>\n<p>Step 2: Use the Center sampler while holding Ctrl+Alt to sample an area in your viewer. Add more Shapes with +/- buttons</p>\n<p>Step 3: Plug the result into the mask input of other nodes </p>\n<hr>"}
+ addUserKnob {26 help1TXT l "&nbsp;" T "Press the "}
+ addUserKnob {22 helpBTN l Help -STARTLINE T "import webbrowser \nwebbrowser.open(\"https://www.hiramgifford.com/buddy-system/maskbuddy\")"}
+ addUserKnob {26 help2TXT l "&nbsp;" -STARTLINE T "button to view the full documentation"}
+ addUserKnob {26 classTXT l "&nbsp;" T "<font color=grey><i>MaskBuddy</i>"}
+ addUserKnob {26 versionTXT l "&nbsp;" -STARTLINE T "<font color=grey><i>v1.2</i>"}
+ addUserKnob {26 infoTXT l "&nbsp;" T "<font color=grey><i>Hiram Gifford - 17/05/2026 - hiramgifford.com</i>"}
+}
+ BackdropNode {
+  inputs 0
+  name BackdropNode1
+  tile_color 0x27757fff
+  label <center>Shapes
+  note_font_size 42
+  xpos -348
+  ypos -185
+  bdwidth 1175
+  bdheight 1231
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode2
+  tile_color 0x27757fff
+  label <center>Mask
+  note_font_size 42
+  xpos 841
+  ypos -185
+  bdwidth 335
+  bdheight 1231
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode3
+  tile_color 0x27757fff
+  label <center>Preview
+  note_font_size 42
+  xpos -348
+  ypos 1064
+  bdwidth 1176
+  bdheight 633
+ }
+ Input {
+  inputs 0
+  name Mask
+  xpos 964
+  ypos -110
+  number 1
+ }
+ Shuffle {
+  name FixEmpty
+  xpos 964
+  ypos -84
+ }
+ Dot {
+  name Dot2
+  xpos 998
+  ypos 982
+ }
+ Input {
+  inputs 0
+  name Input
+  xpos -53
+  ypos -128
+ }
+ Shuffle {
+  name FixEmpty1
+  xpos -53
+  ypos -93
+ }
+ Dot {
+  name Dot9
+  xpos -19
+  ypos -47
+ }
+set N549ea800 [stack 0]
+ Dot {
+  name Dot13
+  xpos -239
+  ypos -47
+ }
+ Dot {
+  name Dot17
+  xpos -239
+  ypos 38
+ }
+set N549eb000 [stack 0]
+ Dot {
+  name Dot11
+  xpos -239
+  ypos 943
+ }
+set N549eb400 [stack 0]
+ Expression {
+  channel0 alpha
+  expr0 "a == 0 ? 1 :0"
+  channel1 none
+  channel2 none
+  channel3 {none none none -rgba.alpha}
+  name CleanAlpha
+  xpos 484
+  ypos 939
+ }
+push $N549eb000
+push $N549ea800
+ Remove {
+  operation keep
+  channels none
+  name InputAOVs
+  xpos -53
+  ypos -15
+  disable {{enableInputAOVsCHK}}
+ }
+ Copy {
+  inputs 2
+  from0 rgba.alpha
+  to0 rgba.alpha
+  name Copy2
+  xpos -53
+  ypos 28
+ }
+ Shuffle {
+  in none
+  in2 rgba
+  alpha alpha2
+  name AOV
+  xpos -53
+  ypos 66
+ }
+ Unpremult {
+  name Unpremult
+  xpos -53
+  ypos 96
+  disable {{!unpremultCHK}}
+ }
+ Blur {
+  channels rgb
+  size {{softenDataSLD}}
+  name SoftenData
+  xpos -53
+  ypos 126
+ }
+ ColorMatrix {
+  matrix {
+      {1 0 -4.371138829e-08}
+      {-4.371138829e-08 1.910685465e-15 -1}
+      {0 1 1.910685465e-15}
+    }
+  invert true
+  name YUpWorld
+  xpos -53
+  ypos 150
+  disable {{!worldSpaceCHK}}
+ }
+ Dot {
+  name Dot1
+  xpos -19
+  ypos 228
+ }
+set N548cb400 [stack 0]
+ Dot {
+  name Dot14
+  xpos 134
+  ypos 228
+ }
+set N548cb800 [stack 0]
+ Dot {
+  name Dot8
+  xpos 262
+  ypos 228
+ }
+set N548cbc00 [stack 0]
+ Dot {
+  name Dot5
+  xpos 392
+  ypos 228
+ }
+set N546f4000 [stack 0]
+ Dot {
+  name Dot4
+  xpos 515
+  ypos 228
+ }
+set N546f4400 [stack 0]
+ Dot {
+  name Dot3
+  xpos 651
+  ypos 228
+ }
+ Add {
+  channels rgb
+  value {{-maskCenterCKNB} {-maskCenterCKNB} {-maskCenterCKNB} 0}
+  name CenterS6
+  xpos 617
+  ypos 346
+  addUserKnob {20 optionsTAB l Options}
+  addUserKnob {18 maskCenterCKNB l "Mask Center"}
+  maskCenterCKNB {0 0 0}
+  addUserKnob {6 maskCenterCKNB_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+ }
+ ColorMatrix {
+  matrix {
+      {{"max(0.0001, ShapeAxisS6.world_matrix.0)"} {ShapeAxisS6.world_matrix.1} {ShapeAxisS6.world_matrix.2}}
+      {{ShapeAxisS6.world_matrix.4} {"max(0.0001, ShapeAxisS6.world_matrix.5)"} {ShapeAxisS6.world_matrix.6}}
+      {{ShapeAxisS6.world_matrix.8} {ShapeAxisS6.world_matrix.9} {"max(0.0001, ShapeAxisS6.world_matrix.10)"}}
+    }
+  invert true
+  name ColourMatrixS6
+  xpos 617
+  ypos 371
+ }
+ Expression {
+  expr3 1-sqrt((pow2(r))+(pow2(g))+(pow2(b)))
+  name ShapesS6
+  knobChanged "## Callback variables\nthis_node = nuke.thisNode()\nthis_knob = nuke.thisKnob()\nthis_group = nuke.thisGroup()\n\n## Checks if the shapeTypesPDC knob has been used and runs statements\nif this_knob.name() in (\"shapeTypesPDC\"):\n    ## Variables\n    shape = \"S6\"\n    userChoice = nuke.thisNode().knob('shapeTypesPDC').value()\n    exp = this_node.knob('expr3')\n    tempName0 = this_node.knob('temp_name0')\n    tempName1 = this_node.knob('temp_name1')\n    tempName2 = this_node.knob('temp_name2')\n    tempName3 = this_node.knob('temp_name3')    \n    tempExp0 = this_node.knob('temp_expr0')\n    tempExp1 = this_node.knob('temp_expr1')\n    tempExp2 = this_node.knob('temp_expr2')\n    tempExp3 = this_node.knob('temp_expr3')\n    ramp0 = this_group.knobs()\['rampEnd' + shape + 'CKNB']\n    ramp1 = this_group.knobs()\['rampStart' + shape + 'CKNB']\n    center = this_group.knobs()\['maskCenter' + shape + 'CKNB']\n    radius = this_group.knobs()\['radius' + shape + 'SLD']\n    scale = this_group.knobs()\['scale' + shape + '3DKNB']\n    rotation = this_group.knobs()\['rotation' + shape + '3DKNB']\n    minorRadius = this_group.knobs()\['minorRadius' + shape + 'SLD']\n    \n    ## Changes expression type and top level knobs based on user choice \n    if userChoice == \"Sphere\":\n        tempName0.setValue(\"\")\n        tempExp0.setValue(\"\")\n        tempName1.setValue(\"\")\n        tempExp1.setValue(\"\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        exp.setValue(\"1-sqrt((pow2(r))+(pow2(g))+(pow2(b)))\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)        \n        minorRadius.setVisible(False)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Radius\")\n    elif userChoice == \"Sphere (2 Points)\":\n        tempName0.setValue(\"distance\")\n        tempExp0.setValue(\"sqrt(pow2(r-rampStartCKNB.r) + pow2(g-rampStartCKNB.g) + pow2(b-rampStartCKNB.b))\")\n        tempName1.setValue(\"length\")\n        tempExp1.setValue(\"sqrt(pow(rampEndCKNB.r-rampStartCKNB.r,2) + pow(rampEndCKNB.g-rampStartCKNB.g,2) + pow(rampEndCKNB.b-rampStartCKNB.b,2))\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        exp.setValue(\"1-clamp(distance / length)\")\n        ramp0.setVisible(True)\n        ramp1.setVisible(True)\n        minorRadius.setVisible(False)\n        center.setVisible(False)\n        radius.setVisible(False)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Radius\")\n        ramp0.setLabel(\"Edge\")\n        ramp1.setLabel(\"Center\")\n    elif userChoice == \"Sphere (Hollow)\":\n        tempName0.setValue(\"\")\n        tempExp0.setValue(\"\")\n        tempName1.setValue(\"\")\n        tempExp1.setValue(\"\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        exp.setValue(\"1-pow((sqrt((pow2(r))+(pow2(g))+(pow2(b)))) - 1, 2) / pow2(minorRadiusSLD)\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)\n        minorRadius.setVisible(True)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Major Radius\")\n    elif userChoice == \"Cube (Rounded)\":\n        tempName0.setValue(\"\")\n        tempExp0.setValue(\"\")\n        tempName1.setValue(\"\")\n        tempExp1.setValue(\"\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        exp.setValue(\"smoothstep(startCubeSLD,endCubeSLD, clamp(1-abs(r)) ) * smoothstep(startCubeSLD,endCubeSLD, clamp(1-abs(g)) ) * smoothstep(startCubeSLD,endCubeSLD, clamp(1-abs(b)) )\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)\n        minorRadius.setVisible(False)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Size\")\n    elif userChoice == \"Cube (Sharp)\":\n        tempName0.setValue(\"\")\n        tempExp0.setValue(\"\")\n        tempName1.setValue(\"\")\n        tempExp1.setValue(\"\")\n        exp.setValue(\"1-max(abs(r),abs(g),abs(b))\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)\n        minorRadius.setVisible(False)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Size\")\n    elif userChoice == \"Octahedron\":\n        tempName0.setValue(\"\")\n        tempExp0.setValue(\"\")\n        tempName1.setValue(\"\")\n        tempExp1.setValue(\"\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        exp.setValue(\"1-(abs(r)+abs(g)+abs(b))\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)\n        minorRadius.setVisible(False)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Size\")\n    elif userChoice == \"Dome\":\n        tempName0.setValue(\"sphere\")\n        tempExp0.setValue(\"1-(abs((r*r)+(g*g)+(b*b)))\")\n        tempName1.setValue(\"cube\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        tempExp1.setValue(\"smoothstep(0,0.1, clamp(1-abs(r)) +1) * smoothstep(0,0.1, clamp(1-abs(g+1)) ) * smoothstep(0,0.1, clamp(1-abs(b)) +1)\")\n        exp.setValue(\"(1-((cube*10)-sphere))/2\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)\n        minorRadius.setVisible(False)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Radius\")\n    elif userChoice == \"Pyramid\":\n        tempName0.setValue(\"octahedron\")\n        tempExp0.setValue(\"1-(abs(r)+abs(g)+abs(b))\")\n        tempName1.setValue(\"cube\")\n        tempExp1.setValue(\"smoothstep(0,1, clamp(1-abs(r)) +1) * smoothstep(0,1, clamp(1-abs(g+1)) ) * smoothstep(0,1, clamp(1-abs(b)) +1)\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        exp.setValue(\"(1-((cube*100)-octahedron))/2\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)\n        minorRadius.setVisible(False)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Size\")\n    elif userChoice == \"Cone\":\n        tempName0.setValue(\"\")\n        tempExp0.setValue(\"\")\n        tempName1.setValue(\"\")\n        tempExp1.setValue(\"\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        exp.setValue(\"clamp((1 - (sqrt(pow2(r) + pow2(b))) / max(max(abs(g), 0), 0)) * (1-min(abs(g) / coneHeightSLD, 1)) * (g >= 0) * (g <= coneHeightSLD), 0, 1)\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)\n        minorRadius.setVisible(False)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Height\")\n    elif userChoice == \"Cylinder\":\n        tempName0.setValue(\"\")\n        tempExp0.setValue(\"\")\n        tempName1.setValue(\"\")\n        tempExp1.setValue(\"\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        exp.setValue(\"(1 - clamp((sqrt(pow2(r) + pow2(b)) - 0.3) / 1, 0, 1)) * smoothstep(0,0.5, clamp(2-abs(g)))\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)\n        minorRadius.setVisible(False)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Radius\")\n    elif userChoice == \"Torus\":\n        tempName0.setValue(\"\")\n        tempExp0.setValue(\"\")\n        tempName1.setValue(\"\")\n        tempExp1.setValue(\"\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        exp.setValue(\"1 - sqrt((pow(sqrt(pow(r, 2) + pow(b, 2)) - 1, 2) + pow(g, 2)) / pow2(minorRadiusSLD))\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)\n        minorRadius.setVisible(True)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Major Radius\")\n    elif userChoice == \"Ramp\":\n        tempName0.setValue(\"distance\")\n        tempExp0.setValue(\"sqrt(pow2(r-rampEndCKNB.r) + pow2(g-rampEndCKNB.g) + pow2(b-rampEndCKNB.b))\")\n        tempName1.setValue(\"start\")\n        tempExp1.setValue(\"sqrt(pow2(r-rampEndCKNB.r-(rampStartCKNB.r-rampEndCKNB.r)) + pow2(g-rampEndCKNB.g-(rampStartCKNB.g-rampEndCKNB.g)) + pow2(b-rampEndCKNB.b-(rampStartCKNB.b-rampEndCKNB.b)))\")\n        tempName2.setValue(\"length\")\n        tempExp2.setValue(\"sqrt(pow2(rampStartCKNB.r-rampEndCKNB.r) + pow2(rampStartCKNB.g-rampEndCKNB.g) + pow2(rampStartCKNB.b-rampEndCKNB.b))\")\n        tempName3.setValue(\"vector\")\n        tempExp3.setValue(\"acos( clamp((pow2(distance)-pow2(start)+pow2(length))/(2*distance*length),-1,1) )\")\n        exp.setValue(\"clamp((distance * cos(vector)) / length)\")\n        ramp0.setVisible(True)\n        ramp1.setVisible(True)\n        minorRadius.setVisible(False)\n        center.setVisible(False)\n        radius.setVisible(False)\n        scale.setVisible(False)\n        rotation.setVisible(False)\n        radius.setLabel(\"Radius\")\n        ramp0.setLabel(\"End (Black)\")\n        ramp1.setLabel(\"Start (White)\")"
+  xpos 617
+  ypos 399
+  addUserKnob {20 User}
+  addUserKnob {4 shapeTypesPDC l Type M {Sphere "Sphere (2 Points)" "Sphere (Hollow)" "Cube (Rounded)" "Cube (Sharp)" Torus Cylinder Cone Octahedron Dome Pyramid Ramp "" "" "" "" "" "" "" "" "" "" "" "" "" "" ""}}
+  addUserKnob {7 startCubeSLD l "Cube Start"}
+  addUserKnob {7 endCubeSLD l "Cube End"}
+  endCubeSLD {{falloffS6SLD*0.5}}
+  addUserKnob {7 coneHeightSLD l "Cone Height" R 0 10}
+  coneHeightSLD 1
+  addUserKnob {7 minorRadiusSLD l "Minor Radius" R 0 2}
+  minorRadiusSLD 0.5
+  addUserKnob {18 rampStartCKNB l "Ramp Start"}
+  rampStartCKNB {0 0 0}
+  addUserKnob {6 rampStartCKNB_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 color_rgb_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {18 rampEndCKNB l "Ramp End"}
+  rampEndCKNB {0 0 0}
+  addUserKnob {6 rampEndCKNB_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+ }
+ Grade {
+  channels rgba
+  whitepoint {{falloffS6SLD}}
+  white_clamp true
+  name FalloffS6
+  xpos 617
+  ypos 478
+ }
+ Expression {
+  expr3 smoothstep(0,1,a)
+  name FalloffTypesS6
+  knobChanged "## Fixed variables\nthis_node = nuke.thisNode()\nthis_knob = nuke.thisKnob()\n\n## Checks if the falloffTypesPDC knob has been used and runs statements\nif this_knob.name() in (\"falloffTypesPDC\"):\n    userChoice = nuke.thisNode().knob('falloffTypesPDC').value()\n    exp = this_node.knob('expr3')\n    if userChoice == \"Smooth\":\n        exp.setValue(\"smoothstep(0,1,a)\")\n    elif userChoice == \"Linear\":\n        exp.setValue(\"\")\n    elif userChoice == \"Quadratic\":\n        exp.setValue(\"clamp(pow2(a),0,1)\")\n    elif userChoice == \"Cubic\":\n        exp.setValue(\"clamp((a**3),0,1)\")\n    elif userChoice == \"Exponential\":\n        exp.setValue(\"pow(a,2)\")"
+  xpos 617
+  ypos 502
+  addUserKnob {20 User}
+  addUserKnob {4 falloffTypesPDC M {Smooth Linear Quadratic Cubic Exponential "" "" "" ""}}
+ }
+ Invert {
+  channels rgba
+  name InvertS6
+  xpos 617
+  ypos 659
+  disable {{!invertS6CHK}}
+ }
+ Shuffle {
+  red alpha
+  green alpha
+  blue alpha
+  name ToAlphaS6
+  xpos 617
+  ypos 683
+ }
+ Grade {
+  channels rgba
+  white {{previewColourCKNB} {previewColourCKNB} {previewColourCKNB} 1}
+  multiply {{valueS6SLD}}
+  name PreviewColourS6
+  xpos 617
+  ypos 721
+ }
+push $N546f4400
+ Add {
+  channels rgb
+  value {{-maskCenterCKNB} {-maskCenterCKNB} {-maskCenterCKNB} 0}
+  name CenterS5
+  xpos 481
+  ypos 346
+  addUserKnob {20 optionsTAB l Options}
+  addUserKnob {18 maskCenterCKNB l "Mask Center"}
+  maskCenterCKNB {0 0 0}
+  addUserKnob {6 maskCenterCKNB_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+ }
+ ColorMatrix {
+  matrix {
+      {{"max(0.0001, ShapeAxisS5.world_matrix.0)"} {ShapeAxisS5.world_matrix.1} {ShapeAxisS5.world_matrix.2}}
+      {{ShapeAxisS5.world_matrix.4} {"max(0.0001, ShapeAxisS5.world_matrix.5)"} {ShapeAxisS5.world_matrix.6}}
+      {{ShapeAxisS5.world_matrix.8} {ShapeAxisS5.world_matrix.9} {"max(0.0001, ShapeAxisS5.world_matrix.10)"}}
+    }
+  invert true
+  name ColourMatrixS5
+  xpos 481
+  ypos 371
+ }
+ Expression {
+  expr3 1-sqrt((pow2(r))+(pow2(g))+(pow2(b)))
+  name ShapesS5
+  knobChanged "## Callback variables\nthis_node = nuke.thisNode()\nthis_knob = nuke.thisKnob()\nthis_group = nuke.thisGroup()\n\n## Checks if the shapeTypesPDC knob has been used and runs statements\nif this_knob.name() in (\"shapeTypesPDC\"):\n    ## Variables\n    shape = \"S5\"\n    userChoice = nuke.thisNode().knob('shapeTypesPDC').value()\n    exp = this_node.knob('expr3')\n    tempName0 = this_node.knob('temp_name0')\n    tempName1 = this_node.knob('temp_name1')\n    tempName2 = this_node.knob('temp_name2')\n    tempName3 = this_node.knob('temp_name3')    \n    tempExp0 = this_node.knob('temp_expr0')\n    tempExp1 = this_node.knob('temp_expr1')\n    tempExp2 = this_node.knob('temp_expr2')\n    tempExp3 = this_node.knob('temp_expr3')\n    ramp0 = this_group.knobs()\['rampEnd' + shape + 'CKNB']\n    ramp1 = this_group.knobs()\['rampStart' + shape + 'CKNB']\n    center = this_group.knobs()\['maskCenter' + shape + 'CKNB']\n    radius = this_group.knobs()\['radius' + shape + 'SLD']\n    scale = this_group.knobs()\['scale' + shape + '3DKNB']\n    rotation = this_group.knobs()\['rotation' + shape + '3DKNB']\n    minorRadius = this_group.knobs()\['minorRadius' + shape + 'SLD']\n    \n    ## Changes expression type and top level knobs based on user choice \n    if userChoice == \"Sphere\":\n        tempName0.setValue(\"\")\n        tempExp0.setValue(\"\")\n        tempName1.setValue(\"\")\n        tempExp1.setValue(\"\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        exp.setValue(\"1-sqrt((pow2(r))+(pow2(g))+(pow2(b)))\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)        \n        minorRadius.setVisible(False)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Radius\")\n    elif userChoice == \"Sphere (2 Points)\":\n        tempName0.setValue(\"distance\")\n        tempExp0.setValue(\"sqrt(pow2(r-rampStartCKNB.r) + pow2(g-rampStartCKNB.g) + pow2(b-rampStartCKNB.b))\")\n        tempName1.setValue(\"length\")\n        tempExp1.setValue(\"sqrt(pow(rampEndCKNB.r-rampStartCKNB.r,2) + pow(rampEndCKNB.g-rampStartCKNB.g,2) + pow(rampEndCKNB.b-rampStartCKNB.b,2))\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        exp.setValue(\"1-clamp(distance / length)\")\n        ramp0.setVisible(True)\n        ramp1.setVisible(True)\n        minorRadius.setVisible(False)\n        center.setVisible(False)\n        radius.setVisible(False)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Radius\")\n        ramp0.setLabel(\"Edge\")\n        ramp1.setLabel(\"Center\")\n    elif userChoice == \"Sphere (Hollow)\":\n        tempName0.setValue(\"\")\n        tempExp0.setValue(\"\")\n        tempName1.setValue(\"\")\n        tempExp1.setValue(\"\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        exp.setValue(\"1-pow((sqrt((pow2(r))+(pow2(g))+(pow2(b)))) - 1, 2) / pow2(minorRadiusSLD)\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)\n        minorRadius.setVisible(True)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Major Radius\")\n    elif userChoice == \"Cube (Rounded)\":\n        tempName0.setValue(\"\")\n        tempExp0.setValue(\"\")\n        tempName1.setValue(\"\")\n        tempExp1.setValue(\"\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        exp.setValue(\"smoothstep(startCubeSLD,endCubeSLD, clamp(1-abs(r)) ) * smoothstep(startCubeSLD,endCubeSLD, clamp(1-abs(g)) ) * smoothstep(startCubeSLD,endCubeSLD, clamp(1-abs(b)) )\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)\n        minorRadius.setVisible(False)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Size\")\n    elif userChoice == \"Cube (Sharp)\":\n        tempName0.setValue(\"\")\n        tempExp0.setValue(\"\")\n        tempName1.setValue(\"\")\n        tempExp1.setValue(\"\")\n        exp.setValue(\"1-max(abs(r),abs(g),abs(b))\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)\n        minorRadius.setVisible(False)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Size\")\n    elif userChoice == \"Octahedron\":\n        tempName0.setValue(\"\")\n        tempExp0.setValue(\"\")\n        tempName1.setValue(\"\")\n        tempExp1.setValue(\"\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        exp.setValue(\"1-(abs(r)+abs(g)+abs(b))\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)\n        minorRadius.setVisible(False)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Size\")\n    elif userChoice == \"Dome\":\n        tempName0.setValue(\"sphere\")\n        tempExp0.setValue(\"1-(abs((r*r)+(g*g)+(b*b)))\")\n        tempName1.setValue(\"cube\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        tempExp1.setValue(\"smoothstep(0,0.1, clamp(1-abs(r)) +1) * smoothstep(0,0.1, clamp(1-abs(g+1)) ) * smoothstep(0,0.1, clamp(1-abs(b)) +1)\")\n        exp.setValue(\"(1-((cube*10)-sphere))/2\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)\n        minorRadius.setVisible(False)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Radius\")\n    elif userChoice == \"Pyramid\":\n        tempName0.setValue(\"octahedron\")\n        tempExp0.setValue(\"1-(abs(r)+abs(g)+abs(b))\")\n        tempName1.setValue(\"cube\")\n        tempExp1.setValue(\"smoothstep(0,1, clamp(1-abs(r)) +1) * smoothstep(0,1, clamp(1-abs(g+1)) ) * smoothstep(0,1, clamp(1-abs(b)) +1)\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        exp.setValue(\"(1-((cube*100)-octahedron))/2\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)\n        minorRadius.setVisible(False)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Size\")\n    elif userChoice == \"Cone\":\n        tempName0.setValue(\"\")\n        tempExp0.setValue(\"\")\n        tempName1.setValue(\"\")\n        tempExp1.setValue(\"\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        exp.setValue(\"clamp((1 - (sqrt(pow2(r) + pow2(b))) / max(max(abs(g), 0), 0)) * (1-min(abs(g) / coneHeightSLD, 1)) * (g >= 0) * (g <= coneHeightSLD), 0, 1)\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)\n        minorRadius.setVisible(False)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Height\")\n    elif userChoice == \"Cylinder\":\n        tempName0.setValue(\"\")\n        tempExp0.setValue(\"\")\n        tempName1.setValue(\"\")\n        tempExp1.setValue(\"\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        exp.setValue(\"(1 - clamp((sqrt(pow2(r) + pow2(b)) - 0.3) / 1, 0, 1)) * smoothstep(0,0.5, clamp(2-abs(g)))\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)\n        minorRadius.setVisible(False)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Radius\")\n    elif userChoice == \"Torus\":\n        tempName0.setValue(\"\")\n        tempExp0.setValue(\"\")\n        tempName1.setValue(\"\")\n        tempExp1.setValue(\"\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        exp.setValue(\"1 - sqrt((pow(sqrt(pow(r, 2) + pow(b, 2)) - 1, 2) + pow(g, 2)) / pow2(minorRadiusSLD))\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)\n        minorRadius.setVisible(True)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Major Radius\")\n    elif userChoice == \"Ramp\":\n        tempName0.setValue(\"distance\")\n        tempExp0.setValue(\"sqrt(pow2(r-rampEndCKNB.r) + pow2(g-rampEndCKNB.g) + pow2(b-rampEndCKNB.b))\")\n        tempName1.setValue(\"start\")\n        tempExp1.setValue(\"sqrt(pow2(r-rampEndCKNB.r-(rampStartCKNB.r-rampEndCKNB.r)) + pow2(g-rampEndCKNB.g-(rampStartCKNB.g-rampEndCKNB.g)) + pow2(b-rampEndCKNB.b-(rampStartCKNB.b-rampEndCKNB.b)))\")\n        tempName2.setValue(\"length\")\n        tempExp2.setValue(\"sqrt(pow2(rampStartCKNB.r-rampEndCKNB.r) + pow2(rampStartCKNB.g-rampEndCKNB.g) + pow2(rampStartCKNB.b-rampEndCKNB.b))\")\n        tempName3.setValue(\"vector\")\n        tempExp3.setValue(\"acos( clamp((pow2(distance)-pow2(start)+pow2(length))/(2*distance*length),-1,1) )\")\n        exp.setValue(\"clamp((distance * cos(vector)) / length)\")\n        ramp0.setVisible(True)\n        ramp1.setVisible(True)\n        minorRadius.setVisible(False)\n        center.setVisible(False)\n        radius.setVisible(False)\n        scale.setVisible(False)\n        rotation.setVisible(False)\n        radius.setLabel(\"Radius\")\n        ramp0.setLabel(\"End (Black)\")\n        ramp1.setLabel(\"Start (White)\")"
+  xpos 481
+  ypos 399
+  addUserKnob {20 User}
+  addUserKnob {4 shapeTypesPDC l Type M {Sphere "Sphere (2 Points)" "Sphere (Hollow)" "Cube (Rounded)" "Cube (Sharp)" Torus Cylinder Cone Octahedron Dome Pyramid Ramp "" "" "" "" "" "" "" "" "" "" "" "" "" "" ""}}
+  addUserKnob {7 startCubeSLD l "Cube Start"}
+  addUserKnob {7 endCubeSLD l "Cube End"}
+  endCubeSLD {{falloffS5SLD*0.5}}
+  addUserKnob {7 coneHeightSLD l "Cone Height" R 0 10}
+  coneHeightSLD 1
+  addUserKnob {7 minorRadiusSLD l "Minor Radius" R 0 2}
+  minorRadiusSLD 0.5
+  addUserKnob {18 rampStartCKNB l "Ramp Start"}
+  rampStartCKNB {0 0 0}
+  addUserKnob {6 rampStartCKNB_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 color_rgb_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {18 rampEndCKNB l "Ramp End"}
+  rampEndCKNB {0 0 0}
+  addUserKnob {6 rampEndCKNB_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+ }
+ Grade {
+  channels rgba
+  whitepoint {{falloffS5SLD}}
+  white_clamp true
+  name FalloffS5
+  xpos 481
+  ypos 478
+ }
+ Expression {
+  expr3 smoothstep(0,1,a)
+  name FalloffTypesS5
+  knobChanged "## Fixed variables\nthis_node = nuke.thisNode()\nthis_knob = nuke.thisKnob()\n\n## Checks if the falloffTypesPDC knob has been used and runs statements\nif this_knob.name() in (\"falloffTypesPDC\"):\n    userChoice = nuke.thisNode().knob('falloffTypesPDC').value()\n    exp = this_node.knob('expr3')\n    if userChoice == \"Smooth\":\n        exp.setValue(\"smoothstep(0,1,a)\")\n    elif userChoice == \"Linear\":\n        exp.setValue(\"\")\n    elif userChoice == \"Quadratic\":\n        exp.setValue(\"clamp(pow2(a),0,1)\")\n    elif userChoice == \"Cubic\":\n        exp.setValue(\"clamp((a**3),0,1)\")\n    elif userChoice == \"Exponential\":\n        exp.setValue(\"pow(a,2)\")"
+  xpos 481
+  ypos 502
+  addUserKnob {20 User}
+  addUserKnob {4 falloffTypesPDC M {Smooth Linear Quadratic Cubic Exponential "" "" "" ""}}
+ }
+ Invert {
+  channels rgba
+  name InvertS5
+  xpos 481
+  ypos 659
+  disable {{!invertS5CHK}}
+ }
+ Shuffle {
+  red alpha
+  green alpha
+  blue alpha
+  name ToAlphaS5
+  xpos 481
+  ypos 683
+ }
+ Grade {
+  channels rgba
+  white {{previewColourCKNB} {previewColourCKNB} {previewColourCKNB} 1}
+  multiply {{valueS5SLD}}
+  name PreviewColourS5
+  xpos 481
+  ypos 721
+ }
+push $N546f4000
+ Add {
+  channels rgb
+  value {{-maskCenterCKNB} {-maskCenterCKNB} {-maskCenterCKNB} 0}
+  name CenterS4
+  xpos 358
+  ypos 346
+  addUserKnob {20 optionsTAB l Options}
+  addUserKnob {18 maskCenterCKNB l "Mask Center"}
+  maskCenterCKNB {0 0 0}
+  addUserKnob {6 maskCenterCKNB_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+ }
+ ColorMatrix {
+  matrix {
+      {{"max(0.0001, ShapeAxisS4.world_matrix.0)"} {ShapeAxisS4.world_matrix.1} {ShapeAxisS4.world_matrix.2}}
+      {{ShapeAxisS4.world_matrix.4} {"max(0.0001, ShapeAxisS4.world_matrix.5)"} {ShapeAxisS4.world_matrix.6}}
+      {{ShapeAxisS4.world_matrix.8} {ShapeAxisS4.world_matrix.9} {"max(0.0001, ShapeAxisS4.world_matrix.10)"}}
+    }
+  invert true
+  name ColourMatrixS4
+  xpos 358
+  ypos 371
+ }
+ Expression {
+  expr3 1-sqrt((pow2(r))+(pow2(g))+(pow2(b)))
+  name ShapesS4
+  knobChanged "## Callback variables\nthis_node = nuke.thisNode()\nthis_knob = nuke.thisKnob()\nthis_group = nuke.thisGroup()\n\n## Checks if the shapeTypesPDC knob has been used and runs statements\nif this_knob.name() in (\"shapeTypesPDC\"):\n    ## Variables\n    shape = \"S4\"\n    userChoice = nuke.thisNode().knob('shapeTypesPDC').value()\n    exp = this_node.knob('expr3')\n    tempName0 = this_node.knob('temp_name0')\n    tempName1 = this_node.knob('temp_name1')\n    tempName2 = this_node.knob('temp_name2')\n    tempName3 = this_node.knob('temp_name3')    \n    tempExp0 = this_node.knob('temp_expr0')\n    tempExp1 = this_node.knob('temp_expr1')\n    tempExp2 = this_node.knob('temp_expr2')\n    tempExp3 = this_node.knob('temp_expr3')\n    ramp0 = this_group.knobs()\['rampEnd' + shape + 'CKNB']\n    ramp1 = this_group.knobs()\['rampStart' + shape + 'CKNB']\n    center = this_group.knobs()\['maskCenter' + shape + 'CKNB']\n    radius = this_group.knobs()\['radius' + shape + 'SLD']\n    scale = this_group.knobs()\['scale' + shape + '3DKNB']\n    rotation = this_group.knobs()\['rotation' + shape + '3DKNB']\n    minorRadius = this_group.knobs()\['minorRadius' + shape + 'SLD']\n    \n    ## Changes expression type and top level knobs based on user choice \n    if userChoice == \"Sphere\":\n        tempName0.setValue(\"\")\n        tempExp0.setValue(\"\")\n        tempName1.setValue(\"\")\n        tempExp1.setValue(\"\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        exp.setValue(\"1-sqrt((pow2(r))+(pow2(g))+(pow2(b)))\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)        \n        minorRadius.setVisible(False)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Radius\")\n    elif userChoice == \"Sphere (2 Points)\":\n        tempName0.setValue(\"distance\")\n        tempExp0.setValue(\"sqrt(pow2(r-rampStartCKNB.r) + pow2(g-rampStartCKNB.g) + pow2(b-rampStartCKNB.b))\")\n        tempName1.setValue(\"length\")\n        tempExp1.setValue(\"sqrt(pow(rampEndCKNB.r-rampStartCKNB.r,2) + pow(rampEndCKNB.g-rampStartCKNB.g,2) + pow(rampEndCKNB.b-rampStartCKNB.b,2))\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        exp.setValue(\"1-clamp(distance / length)\")\n        ramp0.setVisible(True)\n        ramp1.setVisible(True)\n        minorRadius.setVisible(False)\n        center.setVisible(False)\n        radius.setVisible(False)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Radius\")\n        ramp0.setLabel(\"Edge\")\n        ramp1.setLabel(\"Center\")\n    elif userChoice == \"Sphere (Hollow)\":\n        tempName0.setValue(\"\")\n        tempExp0.setValue(\"\")\n        tempName1.setValue(\"\")\n        tempExp1.setValue(\"\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        exp.setValue(\"1-pow((sqrt((pow2(r))+(pow2(g))+(pow2(b)))) - 1, 2) / pow2(minorRadiusSLD)\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)\n        minorRadius.setVisible(True)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Major Radius\")\n    elif userChoice == \"Cube (Rounded)\":\n        tempName0.setValue(\"\")\n        tempExp0.setValue(\"\")\n        tempName1.setValue(\"\")\n        tempExp1.setValue(\"\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        exp.setValue(\"smoothstep(startCubeSLD,endCubeSLD, clamp(1-abs(r)) ) * smoothstep(startCubeSLD,endCubeSLD, clamp(1-abs(g)) ) * smoothstep(startCubeSLD,endCubeSLD, clamp(1-abs(b)) )\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)\n        minorRadius.setVisible(False)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Size\")\n    elif userChoice == \"Cube (Sharp)\":\n        tempName0.setValue(\"\")\n        tempExp0.setValue(\"\")\n        tempName1.setValue(\"\")\n        tempExp1.setValue(\"\")\n        exp.setValue(\"1-max(abs(r),abs(g),abs(b))\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)\n        minorRadius.setVisible(False)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Size\")\n    elif userChoice == \"Octahedron\":\n        tempName0.setValue(\"\")\n        tempExp0.setValue(\"\")\n        tempName1.setValue(\"\")\n        tempExp1.setValue(\"\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        exp.setValue(\"1-(abs(r)+abs(g)+abs(b))\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)\n        minorRadius.setVisible(False)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Size\")\n    elif userChoice == \"Dome\":\n        tempName0.setValue(\"sphere\")\n        tempExp0.setValue(\"1-(abs((r*r)+(g*g)+(b*b)))\")\n        tempName1.setValue(\"cube\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        tempExp1.setValue(\"smoothstep(0,0.1, clamp(1-abs(r)) +1) * smoothstep(0,0.1, clamp(1-abs(g+1)) ) * smoothstep(0,0.1, clamp(1-abs(b)) +1)\")\n        exp.setValue(\"(1-((cube*10)-sphere))/2\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)\n        minorRadius.setVisible(False)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Radius\")\n    elif userChoice == \"Pyramid\":\n        tempName0.setValue(\"octahedron\")\n        tempExp0.setValue(\"1-(abs(r)+abs(g)+abs(b))\")\n        tempName1.setValue(\"cube\")\n        tempExp1.setValue(\"smoothstep(0,1, clamp(1-abs(r)) +1) * smoothstep(0,1, clamp(1-abs(g+1)) ) * smoothstep(0,1, clamp(1-abs(b)) +1)\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        exp.setValue(\"(1-((cube*100)-octahedron))/2\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)\n        minorRadius.setVisible(False)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Size\")\n    elif userChoice == \"Cone\":\n        tempName0.setValue(\"\")\n        tempExp0.setValue(\"\")\n        tempName1.setValue(\"\")\n        tempExp1.setValue(\"\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        exp.setValue(\"clamp((1 - (sqrt(pow2(r) + pow2(b))) / max(max(abs(g), 0), 0)) * (1-min(abs(g) / coneHeightSLD, 1)) * (g >= 0) * (g <= coneHeightSLD), 0, 1)\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)\n        minorRadius.setVisible(False)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Height\")\n    elif userChoice == \"Cylinder\":\n        tempName0.setValue(\"\")\n        tempExp0.setValue(\"\")\n        tempName1.setValue(\"\")\n        tempExp1.setValue(\"\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        exp.setValue(\"(1 - clamp((sqrt(pow2(r) + pow2(b)) - 0.3) / 1, 0, 1)) * smoothstep(0,0.5, clamp(2-abs(g)))\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)\n        minorRadius.setVisible(False)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Radius\")\n    elif userChoice == \"Torus\":\n        tempName0.setValue(\"\")\n        tempExp0.setValue(\"\")\n        tempName1.setValue(\"\")\n        tempExp1.setValue(\"\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        exp.setValue(\"1 - sqrt((pow(sqrt(pow(r, 2) + pow(b, 2)) - 1, 2) + pow(g, 2)) / pow2(minorRadiusSLD))\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)\n        minorRadius.setVisible(True)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Major Radius\")\n    elif userChoice == \"Ramp\":\n        tempName0.setValue(\"distance\")\n        tempExp0.setValue(\"sqrt(pow2(r-rampEndCKNB.r) + pow2(g-rampEndCKNB.g) + pow2(b-rampEndCKNB.b))\")\n        tempName1.setValue(\"start\")\n        tempExp1.setValue(\"sqrt(pow2(r-rampEndCKNB.r-(rampStartCKNB.r-rampEndCKNB.r)) + pow2(g-rampEndCKNB.g-(rampStartCKNB.g-rampEndCKNB.g)) + pow2(b-rampEndCKNB.b-(rampStartCKNB.b-rampEndCKNB.b)))\")\n        tempName2.setValue(\"length\")\n        tempExp2.setValue(\"sqrt(pow2(rampStartCKNB.r-rampEndCKNB.r) + pow2(rampStartCKNB.g-rampEndCKNB.g) + pow2(rampStartCKNB.b-rampEndCKNB.b))\")\n        tempName3.setValue(\"vector\")\n        tempExp3.setValue(\"acos( clamp((pow2(distance)-pow2(start)+pow2(length))/(2*distance*length),-1,1) )\")\n        exp.setValue(\"clamp((distance * cos(vector)) / length)\")\n        ramp0.setVisible(True)\n        ramp1.setVisible(True)\n        minorRadius.setVisible(False)\n        center.setVisible(False)\n        radius.setVisible(False)\n        scale.setVisible(False)\n        rotation.setVisible(False)\n        radius.setLabel(\"Radius\")\n        ramp0.setLabel(\"End (Black)\")\n        ramp1.setLabel(\"Start (White)\")"
+  xpos 358
+  ypos 399
+  addUserKnob {20 User}
+  addUserKnob {4 shapeTypesPDC l Type M {Sphere "Sphere (2 Points)" "Sphere (Hollow)" "Cube (Rounded)" "Cube (Sharp)" Torus Cylinder Cone Octahedron Dome Pyramid Ramp "" "" "" "" "" "" "" "" "" "" "" "" "" "" ""}}
+  addUserKnob {7 startCubeSLD l "Cube Start"}
+  addUserKnob {7 endCubeSLD l "Cube End"}
+  endCubeSLD {{falloffS4SLD*0.5}}
+  addUserKnob {7 coneHeightSLD l "Cone Height" R 0 10}
+  coneHeightSLD 1
+  addUserKnob {7 minorRadiusSLD l "Minor Radius" R 0 2}
+  minorRadiusSLD 0.5
+  addUserKnob {18 rampStartCKNB l "Ramp Start"}
+  rampStartCKNB {0 0 0}
+  addUserKnob {6 rampStartCKNB_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 color_rgb_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {18 rampEndCKNB l "Ramp End"}
+  rampEndCKNB {0 0 0}
+  addUserKnob {6 rampEndCKNB_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+ }
+ Grade {
+  channels rgba
+  whitepoint {{falloffS4SLD}}
+  white_clamp true
+  name FalloffS4
+  xpos 358
+  ypos 478
+ }
+ Expression {
+  expr3 smoothstep(0,1,a)
+  name FalloffTypesS4
+  knobChanged "## Fixed variables\nthis_node = nuke.thisNode()\nthis_knob = nuke.thisKnob()\n\n## Checks if the falloffTypesPDC knob has been used and runs statements\nif this_knob.name() in (\"falloffTypesPDC\"):\n    userChoice = nuke.thisNode().knob('falloffTypesPDC').value()\n    exp = this_node.knob('expr3')\n    if userChoice == \"Smooth\":\n        exp.setValue(\"smoothstep(0,1,a)\")\n    elif userChoice == \"Linear\":\n        exp.setValue(\"\")\n    elif userChoice == \"Quadratic\":\n        exp.setValue(\"clamp(pow2(a),0,1)\")\n    elif userChoice == \"Cubic\":\n        exp.setValue(\"clamp((a**3),0,1)\")\n    elif userChoice == \"Exponential\":\n        exp.setValue(\"pow(a,2)\")"
+  xpos 358
+  ypos 502
+  addUserKnob {20 User}
+  addUserKnob {4 falloffTypesPDC M {Smooth Linear Quadratic Cubic Exponential "" "" "" ""}}
+ }
+ Invert {
+  channels rgba
+  name InvertS4
+  xpos 358
+  ypos 659
+  disable {{!invertS4CHK}}
+ }
+ Shuffle {
+  red alpha
+  green alpha
+  blue alpha
+  name ToAlphaS4
+  xpos 358
+  ypos 683
+ }
+ Grade {
+  channels rgba
+  white {{previewColourCKNB} {previewColourCKNB} {previewColourCKNB} 1}
+  multiply {{valueS4SLD}}
+  name PreviewColourS4
+  xpos 358
+  ypos 721
+ }
+push $N548cbc00
+ Add {
+  channels rgb
+  value {{-maskCenterCKNB} {-maskCenterCKNB} {-maskCenterCKNB} 0}
+  name CenterS3
+  xpos 228
+  ypos 346
+  addUserKnob {20 optionsTAB l Options}
+  addUserKnob {18 maskCenterCKNB l "Mask Center"}
+  maskCenterCKNB {0 0 0}
+  addUserKnob {6 maskCenterCKNB_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+ }
+ ColorMatrix {
+  matrix {
+      {{"max(0.0001, ShapeAxisS3.world_matrix.0)"} {ShapeAxisS3.world_matrix.1} {ShapeAxisS3.world_matrix.2}}
+      {{ShapeAxisS3.world_matrix.4} {"max(0.0001, ShapeAxisS3.world_matrix.5)"} {ShapeAxisS3.world_matrix.6}}
+      {{ShapeAxisS3.world_matrix.8} {ShapeAxisS3.world_matrix.9} {"max(0.0001, ShapeAxisS3.world_matrix.10)"}}
+    }
+  invert true
+  name ColourMatrixS3
+  xpos 228
+  ypos 371
+ }
+ Expression {
+  expr3 1-sqrt((pow2(r))+(pow2(g))+(pow2(b)))
+  name ShapesS3
+  knobChanged "## Callback variables\nthis_node = nuke.thisNode()\nthis_knob = nuke.thisKnob()\nthis_group = nuke.thisGroup()\n\n## Checks if the shapeTypesPDC knob has been used and runs statements\nif this_knob.name() in (\"shapeTypesPDC\"):\n    ## Variables\n    shape = \"S3\"\n    userChoice = nuke.thisNode().knob('shapeTypesPDC').value()\n    exp = this_node.knob('expr3')\n    tempName0 = this_node.knob('temp_name0')\n    tempName1 = this_node.knob('temp_name1')\n    tempName2 = this_node.knob('temp_name2')\n    tempName3 = this_node.knob('temp_name3')    \n    tempExp0 = this_node.knob('temp_expr0')\n    tempExp1 = this_node.knob('temp_expr1')\n    tempExp2 = this_node.knob('temp_expr2')\n    tempExp3 = this_node.knob('temp_expr3')\n    ramp0 = this_group.knobs()\['rampEnd' + shape + 'CKNB']\n    ramp1 = this_group.knobs()\['rampStart' + shape + 'CKNB']\n    center = this_group.knobs()\['maskCenter' + shape + 'CKNB']\n    radius = this_group.knobs()\['radius' + shape + 'SLD']\n    scale = this_group.knobs()\['scale' + shape + '3DKNB']\n    rotation = this_group.knobs()\['rotation' + shape + '3DKNB']\n    minorRadius = this_group.knobs()\['minorRadius' + shape + 'SLD']\n    \n    ## Changes expression type and top level knobs based on user choice \n    if userChoice == \"Sphere\":\n        tempName0.setValue(\"\")\n        tempExp0.setValue(\"\")\n        tempName1.setValue(\"\")\n        tempExp1.setValue(\"\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        exp.setValue(\"1-sqrt((pow2(r))+(pow2(g))+(pow2(b)))\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)        \n        minorRadius.setVisible(False)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Radius\")\n    elif userChoice == \"Sphere (2 Points)\":\n        tempName0.setValue(\"distance\")\n        tempExp0.setValue(\"sqrt(pow2(r-rampStartCKNB.r) + pow2(g-rampStartCKNB.g) + pow2(b-rampStartCKNB.b))\")\n        tempName1.setValue(\"length\")\n        tempExp1.setValue(\"sqrt(pow(rampEndCKNB.r-rampStartCKNB.r,2) + pow(rampEndCKNB.g-rampStartCKNB.g,2) + pow(rampEndCKNB.b-rampStartCKNB.b,2))\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        exp.setValue(\"1-clamp(distance / length)\")\n        ramp0.setVisible(True)\n        ramp1.setVisible(True)\n        minorRadius.setVisible(False)\n        center.setVisible(False)\n        radius.setVisible(False)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Radius\")\n        ramp0.setLabel(\"Edge\")\n        ramp1.setLabel(\"Center\")\n    elif userChoice == \"Sphere (Hollow)\":\n        tempName0.setValue(\"\")\n        tempExp0.setValue(\"\")\n        tempName1.setValue(\"\")\n        tempExp1.setValue(\"\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        exp.setValue(\"1-pow((sqrt((pow2(r))+(pow2(g))+(pow2(b)))) - 1, 2) / pow2(minorRadiusSLD)\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)\n        minorRadius.setVisible(True)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Major Radius\")\n    elif userChoice == \"Cube (Rounded)\":\n        tempName0.setValue(\"\")\n        tempExp0.setValue(\"\")\n        tempName1.setValue(\"\")\n        tempExp1.setValue(\"\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        exp.setValue(\"smoothstep(startCubeSLD,endCubeSLD, clamp(1-abs(r)) ) * smoothstep(startCubeSLD,endCubeSLD, clamp(1-abs(g)) ) * smoothstep(startCubeSLD,endCubeSLD, clamp(1-abs(b)) )\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)\n        minorRadius.setVisible(False)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Size\")\n    elif userChoice == \"Cube (Sharp)\":\n        tempName0.setValue(\"\")\n        tempExp0.setValue(\"\")\n        tempName1.setValue(\"\")\n        tempExp1.setValue(\"\")\n        exp.setValue(\"1-max(abs(r),abs(g),abs(b))\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)\n        minorRadius.setVisible(False)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Size\")\n    elif userChoice == \"Octahedron\":\n        tempName0.setValue(\"\")\n        tempExp0.setValue(\"\")\n        tempName1.setValue(\"\")\n        tempExp1.setValue(\"\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        exp.setValue(\"1-(abs(r)+abs(g)+abs(b))\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)\n        minorRadius.setVisible(False)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Size\")\n    elif userChoice == \"Dome\":\n        tempName0.setValue(\"sphere\")\n        tempExp0.setValue(\"1-(abs((r*r)+(g*g)+(b*b)))\")\n        tempName1.setValue(\"cube\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        tempExp1.setValue(\"smoothstep(0,0.1, clamp(1-abs(r)) +1) * smoothstep(0,0.1, clamp(1-abs(g+1)) ) * smoothstep(0,0.1, clamp(1-abs(b)) +1)\")\n        exp.setValue(\"(1-((cube*10)-sphere))/2\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)\n        minorRadius.setVisible(False)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Radius\")\n    elif userChoice == \"Pyramid\":\n        tempName0.setValue(\"octahedron\")\n        tempExp0.setValue(\"1-(abs(r)+abs(g)+abs(b))\")\n        tempName1.setValue(\"cube\")\n        tempExp1.setValue(\"smoothstep(0,1, clamp(1-abs(r)) +1) * smoothstep(0,1, clamp(1-abs(g+1)) ) * smoothstep(0,1, clamp(1-abs(b)) +1)\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        exp.setValue(\"(1-((cube*100)-octahedron))/2\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)\n        minorRadius.setVisible(False)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Size\")\n    elif userChoice == \"Cone\":\n        tempName0.setValue(\"\")\n        tempExp0.setValue(\"\")\n        tempName1.setValue(\"\")\n        tempExp1.setValue(\"\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        exp.setValue(\"clamp((1 - (sqrt(pow2(r) + pow2(b))) / max(max(abs(g), 0), 0)) * (1-min(abs(g) / coneHeightSLD, 1)) * (g >= 0) * (g <= coneHeightSLD), 0, 1)\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)\n        minorRadius.setVisible(False)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Height\")\n    elif userChoice == \"Cylinder\":\n        tempName0.setValue(\"\")\n        tempExp0.setValue(\"\")\n        tempName1.setValue(\"\")\n        tempExp1.setValue(\"\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        exp.setValue(\"(1 - clamp((sqrt(pow2(r) + pow2(b)) - 0.3) / 1, 0, 1)) * smoothstep(0,0.5, clamp(2-abs(g)))\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)\n        minorRadius.setVisible(False)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Radius\")\n    elif userChoice == \"Torus\":\n        tempName0.setValue(\"\")\n        tempExp0.setValue(\"\")\n        tempName1.setValue(\"\")\n        tempExp1.setValue(\"\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        exp.setValue(\"1 - sqrt((pow(sqrt(pow(r, 2) + pow(b, 2)) - 1, 2) + pow(g, 2)) / pow2(minorRadiusSLD))\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)\n        minorRadius.setVisible(True)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Major Radius\")\n    elif userChoice == \"Ramp\":\n        tempName0.setValue(\"distance\")\n        tempExp0.setValue(\"sqrt(pow2(r-rampEndCKNB.r) + pow2(g-rampEndCKNB.g) + pow2(b-rampEndCKNB.b))\")\n        tempName1.setValue(\"start\")\n        tempExp1.setValue(\"sqrt(pow2(r-rampEndCKNB.r-(rampStartCKNB.r-rampEndCKNB.r)) + pow2(g-rampEndCKNB.g-(rampStartCKNB.g-rampEndCKNB.g)) + pow2(b-rampEndCKNB.b-(rampStartCKNB.b-rampEndCKNB.b)))\")\n        tempName2.setValue(\"length\")\n        tempExp2.setValue(\"sqrt(pow2(rampStartCKNB.r-rampEndCKNB.r) + pow2(rampStartCKNB.g-rampEndCKNB.g) + pow2(rampStartCKNB.b-rampEndCKNB.b))\")\n        tempName3.setValue(\"vector\")\n        tempExp3.setValue(\"acos( clamp((pow2(distance)-pow2(start)+pow2(length))/(2*distance*length),-1,1) )\")\n        exp.setValue(\"clamp((distance * cos(vector)) / length)\")\n        ramp0.setVisible(True)\n        ramp1.setVisible(True)\n        minorRadius.setVisible(False)\n        center.setVisible(False)\n        radius.setVisible(False)\n        scale.setVisible(False)\n        rotation.setVisible(False)\n        radius.setLabel(\"Radius\")\n        ramp0.setLabel(\"End (Black)\")\n        ramp1.setLabel(\"Start (White)\")"
+  xpos 228
+  ypos 399
+  addUserKnob {20 User}
+  addUserKnob {4 shapeTypesPDC l Type M {Sphere "Sphere (2 Points)" "Sphere (Hollow)" "Cube (Rounded)" "Cube (Sharp)" Torus Cylinder Cone Octahedron Dome Pyramid Ramp "" "" "" "" "" "" "" "" "" "" "" "" "" "" ""}}
+  addUserKnob {7 startCubeSLD l "Cube Start"}
+  addUserKnob {7 endCubeSLD l "Cube End"}
+  endCubeSLD {{falloffS3SLD*0.5}}
+  addUserKnob {7 coneHeightSLD l "Cone Height" R 0 10}
+  coneHeightSLD 1
+  addUserKnob {7 minorRadiusSLD l "Minor Radius" R 0 2}
+  minorRadiusSLD 0.5
+  addUserKnob {18 rampStartCKNB l "Ramp Start"}
+  rampStartCKNB {0 0 0}
+  addUserKnob {6 rampStartCKNB_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 color_rgb_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {18 rampEndCKNB l "Ramp End"}
+  rampEndCKNB {0 0 0}
+  addUserKnob {6 rampEndCKNB_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+ }
+ Grade {
+  channels rgba
+  whitepoint {{falloffS3SLD}}
+  white_clamp true
+  name FalloffS3
+  xpos 228
+  ypos 478
+ }
+ Expression {
+  expr3 smoothstep(0,1,a)
+  name FalloffTypesS3
+  knobChanged "## Fixed variables\nthis_node = nuke.thisNode()\nthis_knob = nuke.thisKnob()\n\n## Checks if the falloffTypesPDC knob has been used and runs statements\nif this_knob.name() in (\"falloffTypesPDC\"):\n    userChoice = nuke.thisNode().knob('falloffTypesPDC').value()\n    exp = this_node.knob('expr3')\n    if userChoice == \"Smooth\":\n        exp.setValue(\"smoothstep(0,1,a)\")\n    elif userChoice == \"Linear\":\n        exp.setValue(\"\")\n    elif userChoice == \"Quadratic\":\n        exp.setValue(\"clamp(pow2(a),0,1)\")\n    elif userChoice == \"Cubic\":\n        exp.setValue(\"clamp((a**3),0,1)\")\n    elif userChoice == \"Exponential\":\n        exp.setValue(\"pow(a,2)\")"
+  xpos 228
+  ypos 502
+  addUserKnob {20 User}
+  addUserKnob {4 falloffTypesPDC M {Smooth Linear Quadratic Cubic Exponential "" "" "" ""}}
+ }
+ Invert {
+  channels rgba
+  name InvertS3
+  xpos 228
+  ypos 659
+  disable {{!invertS3CHK}}
+ }
+ Shuffle {
+  red alpha
+  green alpha
+  blue alpha
+  name ToAlphaS3
+  xpos 228
+  ypos 683
+ }
+ Grade {
+  channels rgba
+  white {{previewColourCKNB} {previewColourCKNB} {previewColourCKNB} 1}
+  multiply {{valueS3SLD}}
+  name PreviewColourS3
+  xpos 228
+  ypos 721
+ }
+push $N548cb800
+ Add {
+  channels rgb
+  value {{-maskCenterCKNB} {-maskCenterCKNB} {-maskCenterCKNB} 0}
+  name CenterS2
+  xpos 100
+  ypos 346
+  addUserKnob {20 optionsTAB l Options}
+  addUserKnob {18 maskCenterCKNB l "Mask Center"}
+  maskCenterCKNB {0 0 0}
+  addUserKnob {6 maskCenterCKNB_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+ }
+ ColorMatrix {
+  matrix {
+      {{"max(0.0001, ShapeAxisS2.world_matrix.0)"} {ShapeAxisS2.world_matrix.1} {ShapeAxisS2.world_matrix.2}}
+      {{ShapeAxisS2.world_matrix.4} {"max(0.0001, ShapeAxisS2.world_matrix.5)"} {ShapeAxisS2.world_matrix.6}}
+      {{ShapeAxisS2.world_matrix.8} {ShapeAxisS2.world_matrix.9} {"max(0.0001, ShapeAxisS2.world_matrix.10)"}}
+    }
+  invert true
+  name ColourMatrixS2
+  xpos 100
+  ypos 371
+ }
+ Expression {
+  expr3 1-sqrt((pow2(r))+(pow2(g))+(pow2(b)))
+  name ShapesS2
+  knobChanged "## Callback variables\nthis_node = nuke.thisNode()\nthis_knob = nuke.thisKnob()\nthis_group = nuke.thisGroup()\n\n## Checks if the shapeTypesPDC knob has been used and runs statements\nif this_knob.name() in (\"shapeTypesPDC\"):\n    ## Variables\n    shape = \"S2\"\n    userChoice = nuke.thisNode().knob('shapeTypesPDC').value()\n    exp = this_node.knob('expr3')\n    tempName0 = this_node.knob('temp_name0')\n    tempName1 = this_node.knob('temp_name1')\n    tempName2 = this_node.knob('temp_name2')\n    tempName3 = this_node.knob('temp_name3')    \n    tempExp0 = this_node.knob('temp_expr0')\n    tempExp1 = this_node.knob('temp_expr1')\n    tempExp2 = this_node.knob('temp_expr2')\n    tempExp3 = this_node.knob('temp_expr3')\n    ramp0 = this_group.knobs()\['rampEnd' + shape + 'CKNB']\n    ramp1 = this_group.knobs()\['rampStart' + shape + 'CKNB']\n    center = this_group.knobs()\['maskCenter' + shape + 'CKNB']\n    radius = this_group.knobs()\['radius' + shape + 'SLD']\n    scale = this_group.knobs()\['scale' + shape + '3DKNB']\n    rotation = this_group.knobs()\['rotation' + shape + '3DKNB']\n    minorRadius = this_group.knobs()\['minorRadius' + shape + 'SLD']\n    \n    ## Changes expression type and top level knobs based on user choice \n    if userChoice == \"Sphere\":\n        tempName0.setValue(\"\")\n        tempExp0.setValue(\"\")\n        tempName1.setValue(\"\")\n        tempExp1.setValue(\"\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        exp.setValue(\"1-sqrt((pow2(r))+(pow2(g))+(pow2(b)))\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)        \n        minorRadius.setVisible(False)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Radius\")\n    elif userChoice == \"Sphere (2 Points)\":\n        tempName0.setValue(\"distance\")\n        tempExp0.setValue(\"sqrt(pow2(r-rampStartCKNB.r) + pow2(g-rampStartCKNB.g) + pow2(b-rampStartCKNB.b))\")\n        tempName1.setValue(\"length\")\n        tempExp1.setValue(\"sqrt(pow(rampEndCKNB.r-rampStartCKNB.r,2) + pow(rampEndCKNB.g-rampStartCKNB.g,2) + pow(rampEndCKNB.b-rampStartCKNB.b,2))\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        exp.setValue(\"1-clamp(distance / length)\")\n        ramp0.setVisible(True)\n        ramp1.setVisible(True)\n        minorRadius.setVisible(False)\n        center.setVisible(False)\n        radius.setVisible(False)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Radius\")\n        ramp0.setLabel(\"Edge\")\n        ramp1.setLabel(\"Center\")\n    elif userChoice == \"Sphere (Hollow)\":\n        tempName0.setValue(\"\")\n        tempExp0.setValue(\"\")\n        tempName1.setValue(\"\")\n        tempExp1.setValue(\"\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        exp.setValue(\"1-pow((sqrt((pow2(r))+(pow2(g))+(pow2(b)))) - 1, 2) / pow2(minorRadiusSLD)\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)\n        minorRadius.setVisible(True)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Major Radius\")\n    elif userChoice == \"Cube (Rounded)\":\n        tempName0.setValue(\"\")\n        tempExp0.setValue(\"\")\n        tempName1.setValue(\"\")\n        tempExp1.setValue(\"\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        exp.setValue(\"smoothstep(startCubeSLD,endCubeSLD, clamp(1-abs(r)) ) * smoothstep(startCubeSLD,endCubeSLD, clamp(1-abs(g)) ) * smoothstep(startCubeSLD,endCubeSLD, clamp(1-abs(b)) )\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)\n        minorRadius.setVisible(False)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Size\")\n    elif userChoice == \"Cube (Sharp)\":\n        tempName0.setValue(\"\")\n        tempExp0.setValue(\"\")\n        tempName1.setValue(\"\")\n        tempExp1.setValue(\"\")\n        exp.setValue(\"1-max(abs(r),abs(g),abs(b))\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)\n        minorRadius.setVisible(False)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Size\")\n    elif userChoice == \"Octahedron\":\n        tempName0.setValue(\"\")\n        tempExp0.setValue(\"\")\n        tempName1.setValue(\"\")\n        tempExp1.setValue(\"\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        exp.setValue(\"1-(abs(r)+abs(g)+abs(b))\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)\n        minorRadius.setVisible(False)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Size\")\n    elif userChoice == \"Dome\":\n        tempName0.setValue(\"sphere\")\n        tempExp0.setValue(\"1-(abs((r*r)+(g*g)+(b*b)))\")\n        tempName1.setValue(\"cube\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        tempExp1.setValue(\"smoothstep(0,0.1, clamp(1-abs(r)) +1) * smoothstep(0,0.1, clamp(1-abs(g+1)) ) * smoothstep(0,0.1, clamp(1-abs(b)) +1)\")\n        exp.setValue(\"(1-((cube*10)-sphere))/2\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)\n        minorRadius.setVisible(False)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Radius\")\n    elif userChoice == \"Pyramid\":\n        tempName0.setValue(\"octahedron\")\n        tempExp0.setValue(\"1-(abs(r)+abs(g)+abs(b))\")\n        tempName1.setValue(\"cube\")\n        tempExp1.setValue(\"smoothstep(0,1, clamp(1-abs(r)) +1) * smoothstep(0,1, clamp(1-abs(g+1)) ) * smoothstep(0,1, clamp(1-abs(b)) +1)\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        exp.setValue(\"(1-((cube*100)-octahedron))/2\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)\n        minorRadius.setVisible(False)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Size\")\n    elif userChoice == \"Cone\":\n        tempName0.setValue(\"\")\n        tempExp0.setValue(\"\")\n        tempName1.setValue(\"\")\n        tempExp1.setValue(\"\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        exp.setValue(\"clamp((1 - (sqrt(pow2(r) + pow2(b))) / max(max(abs(g), 0), 0)) * (1-min(abs(g) / coneHeightSLD, 1)) * (g >= 0) * (g <= coneHeightSLD), 0, 1)\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)\n        minorRadius.setVisible(False)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Height\")\n    elif userChoice == \"Cylinder\":\n        tempName0.setValue(\"\")\n        tempExp0.setValue(\"\")\n        tempName1.setValue(\"\")\n        tempExp1.setValue(\"\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        exp.setValue(\"(1 - clamp((sqrt(pow2(r) + pow2(b)) - 0.3) / 1, 0, 1)) * smoothstep(0,0.5, clamp(2-abs(g)))\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)\n        minorRadius.setVisible(False)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Radius\")\n    elif userChoice == \"Torus\":\n        tempName0.setValue(\"\")\n        tempExp0.setValue(\"\")\n        tempName1.setValue(\"\")\n        tempExp1.setValue(\"\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        exp.setValue(\"1 - sqrt((pow(sqrt(pow(r, 2) + pow(b, 2)) - 1, 2) + pow(g, 2)) / pow2(minorRadiusSLD))\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)\n        minorRadius.setVisible(True)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Major Radius\")\n    elif userChoice == \"Ramp\":\n        tempName0.setValue(\"distance\")\n        tempExp0.setValue(\"sqrt(pow2(r-rampEndCKNB.r) + pow2(g-rampEndCKNB.g) + pow2(b-rampEndCKNB.b))\")\n        tempName1.setValue(\"start\")\n        tempExp1.setValue(\"sqrt(pow2(r-rampEndCKNB.r-(rampStartCKNB.r-rampEndCKNB.r)) + pow2(g-rampEndCKNB.g-(rampStartCKNB.g-rampEndCKNB.g)) + pow2(b-rampEndCKNB.b-(rampStartCKNB.b-rampEndCKNB.b)))\")\n        tempName2.setValue(\"length\")\n        tempExp2.setValue(\"sqrt(pow2(rampStartCKNB.r-rampEndCKNB.r) + pow2(rampStartCKNB.g-rampEndCKNB.g) + pow2(rampStartCKNB.b-rampEndCKNB.b))\")\n        tempName3.setValue(\"vector\")\n        tempExp3.setValue(\"acos( clamp((pow2(distance)-pow2(start)+pow2(length))/(2*distance*length),-1,1) )\")\n        exp.setValue(\"clamp((distance * cos(vector)) / length)\")\n        ramp0.setVisible(True)\n        ramp1.setVisible(True)\n        minorRadius.setVisible(False)\n        center.setVisible(False)\n        radius.setVisible(False)\n        scale.setVisible(False)\n        rotation.setVisible(False)\n        radius.setLabel(\"Radius\")\n        ramp0.setLabel(\"End (Black)\")\n        ramp1.setLabel(\"Start (White)\")"
+  xpos 100
+  ypos 399
+  addUserKnob {20 User}
+  addUserKnob {4 shapeTypesPDC l Type M {Sphere "Sphere (2 Points)" "Sphere (Hollow)" "Cube (Rounded)" "Cube (Sharp)" Torus Cylinder Cone Octahedron Dome Pyramid Ramp "" "" "" "" "" "" "" "" "" "" "" "" "" "" ""}}
+  addUserKnob {7 startCubeSLD l "Cube Start"}
+  addUserKnob {7 endCubeSLD l "Cube End"}
+  endCubeSLD {{falloffS2SLD*0.5}}
+  addUserKnob {7 coneHeightSLD l "Cone Height" R 0 10}
+  coneHeightSLD 1
+  addUserKnob {7 minorRadiusSLD l "Minor Radius" R 0 2}
+  minorRadiusSLD 0.5
+  addUserKnob {18 rampStartCKNB l "Ramp Start"}
+  rampStartCKNB {0 0 0}
+  addUserKnob {6 rampStartCKNB_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 color_rgb_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {18 rampEndCKNB l "Ramp End"}
+  rampEndCKNB {0 0 0}
+  addUserKnob {6 rampEndCKNB_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+ }
+ Grade {
+  channels rgba
+  whitepoint {{falloffS2SLD}}
+  white_clamp true
+  name FalloffS2
+  xpos 100
+  ypos 478
+ }
+ Expression {
+  expr3 smoothstep(0,1,a)
+  name FalloffTypesS2
+  knobChanged "## Fixed variables\nthis_node = nuke.thisNode()\nthis_knob = nuke.thisKnob()\n\n## Checks if the falloffTypesPDC knob has been used and runs statements\nif this_knob.name() in (\"falloffTypesPDC\"):\n    userChoice = nuke.thisNode().knob('falloffTypesPDC').value()\n    exp = this_node.knob('expr3')\n    if userChoice == \"Smooth\":\n        exp.setValue(\"smoothstep(0,1,a)\")\n    elif userChoice == \"Linear\":\n        exp.setValue(\"\")\n    elif userChoice == \"Quadratic\":\n        exp.setValue(\"clamp(pow2(a),0,1)\")\n    elif userChoice == \"Cubic\":\n        exp.setValue(\"clamp((a**3),0,1)\")\n    elif userChoice == \"Exponential\":\n        exp.setValue(\"pow(a,2)\")"
+  xpos 100
+  ypos 502
+  addUserKnob {20 User}
+  addUserKnob {4 falloffTypesPDC M {Smooth Linear Quadratic Cubic Exponential "" "" "" ""}}
+ }
+ Invert {
+  channels rgba
+  name InvertS2
+  xpos 100
+  ypos 659
+  disable {{!invertS2CHK}}
+ }
+ Shuffle {
+  red alpha
+  green alpha
+  blue alpha
+  name ToAlphaS2
+  xpos 100
+  ypos 683
+ }
+ Grade {
+  channels rgba
+  white {{previewColourCKNB} {previewColourCKNB} {previewColourCKNB} 1}
+  multiply {{valueS2SLD}}
+  name PreviewColourS2
+  xpos 100
+  ypos 721
+ }
+push $N548cb400
+ Add {
+  channels rgb
+  value {{-maskCenterCKNB} {-maskCenterCKNB} {-maskCenterCKNB} 0}
+  name CenterS1
+  xpos -53
+  ypos 346
+  addUserKnob {20 optionsTAB l Options}
+  addUserKnob {18 maskCenterCKNB l "Mask Center"}
+  maskCenterCKNB {0 0 0}
+  addUserKnob {6 maskCenterCKNB_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+ }
+ ColorMatrix {
+  matrix {
+      {{"max(0.0001, ShapeAxisS1.world_matrix.0)"} {ShapeAxisS1.world_matrix.1} {ShapeAxisS1.world_matrix.2}}
+      {{ShapeAxisS1.world_matrix.4} {"max(0.0001, ShapeAxisS1.world_matrix.5)"} {ShapeAxisS1.world_matrix.6}}
+      {{ShapeAxisS1.world_matrix.8} {ShapeAxisS1.world_matrix.9} {"max(0.0001, ShapeAxisS1.world_matrix.10)"}}
+    }
+  invert true
+  name ColourMatrixS1
+  xpos -53
+  ypos 371
+ }
+ Expression {
+  expr3 1-sqrt((pow2(r))+(pow2(g))+(pow2(b)))
+  name ShapesS1
+  knobChanged "## Callback variables\nthis_node = nuke.thisNode()\nthis_knob = nuke.thisKnob()\nthis_group = nuke.thisGroup()\n\n## Checks if the shapeTypesPDC knob has been used and runs statements\nif this_knob.name() in (\"shapeTypesPDC\"):\n    ## Variables\n    shape = \"S1\"\n    userChoice = nuke.thisNode().knob('shapeTypesPDC').value()\n    exp = this_node.knob('expr3')\n    tempName0 = this_node.knob('temp_name0')\n    tempName1 = this_node.knob('temp_name1')\n    tempName2 = this_node.knob('temp_name2')\n    tempName3 = this_node.knob('temp_name3')    \n    tempExp0 = this_node.knob('temp_expr0')\n    tempExp1 = this_node.knob('temp_expr1')\n    tempExp2 = this_node.knob('temp_expr2')\n    tempExp3 = this_node.knob('temp_expr3')\n    ramp0 = this_group.knobs()\['rampEnd' + shape + 'CKNB']\n    ramp1 = this_group.knobs()\['rampStart' + shape + 'CKNB']\n    center = this_group.knobs()\['maskCenter' + shape + 'CKNB']\n    radius = this_group.knobs()\['radius' + shape + 'SLD']\n    scale = this_group.knobs()\['scale' + shape + '3DKNB']\n    rotation = this_group.knobs()\['rotation' + shape + '3DKNB']\n    minorRadius = this_group.knobs()\['minorRadius' + shape + 'SLD']\n    \n    ## Changes expression type and top level knobs based on user choice \n    if userChoice == \"Sphere\":\n        tempName0.setValue(\"\")\n        tempExp0.setValue(\"\")\n        tempName1.setValue(\"\")\n        tempExp1.setValue(\"\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        exp.setValue(\"1-sqrt((pow2(r))+(pow2(g))+(pow2(b)))\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)        \n        minorRadius.setVisible(False)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Radius\")\n    elif userChoice == \"Sphere (2 Points)\":\n        tempName0.setValue(\"distance\")\n        tempExp0.setValue(\"sqrt(pow2(r-rampStartCKNB.r) + pow2(g-rampStartCKNB.g) + pow2(b-rampStartCKNB.b))\")\n        tempName1.setValue(\"length\")\n        tempExp1.setValue(\"sqrt(pow(rampEndCKNB.r-rampStartCKNB.r,2) + pow(rampEndCKNB.g-rampStartCKNB.g,2) + pow(rampEndCKNB.b-rampStartCKNB.b,2))\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        exp.setValue(\"1-clamp(distance / length)\")\n        ramp0.setVisible(True)\n        ramp1.setVisible(True)\n        minorRadius.setVisible(False)\n        center.setVisible(False)\n        radius.setVisible(False)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Radius\")\n        ramp0.setLabel(\"Edge\")\n        ramp1.setLabel(\"Center\")\n    elif userChoice == \"Sphere (Hollow)\":\n        tempName0.setValue(\"\")\n        tempExp0.setValue(\"\")\n        tempName1.setValue(\"\")\n        tempExp1.setValue(\"\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        exp.setValue(\"1-pow((sqrt((pow2(r))+(pow2(g))+(pow2(b)))) - 1, 2) / pow2(minorRadiusSLD)\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)\n        minorRadius.setVisible(True)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Major Radius\")\n    elif userChoice == \"Cube (Rounded)\":\n        tempName0.setValue(\"\")\n        tempExp0.setValue(\"\")\n        tempName1.setValue(\"\")\n        tempExp1.setValue(\"\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        exp.setValue(\"smoothstep(startCubeSLD,endCubeSLD, clamp(1-abs(r)) ) * smoothstep(startCubeSLD,endCubeSLD, clamp(1-abs(g)) ) * smoothstep(startCubeSLD,endCubeSLD, clamp(1-abs(b)) )\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)\n        minorRadius.setVisible(False)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Size\")\n    elif userChoice == \"Cube (Sharp)\":\n        tempName0.setValue(\"\")\n        tempExp0.setValue(\"\")\n        tempName1.setValue(\"\")\n        tempExp1.setValue(\"\")\n        exp.setValue(\"1-max(abs(r),abs(g),abs(b))\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)\n        minorRadius.setVisible(False)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Size\")\n    elif userChoice == \"Octahedron\":\n        tempName0.setValue(\"\")\n        tempExp0.setValue(\"\")\n        tempName1.setValue(\"\")\n        tempExp1.setValue(\"\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        exp.setValue(\"1-(abs(r)+abs(g)+abs(b))\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)\n        minorRadius.setVisible(False)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Size\")\n    elif userChoice == \"Dome\":\n        tempName0.setValue(\"sphere\")\n        tempExp0.setValue(\"1-(abs((r*r)+(g*g)+(b*b)))\")\n        tempName1.setValue(\"cube\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        tempExp1.setValue(\"smoothstep(0,0.1, clamp(1-abs(r)) +1) * smoothstep(0,0.1, clamp(1-abs(g+1)) ) * smoothstep(0,0.1, clamp(1-abs(b)) +1)\")\n        exp.setValue(\"(1-((cube*10)-sphere))/2\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)\n        minorRadius.setVisible(False)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Radius\")\n    elif userChoice == \"Pyramid\":\n        tempName0.setValue(\"octahedron\")\n        tempExp0.setValue(\"1-(abs(r)+abs(g)+abs(b))\")\n        tempName1.setValue(\"cube\")\n        tempExp1.setValue(\"smoothstep(0,1, clamp(1-abs(r)) +1) * smoothstep(0,1, clamp(1-abs(g+1)) ) * smoothstep(0,1, clamp(1-abs(b)) +1)\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        exp.setValue(\"(1-((cube*100)-octahedron))/2\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)\n        minorRadius.setVisible(False)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Size\")\n    elif userChoice == \"Cone\":\n        tempName0.setValue(\"\")\n        tempExp0.setValue(\"\")\n        tempName1.setValue(\"\")\n        tempExp1.setValue(\"\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        exp.setValue(\"clamp((1 - (sqrt(pow2(r) + pow2(b))) / max(max(abs(g), 0), 0)) * (1-min(abs(g) / coneHeightSLD, 1)) * (g >= 0) * (g <= coneHeightSLD), 0, 1)\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)\n        minorRadius.setVisible(False)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Height\")\n    elif userChoice == \"Cylinder\":\n        tempName0.setValue(\"\")\n        tempExp0.setValue(\"\")\n        tempName1.setValue(\"\")\n        tempExp1.setValue(\"\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        exp.setValue(\"(1 - clamp((sqrt(pow2(r) + pow2(b)) - 0.3) / 1, 0, 1)) * smoothstep(0,0.5, clamp(2-abs(g)))\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)\n        minorRadius.setVisible(False)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Radius\")\n    elif userChoice == \"Torus\":\n        tempName0.setValue(\"\")\n        tempExp0.setValue(\"\")\n        tempName1.setValue(\"\")\n        tempExp1.setValue(\"\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        exp.setValue(\"1 - sqrt((pow(sqrt(pow(r, 2) + pow(b, 2)) - 1, 2) + pow(g, 2)) / pow2(minorRadiusSLD))\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)\n        minorRadius.setVisible(True)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Major Radius\")\n    elif userChoice == \"Ramp\":\n        tempName0.setValue(\"distance\")\n        tempExp0.setValue(\"sqrt(pow2(r-rampEndCKNB.r) + pow2(g-rampEndCKNB.g) + pow2(b-rampEndCKNB.b))\")\n        tempName1.setValue(\"start\")\n        tempExp1.setValue(\"sqrt(pow2(r-rampEndCKNB.r-(rampStartCKNB.r-rampEndCKNB.r)) + pow2(g-rampEndCKNB.g-(rampStartCKNB.g-rampEndCKNB.g)) + pow2(b-rampEndCKNB.b-(rampStartCKNB.b-rampEndCKNB.b)))\")\n        tempName2.setValue(\"length\")\n        tempExp2.setValue(\"sqrt(pow2(rampStartCKNB.r-rampEndCKNB.r) + pow2(rampStartCKNB.g-rampEndCKNB.g) + pow2(rampStartCKNB.b-rampEndCKNB.b))\")\n        tempName3.setValue(\"vector\")\n        tempExp3.setValue(\"acos( clamp((pow2(distance)-pow2(start)+pow2(length))/(2*distance*length),-1,1) )\")\n        exp.setValue(\"clamp((distance * cos(vector)) / length)\")\n        ramp0.setVisible(True)\n        ramp1.setVisible(True)\n        minorRadius.setVisible(False)\n        center.setVisible(False)\n        radius.setVisible(False)\n        scale.setVisible(False)\n        rotation.setVisible(False)\n        radius.setLabel(\"Radius\")\n        ramp0.setLabel(\"End (Black)\")\n        ramp1.setLabel(\"Start (White)\")"
+  xpos -53
+  ypos 399
+  addUserKnob {20 User}
+  addUserKnob {4 shapeTypesPDC l Type M {Sphere "Sphere (2 Points)" "Sphere (Hollow)" "Cube (Rounded)" "Cube (Sharp)" Torus Cylinder Cone Octahedron Dome Pyramid Ramp "" "" "" "" "" "" "" "" "" "" "" "" "" "" ""}}
+  addUserKnob {7 startCubeSLD l "Cube Start"}
+  addUserKnob {7 endCubeSLD l "Cube End"}
+  endCubeSLD {{falloffS1SLD*0.5}}
+  addUserKnob {7 coneHeightSLD l "Cone Height" R 0 10}
+  coneHeightSLD 1
+  addUserKnob {7 minorRadiusSLD l "Minor Radius" R 0 2}
+  minorRadiusSLD 0.5
+  addUserKnob {18 rampStartCKNB l "Ramp Start"}
+  rampStartCKNB {0 0 0}
+  addUserKnob {6 rampStartCKNB_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 color_rgb_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {18 rampEndCKNB l "Ramp End"}
+  rampEndCKNB {0 0 0}
+  addUserKnob {6 rampEndCKNB_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+ }
+ Grade {
+  channels rgba
+  whitepoint {{falloffS1SLD}}
+  white_clamp true
+  name FalloffS1
+  xpos -53
+  ypos 478
+ }
+ Expression {
+  expr3 smoothstep(0,1,a)
+  name FalloffTypesS1
+  knobChanged "## Fixed variables\nthis_node = nuke.thisNode()\nthis_knob = nuke.thisKnob()\nthis_group = nuke.thisGroup()\n\n## Checks if the falloffTypesPDC knob has been used and runs statements\nif this_knob.name() in (\"falloffTypesPDC\"):\n    userChoice = nuke.thisNode().knob('falloffTypesPDC').value()\n    adv = nuke.toNode(\"AdvancedS1\")\n    exp = this_node.knob('expr3')\n    lut = this_group.knobs()\['advancedFalloffS1LUT']\n    if userChoice == \"Smooth\":\n        lut.setVisible(False)\n        adv.knob('disable').setValue(1)\n        exp.setValue(\"smoothstep(0,1,a)\")\n    elif userChoice == \"Linear\":\n        lut.setVisible(False)\n        adv.knob('disable').setValue(1)\n        exp.setValue(\"\")\n    elif userChoice == \"Quadratic\":\n        lut.setVisible(False)\n        adv.knob('disable').setValue(1)\n        exp.setValue(\"clamp(pow2(a),0,1)\")\n    elif userChoice == \"Cubic\":\n        lut.setVisible(False)\n        adv.knob('disable').setValue(1)\n        exp.setValue(\"clamp((a**3),0,1)\")\n    elif userChoice == \"Exponential\":\n        lut.setVisible(False)\n        adv.knob('disable').setValue(1)\n        exp.setValue(\"pow(a,2)\")\n    elif userChoice == \"Advanced\":\n        exp.setValue(\"\")\n        lut.setVisible(True)\n        adv.knob('disable').setValue(0)"
+  xpos -53
+  ypos 502
+  addUserKnob {20 User}
+  addUserKnob {4 falloffTypesPDC M {Smooth Linear Quadratic Cubic Exponential Advanced "" "" ""}}
+ }
+ ColorLookup {
+  lut {master {curve L 0 s0 C k 1 s0}
+    red {}
+    green {}
+    blue {}
+    alpha {}}
+  name AdvancedS1
+  xpos -53
+  ypos 527
+  disable true
+ }
+ Invert {
+  channels rgba
+  name InvertS1
+  xpos -53
+  ypos 659
+  disable {{!invertS1CHK}}
+ }
+ Shuffle {
+  red alpha
+  green alpha
+  blue alpha
+  name ToAlphaS1
+  xpos -53
+  ypos 683
+ }
+ Grade {
+  channels rgba
+  white {{previewColourCKNB} {previewColourCKNB} {previewColourCKNB} 1}
+  multiply {{valueS1SLD}}
+  name PreviewColourS1
+  xpos -53
+  ypos 721
+ }
+ Dot {
+  name Dot10
+  xpos -19
+  ypos 767
+ }
+ Merge2 {
+  inputs 2
+  name MergeS2
+  knobChanged "## Fixed variables\nthis_node = nuke.thisNode()\nthis_knob = nuke.thisKnob()\n\n\n## Checks if the mergeOps knob has been used and runs statements\nif this_knob.name() in (\"mergeOps\"):\n    mOp = nuke.thisNode().knob('mergeOps').value()\n    if mOp == \"Over\":\n        this_node.knob('operation').setValue(\"over\")\n    elif mOp == \"Stencil\":\n        this_node.knob('operation').setValue(\"stencil\")\n    elif mOp == \"Out\":\n        this_node.knob('operation').setValue(\"out\")\n    elif mOp == \"Xor\":\n        this_node.knob('operation').setValue(\"xor\")     \n    elif mOp == \"Mask\":\n        this_node.knob('operation').setValue(\"mask\")     \n    elif mOp == \"Difference\":\n        this_node.knob('operation').setValue(\"difference\")  \n    elif mOp == \"Minus\":\n        this_node.knob('operation').setValue(\"minus\")\n    elif mOp == \"From\":\n        this_node.knob('operation').setValue(\"from\")\n    elif mOp == \"Max\":\n        this_node.knob('operation').setValue(\"max\")\n    elif mOp == \"Min\":\n        this_node.knob('operation').setValue(\"min\")\n    elif mOp == \"Geometric\":\n        this_node.knob('operation').setValue(\"geometric\")\n    elif mOp == \"Disjoint-Over\":\n        this_node.knob('operation').setValue(\"disjoint-over\")"
+  xpos 100
+  ypos 763
+  disable true
+  addUserKnob {20 User}
+  addUserKnob {4 mergeOps l "" +STARTLINE M {Over Stencil Out Xor Mask Difference Minus From Max Min Geometric Disjoint-Over "" ""}}
+ }
+ Merge2 {
+  inputs 2
+  name MergeS3
+  knobChanged "## Fixed variables\nthis_node = nuke.thisNode()\nthis_knob = nuke.thisKnob()\n\n\n## Checks if the mergeOps knob has been used and runs statements\nif this_knob.name() in (\"mergeOps\"):\n    mOp = nuke.thisNode().knob('mergeOps').value()\n    if mOp == \"Over\":\n        this_node.knob('operation').setValue(\"over\")\n    elif mOp == \"Stencil\":\n        this_node.knob('operation').setValue(\"stencil\")\n    elif mOp == \"Out\":\n        this_node.knob('operation').setValue(\"out\")\n    elif mOp == \"Xor\":\n        this_node.knob('operation').setValue(\"xor\")     \n    elif mOp == \"Mask\":\n        this_node.knob('operation').setValue(\"mask\")     \n    elif mOp == \"Difference\":\n        this_node.knob('operation').setValue(\"difference\")  \n    elif mOp == \"Minus\":\n        this_node.knob('operation').setValue(\"minus\")\n    elif mOp == \"From\":\n        this_node.knob('operation').setValue(\"from\")\n    elif mOp == \"Max\":\n        this_node.knob('operation').setValue(\"max\")\n    elif mOp == \"Min\":\n        this_node.knob('operation').setValue(\"min\")\n    elif mOp == \"Geometric\":\n        this_node.knob('operation').setValue(\"geometric\")\n    elif mOp == \"Disjoint-Over\":\n        this_node.knob('operation').setValue(\"disjoint-over\")"
+  xpos 228
+  ypos 763
+  disable true
+  addUserKnob {20 User}
+  addUserKnob {4 mergeOps l "" +STARTLINE M {Over Stencil Out Xor Mask Difference Minus From Max Min Geometric Disjoint-Over "" "" ""}}
+ }
+ Merge2 {
+  inputs 2
+  name MergeS4
+  knobChanged "## Fixed variables\nthis_node = nuke.thisNode()\nthis_knob = nuke.thisKnob()\n\n\n## Checks if the mergeOps knob has been used and runs statements\nif this_knob.name() in (\"mergeOps\"):\n    mOp = nuke.thisNode().knob('mergeOps').value()\n    if mOp == \"Over\":\n        this_node.knob('operation').setValue(\"over\")\n    elif mOp == \"Stencil\":\n        this_node.knob('operation').setValue(\"stencil\")\n    elif mOp == \"Out\":\n        this_node.knob('operation').setValue(\"out\")\n    elif mOp == \"Xor\":\n        this_node.knob('operation').setValue(\"xor\")     \n    elif mOp == \"Mask\":\n        this_node.knob('operation').setValue(\"mask\")     \n    elif mOp == \"Difference\":\n        this_node.knob('operation').setValue(\"difference\")  \n    elif mOp == \"Minus\":\n        this_node.knob('operation').setValue(\"minus\")\n    elif mOp == \"From\":\n        this_node.knob('operation').setValue(\"from\")\n    elif mOp == \"Max\":\n        this_node.knob('operation').setValue(\"max\")\n    elif mOp == \"Min\":\n        this_node.knob('operation').setValue(\"min\")\n    elif mOp == \"Geometric\":\n        this_node.knob('operation').setValue(\"geometric\")\n    elif mOp == \"Disjoint-Over\":\n        this_node.knob('operation').setValue(\"disjoint-over\")"
+  xpos 358
+  ypos 763
+  disable true
+  addUserKnob {20 User}
+  addUserKnob {4 mergeOps l "" +STARTLINE M {Over Stencil Out Xor Mask Difference Minus From Max Min Geometric Disjoint-Over "" "" ""}}
+ }
+ Merge2 {
+  inputs 2
+  name MergeS5
+  knobChanged "## Fixed variables\nthis_node = nuke.thisNode()\nthis_knob = nuke.thisKnob()\n\n\n## Checks if the mergeOps knob has been used and runs statements\nif this_knob.name() in (\"mergeOps\"):\n    mOp = nuke.thisNode().knob('mergeOps').value()\n    if mOp == \"Over\":\n        this_node.knob('operation').setValue(\"over\")\n    elif mOp == \"Stencil\":\n        this_node.knob('operation').setValue(\"stencil\")\n    elif mOp == \"Out\":\n        this_node.knob('operation').setValue(\"out\")\n    elif mOp == \"Xor\":\n        this_node.knob('operation').setValue(\"xor\")     \n    elif mOp == \"Mask\":\n        this_node.knob('operation').setValue(\"mask\")     \n    elif mOp == \"Difference\":\n        this_node.knob('operation').setValue(\"difference\")  \n    elif mOp == \"Minus\":\n        this_node.knob('operation').setValue(\"minus\")\n    elif mOp == \"From\":\n        this_node.knob('operation').setValue(\"from\")\n    elif mOp == \"Max\":\n        this_node.knob('operation').setValue(\"max\")\n    elif mOp == \"Min\":\n        this_node.knob('operation').setValue(\"min\")\n    elif mOp == \"Geometric\":\n        this_node.knob('operation').setValue(\"geometric\")\n    elif mOp == \"Disjoint-Over\":\n        this_node.knob('operation').setValue(\"disjoint-over\")"
+  xpos 481
+  ypos 763
+  disable true
+  addUserKnob {20 User}
+  addUserKnob {4 mergeOps l "" +STARTLINE M {Over Stencil Out Xor Mask Difference Minus From Max Min Geometric Disjoint-Over "" "" ""}}
+ }
+ Merge2 {
+  inputs 2
+  name MergeS6
+  knobChanged "## Fixed variables\nthis_node = nuke.thisNode()\nthis_knob = nuke.thisKnob()\n\n\n## Checks if the mergeOps knob has been used and runs statements\nif this_knob.name() in (\"mergeOps\"):\n    mOp = nuke.thisNode().knob('mergeOps').value()\n    if mOp == \"Over\":\n        this_node.knob('operation').setValue(\"over\")\n    elif mOp == \"Stencil\":\n        this_node.knob('operation').setValue(\"stencil\")\n    elif mOp == \"Out\":\n        this_node.knob('operation').setValue(\"out\")\n    elif mOp == \"Xor\":\n        this_node.knob('operation').setValue(\"xor\")     \n    elif mOp == \"Mask\":\n        this_node.knob('operation').setValue(\"mask\")     \n    elif mOp == \"Difference\":\n        this_node.knob('operation').setValue(\"difference\")  \n    elif mOp == \"Minus\":\n        this_node.knob('operation').setValue(\"minus\")\n    elif mOp == \"From\":\n        this_node.knob('operation').setValue(\"from\")\n    elif mOp == \"Max\":\n        this_node.knob('operation').setValue(\"max\")\n    elif mOp == \"Min\":\n        this_node.knob('operation').setValue(\"min\")\n    elif mOp == \"Geometric\":\n        this_node.knob('operation').setValue(\"geometric\")\n    elif mOp == \"Disjoint-Over\":\n        this_node.knob('operation').setValue(\"disjoint-over\")"
+  xpos 617
+  ypos 763
+  disable true
+  addUserKnob {20 User}
+  addUserKnob {4 mergeOps l "" +STARTLINE M {Over Stencil Out Xor Mask Difference Minus From Max Min Geometric Disjoint-Over "" "" ""}}
+ }
+ Multiply {
+  inputs 1+1
+  channels rgba
+  value 0
+  name MultAlpha
+  xpos 617
+  ypos 939
+ }
+ Multiply {
+  inputs 1+1
+  channels rgba
+  value {{maskValueSLD}}
+  invert_mask {{!invertMaskCHK}}
+  name MultMask
+  xpos 617
+  ypos 978
+  disable {{"\[expr \{\[exists parent.input1] ? 0 : 1\}]"}}
+ }
+ Clamp {
+  channels rgba
+  name OutputClamp
+  xpos 617
+  ypos 1128
+ }
+ Dilate {
+  channels rgba
+  size -1
+  name DilateFixIn
+  xpos 617
+  ypos 1158
+  disable {{!edgeFixCHK}}
+ }
+ Dilate {
+  channels rgba
+  size 1
+  name DilateFixOut
+  xpos 617
+  ypos 1182
+  disable {{!edgeFixCHK}}
+ }
+ Group {
+  name ErodeFine
+  help "Erode an image with fine controls, as opposed to Nuke's default erode node."
+  note_font "DejaVu Sans"
+  xpos 617
+  ypos 1218
+  addUserKnob {20 optionsTAB l Options}
+  addUserKnob {26 erodeTXT l <b>Erode}
+  addUserKnob {7 size l Size R -10 10}
+  size {{dilateFixSizeSLD}}
+  addUserKnob {26 maskTXT l <b>Mask}
+  addUserKnob {7 maskValueSLD l Value}
+  addUserKnob {6 maskInvertCHK l Invert -STARTLINE}
+ }
+  Input {
+   inputs 0
+   name Mask
+   xpos 346
+   ypos 1141
+   number 1
+  }
+  Shuffle {
+   name FixEmpty
+   xpos 346
+   ypos 1165
+  }
+  Input {
+   inputs 0
+   name Input
+   xpos -11
+   ypos 152
+  }
+  Dot {
+   name Dot15
+   tile_color 0xcccccc00
+   xpos 23
+   ypos 287
+  }
+set N5f2e0800 [stack 0]
+  Dilate {
+   channels rgba
+   size {{int(parent.size)}}
+   name Dilate4
+   xpos -11
+   ypos 434
+  }
+  AdjBBox {
+   numpixels 1
+   name AdjBBox2
+   xpos -11
+   ypos 533
+  }
+  Dot {
+   name Dot6
+   tile_color 0xcccccc00
+   xpos 23
+   ypos 678
+  }
+set N5f2e1400 [stack 0]
+  Dot {
+   name Dot8
+   tile_color 0xcccccc00
+   xpos 175
+   ypos 678
+  }
+  Transform {
+   translate {{exp.expo(abs(parent.size-int(parent.size))*10)*-1} 0}
+   center {320 240}
+   black_outside false
+   shutteroffset centred
+   name Transform5
+   xpos 141
+   ypos 829
+  }
+push $N5f2e1400
+  Dot {
+   name Dot7
+   tile_color 0xcccccc00
+   xpos -127
+   ypos 678
+  }
+  Transform {
+   translate {{exp.expo(abs(parent.size-int(parent.size))*10)} 0}
+   center {320 240}
+   black_outside false
+   shutteroffset centred
+   name Transform4
+   selected true
+   xpos -161
+   ypos 789
+  }
+push $N5f2e1400
+  Merge2 {
+   inputs 2
+   operation {{parent.size>0?17:18}}
+   bbox B
+   also_merge all
+   name Merge2
+   xpos -11
+   ypos 789
+  }
+  Merge2 {
+   inputs 2
+   operation {{parent.size>0?17:18}}
+   bbox B
+   also_merge all
+   name Merge1
+   xpos -11
+   ypos 829
+  }
+  Dot {
+   name Dot9
+   xpos 23
+   ypos 910
+  }
+set N5f2ff000 [stack 0]
+  Dot {
+   name Dot10
+   xpos 175
+   ypos 910
+  }
+  Transform {
+   translate {0 {exp.expo(abs(parent.size-int(parent.size))*10)*-1}}
+   center {320 240}
+   black_outside false
+   shutteroffset centred
+   name Transform6
+   xpos 141
+   ypos 1067
+  }
+push $N5f2ff000
+  Dot {
+   name Dot11
+   xpos -127
+   ypos 910
+  }
+  Transform {
+   translate {0 {exp.expo(abs(parent.size-int(parent.size))*10)}}
+   center {320 240}
+   black_outside false
+   shutteroffset centred
+   name Transform7
+   xpos -161
+   ypos 1021
+  }
+push $N5f2ff000
+  Merge2 {
+   inputs 2
+   operation {{parent.size>0?17:18}}
+   bbox B
+   also_merge all
+   name Merge3
+   xpos -11
+   ypos 1021
+  }
+  Merge2 {
+   inputs 2
+   operation {{parent.size>0?17:18}}
+   bbox B
+   also_merge all
+   name Merge4
+   xpos -11
+   ypos 1067
+  }
+  Multiply {
+   inputs 1+1
+   channels rgba
+   value {{maskValueSLD}}
+   invert_mask {{maskInvertCHK}}
+   name Multiply1
+   xpos -11
+   ypos 1165
+  }
+push $N5f2e0800
+  Dot {
+   name Dot13
+   tile_color 0xcccccc00
+   xpos -290
+   ypos 287
+  }
+  Dot {
+   name Dot12
+   tile_color 0xcccccc00
+   xpos -290
+   ypos 1261
+  }
+  NodeWrapper {
+   inputs 2
+   channels rgba
+   maskChannelMask none
+   name NodeWrapper1
+   xpos -11
+   ypos 1257
+  }
+  Output {
+   name Output1
+   xpos -11
+   ypos 1389
+  }
+  NoOp {
+   inputs 0
+   name exp
+   xpos 298
+   ypos 707
+   addUserKnob {20 User}
+   addUserKnob {7 expo}
+   expo {{parent.size>0?positive_curve:negative_curve}}
+   addUserKnob {7 positive_curve}
+   positive_curve {{curve 0 0.1037476063 0.1683235168 0.2209408283 0.2831250429 0.3357424736 0.3954704404 0.4731256962 0.5778000951 0.762029767 1}}
+   addUserKnob {7 negative_curve}
+   negative_curve {{curve 0 0.2209040523 0.3736710192 0.4841623592 0.5752981992 0.6541623592 0.7271137492 0.8043368459 0.8681262732 0.9249737263 1}}
+  }
+ end_group
+ EdgeBlur {
+  channels rgba
+  size {{edgeBlurSLD}}
+  edge_mult {{edgeFixFalloffSLD}}
+  name EdgeBlur
+  xpos 617
+  ypos 1250
+  disable {{!edgeBlurCHK}}
+ }
+ Multiply {
+  channels rgba
+  value 0
+  name NoAOV
+  xpos 617
+  ypos 1286
+  disable {{"aovSelectionCHNKNB == 0 ? 0:1"}}
+ }
+ Dot {
+  name Dot12
+  xpos 651
+  ypos 1367
+ }
+set N5ef08c00 [stack 0]
+ Dot {
+  name Dot16
+  xpos 518
+  ypos 1367
+ }
+set N5ef09000 [stack 0]
+push $N549eb400
+ Shuffle {
+  in rgb
+  alpha black
+  name InputRGB
+  xpos -273
+  ypos 1275
+ }
+ Saturation {
+  saturation 0
+  name Saturation
+  xpos -273
+  ypos 1301
+  disable {{!previewBwCHK}}
+ }
+ Clamp {
+  channels rgba
+  name PreviewClamp
+  xpos -273
+  ypos 1331
+  disable {{!previewClampCHK}}
+ }
+push $N5ef09000
+ Merge2 {
+  inputs 2
+  operation under
+  Achannels rgb
+  name Merge10
+  xpos -273
+  ypos 1363
+ }
+ Remove {
+  operation keep
+  channels rgb
+  name KeepRGB
+  xpos -273
+  ypos 1406
+ }
+ Dot {
+  name Dot15
+  xpos -239
+  ypos 1484
+ }
+ Copy {
+  inputs 2
+  from0 rgba.alpha
+  to0 rgba.alpha
+  name Copy1
+  xpos 484
+  ypos 1474
+ }
+ Remove {
+  channels rgb
+  name RemoveRGBFarm
+  xpos 484
+  ypos 1508
+  disable {{"\$gui"}}
+ }
+push $N5ef08c00
+ Remove {
+  operation keep
+  channels alpha
+  name KeepAlpha
+  xpos 617
+  ypos 1400
+ }
+set N5ef39400 [stack 0]
+ Shuffle {
+  red alpha
+  green alpha
+  blue alpha
+  name ToAlphaAll
+  xpos 617
+  ypos 1450
+ }
+ Switch {
+  inputs 2
+  which 1
+  name PreviewSwitch
+  xpos 617
+  ypos 1508
+  disable {{!previewToggleCHK}}
+ }
+push $N5ef39400
+ Dot {
+  name Dot7
+  xpos 750
+  ypos 1409
+ }
+ Dot {
+  name Dot6
+  xpos 750
+  ypos 1549
+ }
+ Switch {
+  inputs 2
+  which {{"\$gui"}}
+  name RenderSwitch
+  tile_color 0x191919ff
+  xpos 617
+  ypos 1545
+ }
+ Shuffle {
+  red alpha
+  green alpha
+  blue alpha
+  name Safety
+  xpos 617
+  ypos 1570
+  disable {{"\$gui"}}
+ }
+ Output {
+  name Output
+  xpos 617
+  ypos 1645
+ }
+ Axis2 {
+  inputs 0
+  display off
+  selectable false
+  rotate {{rotationS63DKNB} {rotationS63DKNB} {rotationS63DKNB}}
+  scaling {{scaleS63DKNB} {scaleS63DKNB} {scaleS63DKNB}}
+  uniform_scale {{radiusS6SLD*globalScaleSLD}}
+  name ShapeAxisS6
+  label "Mask transform"
+  xpos 628
+  ypos 272
+  hide_input true
+ }
+ Axis2 {
+  inputs 0
+  display off
+  selectable false
+  rotate {{rotationS53DKNB} {rotationS53DKNB} {rotationS53DKNB}}
+  scaling {{scaleS53DKNB} {scaleS53DKNB} {scaleS53DKNB}}
+  uniform_scale {{radiusS5SLD*globalScaleSLD}}
+  name ShapeAxisS5
+  label "Mask transform"
+  xpos 492
+  ypos 272
+  hide_input true
+ }
+ Axis2 {
+  inputs 0
+  display off
+  selectable false
+  rotate {{rotationS43DKNB} {rotationS43DKNB} {rotationS43DKNB}}
+  scaling {{scaleS43DKNB} {scaleS43DKNB} {scaleS43DKNB}}
+  uniform_scale {{radiusS4SLD*globalScaleSLD}}
+  name ShapeAxisS4
+  label "Mask transform"
+  xpos 369
+  ypos 272
+  hide_input true
+ }
+ Axis2 {
+  inputs 0
+  display off
+  selectable false
+  rotate {{rotationS33DKNB} {rotationS33DKNB} {rotationS33DKNB}}
+  scaling {{scaleS33DKNB} {scaleS33DKNB} {scaleS33DKNB}}
+  uniform_scale {{radiusS3SLD*globalScaleSLD}}
+  name ShapeAxisS3
+  label "Mask transform"
+  xpos 239
+  ypos 272
+  hide_input true
+ }
+ Axis2 {
+  inputs 0
+  display off
+  selectable false
+  rotate {{rotationS23DKNB} {rotationS23DKNB} {rotationS23DKNB}}
+  scaling {{scaleS23DKNB} {scaleS23DKNB} {scaleS23DKNB}}
+  uniform_scale {{radiusS2SLD*globalScaleSLD}}
+  name ShapeAxisS2
+  label "Mask transform"
+  xpos 111
+  ypos 272
+  hide_input true
+ }
+ Axis2 {
+  inputs 0
+  display off
+  selectable false
+  rotate {{rotationS13DKNB} {rotationS13DKNB} {rotationS13DKNB}}
+  scaling {{scaleS13DKNB} {scaleS13DKNB} {scaleS13DKNB}}
+  uniform_scale {{radiusS1SLD*globalScaleSLD}}
+  name ShapeAxisS1
+  label "Mask transform"
+  xpos -42
+  ypos 272
+  hide_input true
+ }
+end_group

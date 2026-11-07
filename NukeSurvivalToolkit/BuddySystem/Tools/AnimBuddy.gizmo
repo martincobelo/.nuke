@@ -1,0 +1,159 @@
+Group {
+ name AnimBuddy
+ inputs 0
+ tile_color 0x1f00ffff
+ label "Random, Sine, Blips"
+ addUserKnob {20 optionsTAB l Options}
+ addUserKnob {26 aCurveTXT l "<b><p style=\"color:#5D6BDD\">A Curve</p></b>"}
+ addUserKnob {41 aCurveTypePDC l <b>Type</b> T AnimBuddyInternal.aCurveTypePDC}
+ addUserKnob {78 aCurveResult l "<b> | Result </b>" -STARTLINE n 1}
+ aCurveResult {{"aCurveAmplitude*((((random(((frame-(frame % (aCurveFramehold+0.000001)))/aCurveWaveLength)+((aCurveOffset/-1)/10)+aCurveSeed)) * (aCurveMaxVal-aCurveMinVal) ) + aCurveMinVal) + aCurveLift)"}}
+ addUserKnob {22 aCurveShowLinkedBTN l "Show Linked" -STARTLINE T "#finds all knobs that have an expression link on them\nanimbuddy = nuke.thisNode().name()\n\nwith nuke.root():\n    for node in nuke.allNodes():\n        node.knob('selected').setValue(False)\n        for knob in node.knobs():\n            if node\[knob].hasExpression():\n                if \"parent.\{\}.aCurveResult\".format(animbuddy) in node\[knob].toScript():\n                    node\['selected'].setValue(True)\n    \n\n#finds all selected nodes\nselected_list = \[]\nfor node in nuke.allNodes():\n    if node.knob('selected').getValue() == 1:\n        selected_list.append(node.name())\n\n#zooms the dag to show the nodes with the expression\nif len(selected_list) != 0:                \n    nuke.zoomToFitSelected()\nelse:                \n    nuke.message(\"No expression links from <b>A Curve Result</b> found\")"}
+ addUserKnob {41 aCurveSeed l Seed T AnimBuddyInternal.aCurveSeed}
+ addUserKnob {41 aCurveRegenSeedBTN l Regen -STARTLINE T AnimBuddyInternal.aCurveRegenSeedBTN}
+ addUserKnob {41 aCurveCustom l Custom +HIDDEN T AnimBuddyInternal.aCurveCustom}
+ addUserKnob {41 aCurveAmplitude l Amplitude T AnimBuddyInternal.aCurveAmplitude}
+ addUserKnob {41 aCurveWaveLength l "Wave Length" T AnimBuddyInternal.aCurveWaveLength}
+ addUserKnob {41 aCurveBloopLength l "Bloop Length" +HIDDEN T AnimBuddyInternal.aCurveBloopLength}
+ addUserKnob {41 aCurveMaxVal l "Max Value" T AnimBuddyInternal.aCurveMaxVal}
+ addUserKnob {41 aCurveMinVal l "Min Value" T AnimBuddyInternal.aCurveMinVal}
+ addUserKnob {41 aCurveLift l Lift/Lower T AnimBuddyInternal.aCurveLift}
+ addUserKnob {41 aCurveOffset l "Time Offset" T AnimBuddyInternal.aCurveOffset}
+ addUserKnob {41 aCurveFramehold l Framehold T AnimBuddyInternal.aCurveFramehold}
+ addUserKnob {26 bCurveTXT l "<b><p style=\"color:#5D6BDD\">B Curve</p></b>"}
+ addUserKnob {41 bCurveTypePDC l <b>Type</b> T AnimBuddyInternal.bCurveTypePDC}
+ addUserKnob {78 bCurveResult l "<b> | Result </b>" -STARTLINE n 1}
+ bCurveResult {{"bCurveAmplitude*((sin(2*pi*((frame-(frame % (bCurveFramehold+0.000001)))+(bCurveOffset/-1)+1.5)/bCurveWaveLength)+1)/2 * (bCurveMaxVal-bCurveMinVal) + bCurveMinVal + bCurveLift)"}}
+ addUserKnob {22 bCurveShowLinkedBTN l "Show Linked" -STARTLINE T "#finds all knobs that have an expression link on them\nanimbuddy = nuke.thisNode().name()\n\nwith nuke.root():\n    for node in nuke.allNodes():\n        node.knob('selected').setValue(False)\n        for knob in node.knobs():\n            if node\[knob].hasExpression():\n                if \"parent.\{\}.bCurveResult\".format(animbuddy) in node\[knob].toScript():\n                    node\['selected'].setValue(True)\n    \n\n#finds all selected nodes\nselected_list = \[]\nfor node in nuke.allNodes():\n    if node.knob('selected').getValue() == 1:\n        selected_list.append(node.name())\n\n#zooms the dag to show the nodes with the expression\nif len(selected_list) != 0:                \n    nuke.zoomToFitSelected()\nelse:                \n    nuke.message(\"No expression links from <b>B Curve Result</b> found\")"}
+ addUserKnob {41 bCurveSeed l Seed +HIDDEN T AnimBuddyInternal.bCurveSeed}
+ addUserKnob {41 bCurveRegenSeedBTN l Regen -STARTLINE +HIDDEN T AnimBuddyInternal.bCurveRegenSeedBTN}
+ addUserKnob {41 bCurveCustom l Custom +HIDDEN T AnimBuddyInternal.bCurveCustom}
+ addUserKnob {41 bCurveAmplitude l Amplitude T AnimBuddyInternal.bCurveAmplitude}
+ addUserKnob {41 bCurveWaveLength l "Wave Length" T AnimBuddyInternal.bCurveWaveLength}
+ addUserKnob {41 bCurveBloopLength l "Blip Length" +HIDDEN T AnimBuddyInternal.bCurveBloopLength}
+ addUserKnob {41 bCurveMaxVal l "Max Value" T AnimBuddyInternal.bCurveMaxVal}
+ addUserKnob {41 bCurveMinVal l "Min Value" T AnimBuddyInternal.bCurveMinVal}
+ addUserKnob {41 bCurveLift l Lift/Lower T AnimBuddyInternal.bCurveLift}
+ addUserKnob {41 bCurveOffset l "Time Offset" T AnimBuddyInternal.bCurveOffset}
+ addUserKnob {41 bCurveFramehold l Framehold T AnimBuddyInternal.bCurveFramehold}
+ addUserKnob {26 cCurveTXT l "<b><p style=\"color:#5D6BDD\">C Curve</p></b>"}
+ addUserKnob {41 cCurveTypePDC l <b>Type</b> T AnimBuddyInternal.cCurveTypePDC}
+ addUserKnob {78 cCurveResult l "<b> | Result </b>" -STARTLINE n 1}
+ cCurveResult {{"cCurveAmplitude*((((frame+(((cCurveOffset/-1)-1)+cCurveWaveLength)) % (cCurveWaveLength+cCurveBloopLength)/(cCurveWaveLength)) *(cCurveWaveLength/cCurveBloopLength) - (cCurveWaveLength/cCurveBloopLength) >= 0 ? cCurveMaxVal : cCurveMinVal) + cCurveLift)"}}
+ addUserKnob {22 cCurveShowLinkedBTN l "Show Linked" -STARTLINE T "#finds all knobs that have an expression link on them\nanimbuddy = nuke.thisNode().name()\n\nwith nuke.root():\n    for node in nuke.allNodes():\n        node.knob('selected').setValue(False)\n        for knob in node.knobs():\n            if node\[knob].hasExpression():\n                if \"parent.\{\}.cCurveResult\".format(animbuddy) in node\[knob].toScript():\n                    node\['selected'].setValue(True)\n    \n\n#finds all selected nodes\nselected_list = \[]\nfor node in nuke.allNodes():\n    if node.knob('selected').getValue() == 1:\n        selected_list.append(node.name())\n\n#zooms the dag to show the nodes with the expression\nif len(selected_list) != 0:                \n    nuke.zoomToFitSelected()\nelse:                \n    nuke.message(\"No expression links from <b>C Curve Result</b> found\")"}
+ addUserKnob {41 cCurveSeed l Seed +HIDDEN T AnimBuddyInternal.cCurveSeed}
+ addUserKnob {41 cCurveRegenSeedBTN l Regen -STARTLINE +HIDDEN T AnimBuddyInternal.cCurveRegenSeedBTN}
+ addUserKnob {41 cCurveCustom l Custom +HIDDEN T AnimBuddyInternal.cCurveCustom}
+ addUserKnob {41 cCurveAmplitude l Amplitude T AnimBuddyInternal.cCurveAmplitude}
+ addUserKnob {41 cCurveWaveLength l "Wave Length" T AnimBuddyInternal.cCurveWaveLength}
+ addUserKnob {41 cCurveBloopLength l "Blip Length" T AnimBuddyInternal.cCurveBloopLength}
+ addUserKnob {41 cCurveMaxVal l "Max Value" T AnimBuddyInternal.cCurveMaxVal}
+ addUserKnob {41 cCurveMinVal l "Min Value" T AnimBuddyInternal.cCurveMinVal}
+ addUserKnob {41 cCurveLift l Lift/Lower T AnimBuddyInternal.cCurveLift}
+ addUserKnob {41 cCurveOffset l "Time Offset" T AnimBuddyInternal.cCurveOffset}
+ addUserKnob {41 cCurveFramehold l Framehold +HIDDEN T AnimBuddyInternal.cCurveFramehold}
+ addUserKnob {26 mixTXT l "<b><p style=\"color:#5D6BDD\">Mix</p></b>"}
+ addUserKnob {41 mixAmplitude l Amplitude T AnimBuddyInternal.mixAmplitude}
+ addUserKnob {41 aMixAmount l "Random | A" T AnimBuddyInternal.aMixAmount}
+ addUserKnob {41 bMixAmount l "Sine | B" T AnimBuddyInternal.bMixAmount}
+ addUserKnob {41 cMixAmount l "Blips | C" T AnimBuddyInternal.cMixAmount}
+ addUserKnob {26 mixResultTXT l "&nbsp;" T "Use sliders to mix the 3 curves into 1 "}
+ addUserKnob {78 mixAbcResult l "<b> | Result </b>" -STARTLINE n 1}
+ mixAbcResult {{mixAmplitude*(((aMixAmount*aCurveResult)+(bMixAmount*bCurveResult)+(cMixAmount*cCurveResult))/(aMixAmount+bMixAmount+cMixAmount))}}
+ addUserKnob {22 mixAbcResultShowLinkedBTN l "Show Linked" -STARTLINE T "#finds all knobs that have an expression link on them\nanimbuddy = nuke.thisNode().name()\n\nwith nuke.root():\n    for node in nuke.allNodes():\n        node.knob('selected').setValue(False)\n        for knob in node.knobs():\n            if node\[knob].hasExpression():\n                if \"parent.\{\}.mixAbcResult\".format(animbuddy) in node\[knob].toScript():\n                    node\['selected'].setValue(True)\n    \n\n#finds all selected nodes\nselected_list = \[]\nfor node in nuke.allNodes():\n    if node.knob('selected').getValue() == 1:\n        selected_list.append(node.name())\n\n#zooms the dag to show the nodes with the expression\nif len(selected_list) != 0:                \n    nuke.zoomToFitSelected()\nelse:                \n    nuke.message(\"No expression links from <b> Mix Curve Result</b> found\")"}
+ addUserKnob {20 infoTAB l Info}
+ addUserKnob {26 aboutTXT l "&nbsp;" T "<h3>About</h3> \n<p>This is a tool that can create curves, of many different types\n<br>Useful for driving procedural animations, like shakes, flashes, noise, etc...</p> \n<hr>\n <h3>How To Use</h3> \n<p>Step 1: Pick your curve types</p>\n<p>Step 2: Open Curve Editor panel and modify them</p>\n<p>Step 3: Expression link the Results to knobs on other nodes</p>\n<hr>"}
+ addUserKnob {26 help1TXT l "&nbsp;" T "Press the "}
+ addUserKnob {22 helpBTN l Help -STARTLINE T "import webbrowser \nwebbrowser.open(\"https://www.hiramgifford.com/buddy-system/animbuddy\")"}
+ addUserKnob {26 help2TXT l "&nbsp;" -STARTLINE T "button to view the full documentation"}
+ addUserKnob {26 classTXT l "&nbsp;" T "<font color=grey><i>AnimBuddy</i>"}
+ addUserKnob {26 versionTXT l "&nbsp;" -STARTLINE T "<font color=grey><i>v1.2</i>"}
+ addUserKnob {26 infoTXT l "&nbsp;" T "<font color=grey><i>Hiram Gifford - 01/03/2026 - hiramgifford.com</i>"}
+}
+ NoOp {
+  inputs 0
+  name AnimBuddyInternal
+  knobChanged "## Global variables\nthis_knob = nuke.thisKnob()\nthis_node = nuke.thisNode()\nthis_group = nuke.thisGroup()\nlabel = this_group.knobs()\['label']\nuser_choice_a = this_node.knob('aCurveTypePDC').value()\nuser_choice_b = this_node.knob('bCurveTypePDC').value()\nuser_choice_c = this_node.knob('cCurveTypePDC').value()\nmix_a = this_group.knobs()\['aMixAmount']\nmix_b = this_group.knobs()\['bMixAmount']\nmix_c = this_group.knobs()\['cMixAmount']\n\n## Update curve function\ndef update_curve_type(curve):\n  \n    ## Curve Variables\n    user_choice = nuke.thisNode().knob(curve + 'CurveTypePDC').value()\n    result = this_group.knobs()\[curve + 'CurveResult']        \n    seed = this_group.knobs()\[curve + 'CurveSeed']\n    seed_regen = this_group.knobs()\[curve + 'CurveRegenSeedBTN']\n    amplitude = this_group.knobs()\[curve + 'CurveAmplitude']\n    frequency = this_group.knobs()\[curve + 'CurveWaveLength']\n    bloop_length = this_group.knobs()\[curve + 'CurveBloopLength']\n    max_value = this_group.knobs()\[curve + 'CurveMaxVal']\n    min_value = this_group.knobs()\[curve + 'CurveMinVal']\n    lift_lower = this_group.knobs()\[curve + 'CurveLift']\n    time_offset = this_group.knobs()\[curve + 'CurveOffset']\n    framehold = this_group.knobs()\[curve + 'CurveFramehold']\n    custom = this_group.knobs()\[curve + 'CurveCustom']\n    \n    \n    ## Changes curve type and top level knobs based on user choice \n    if user_choice == \"Random\":\n        result.setExpression(curve + \"CurveAmplitude*((((random(((frame-(frame % (\"+ curve +\"CurveFramehold+0.000001)))/\"+ curve +\"CurveWaveLength)+((\"+ curve +\"CurveOffset/-1)/10)+\"+ curve +\"CurveSeed)) * (\"+ curve +\"CurveMaxVal-\"+ curve +\"CurveMinVal) ) + \"+ curve +\"CurveMinVal) + \"+ curve +\"CurveLift\"+\")\")\n        seed.setVisible(True)\n        seed_regen.setVisible(True)\n        amplitude.setVisible(True)\n        frequency.setVisible(True)\n        bloop_length.setVisible(False)\n        max_value.setVisible(True)\n        min_value.setVisible(True)\n        lift_lower.setVisible(True)\n        time_offset.setVisible(True)\n        framehold.setVisible(True)\n        custom.setVisible(False)\n        \n        \n    elif user_choice == \"Noise\":\n        result.setExpression(curve + \"CurveAmplitude*((noise((frame-(frame % (\"+ curve +\"CurveFramehold+0.000001))+(\"+ curve +\"CurveOffset/-1)+\"+ curve +\"CurveSeed)/\"+ curve +\"CurveWaveLength)+1)/2 * (\"+ curve +\"CurveMaxVal-\"+ curve +\"CurveMinVal) + \"+ curve +\"CurveMinVal + \"+ curve +\"CurveLift)\")\n        seed.setVisible(True)\n        seed_regen.setVisible(True)\n        amplitude.setVisible(True)\n        frequency.setVisible(True)\n        bloop_length.setVisible(False)\n        max_value.setVisible(True)\n        min_value.setVisible(True)\n        lift_lower.setVisible(True)\n        time_offset.setVisible(True)\n        framehold.setVisible(True)\n        custom.setVisible(False)\n        \n    elif user_choice == \"Sine\":\n        result.setExpression(curve + \"CurveAmplitude*((sin(2*pi*((frame-(frame % (\"+ curve +\"CurveFramehold+0.000001)))+(\"+ curve +\"CurveOffset/-1)+1.5)/\"+ curve +\"CurveWaveLength)+1)/2 * (\"+ curve +\"CurveMaxVal-\"+ curve +\"CurveMinVal) + \"+ curve +\"CurveMinVal + \"+ curve +\"CurveLift)\")\n        seed.setVisible(False)\n        seed_regen.setVisible(False)\n        amplitude.setVisible(True)\n        frequency.setVisible(True)\n        bloop_length.setVisible(False)\n        max_value.setVisible(True)\n        min_value.setVisible(True)\n        lift_lower.setVisible(True)\n        time_offset.setVisible(True)\n        framehold.setVisible(True)\n        custom.setVisible(False)\n        \n    elif user_choice == \"Triangle\":\n        result.setExpression(curve + \"CurveAmplitude*((asin(sin(2*pi*((frame-(frame % (\"+ curve +\"CurveFramehold+0.000001)))+(\"+ curve +\"CurveOffset/-1)+1.5)/\"+ curve +\"CurveWaveLength))/pi+0.5) * (\"+ curve +\"CurveMaxVal-\"+ curve +\"CurveMinVal) + \"+ curve +\"CurveMinVal + \"+ curve +\"CurveLift)\")\n        seed.setVisible(False)\n        seed_regen.setVisible(False)\n        amplitude.setVisible(True)\n        frequency.setVisible(True)\n        bloop_length.setVisible(False)\n        max_value.setVisible(True)\n        min_value.setVisible(True)\n        lift_lower.setVisible(True)\n        time_offset.setVisible(True)\n        framehold.setVisible(True)\n        custom.setVisible(False)    \n        \n    elif user_choice == \"Square\":\n        result.setExpression(curve + \"CurveAmplitude*(int(sin(2*pi*((frame-(frame % (\"+ curve +\"CurveFramehold+0.000001)))+(\"+ curve +\"CurveOffset/-1)-1)/\"+ curve +\"CurveWaveLength)+1) * (\"+ curve +\"CurveMaxVal-\"+ curve +\"CurveMinVal) + \"+ curve +\"CurveMinVal + \"+ curve +\"CurveLift)\")\n        seed.setVisible(False)\n        seed_regen.setVisible(False)\n        amplitude.setVisible(True)\n        frequency.setVisible(True)\n        bloop_length.setVisible(False)\n        max_value.setVisible(True)\n        min_value.setVisible(True)\n        lift_lower.setVisible(True)\n        time_offset.setVisible(True)\n        framehold.setVisible(True)\n        custom.setVisible(False)\n        \n    elif user_choice == \"Sawtooth\":\n        result.setExpression(curve + \"CurveAmplitude*((((frame-(frame % (\"+ curve +\"CurveFramehold+0.000001)))+(\"+ curve +\"CurveOffset/-1)-1.00000001) % \"+ curve +\"CurveWaveLength)/\"+ curve +\"CurveWaveLength * (\"+ curve +\"CurveMaxVal-\"+ curve +\"CurveMinVal) + \"+ curve +\"CurveMinVal + \"+ curve +\"CurveLift)\")\n        seed.setVisible(False)\n        seed_regen.setVisible(False)\n        amplitude.setVisible(True)\n        frequency.setVisible(True)\n        bloop_length.setVisible(False)\n        max_value.setVisible(True)\n        min_value.setVisible(True)\n        lift_lower.setVisible(True)\n        time_offset.setVisible(True)\n        framehold.setVisible(True)\n        custom.setVisible(False)\n\n    elif user_choice == \"Parabolic +\":\n        result.setExpression(curve + \"CurveAmplitude*(sin((pi*((frame-(frame % (\"+ curve +\"CurveFramehold+0.000001)))+(\"+ curve +\"CurveOffset/-1)-1.00000001)/(2*\"+ curve +\"CurveWaveLength)) % (pi/2)) * (\"+ curve +\"CurveMaxVal-\"+ curve +\"CurveMinVal) + \"+ curve +\"CurveMinVal + \"+ curve +\"CurveLift)\")\n        seed.setVisible(False)\n        seed_regen.setVisible(False)\n        amplitude.setVisible(True)\n        frequency.setVisible(True)\n        bloop_length.setVisible(False)\n        max_value.setVisible(True)\n        min_value.setVisible(True)\n        lift_lower.setVisible(True)\n        time_offset.setVisible(True)\n        framehold.setVisible(True)\n        custom.setVisible(False)\n\n    elif user_choice == \"Parabolic -\":\n        result.setExpression(curve + \"CurveAmplitude*(cos((pi*((frame-(frame % (\"+ curve +\"CurveFramehold+0.000001)))+(\"+ curve +\"CurveOffset/-1)-1)/(2*\"+ curve +\"CurveWaveLength)) % (pi/2)) * (\"+ curve +\"CurveMaxVal-\"+ curve +\"CurveMinVal) + \"+ curve +\"CurveMinVal + \"+ curve +\"CurveLift)\")\n        seed.setVisible(False)\n        seed_regen.setVisible(False)\n        amplitude.setVisible(True)\n        frequency.setVisible(True)\n        bloop_length.setVisible(False)\n        max_value.setVisible(True)\n        min_value.setVisible(True)\n        lift_lower.setVisible(True)\n        time_offset.setVisible(True)\n        framehold.setVisible(True)\n        custom.setVisible(False)\n        \n    elif user_choice == \"Exponential\":\n        result.setExpression(curve + \"CurveAmplitude*((exp(2*pi*(((frame-(frame % (\"+ curve +\"CurveFramehold+0.000001)))+((\"+ curve +\"CurveOffset+1)/-1)) % \"+ curve +\"CurveWaveLength)/\"+ curve +\"CurveWaveLength)-1)/exp(2*pi) * (\"+ curve +\"CurveMaxVal-\"+ curve +\"CurveMinVal) + \"+ curve +\"CurveMinVal + \"+ curve +\"CurveLift)\")\n        seed.setVisible(False)\n        seed_regen.setVisible(False)\n        amplitude.setVisible(True)\n        frequency.setVisible(True)\n        bloop_length.setVisible(False)\n        max_value.setVisible(True)\n        min_value.setVisible(True)\n        lift_lower.setVisible(True)\n        time_offset.setVisible(True)\n        framehold.setVisible(True)\n        custom.setVisible(False)\n\n    elif user_choice == \"Bounce\":\n        result.setExpression(curve + \"CurveAmplitude*(abs(sin(pi*((frame-(frame % (\"+ curve +\"CurveFramehold+0.000001)))+(\"+ curve +\"CurveOffset+1)/-1)/\"+ curve +\"CurveWaveLength))* (\"+ curve +\"CurveMaxVal-\"+ curve +\"CurveMinVal) + \"+ curve +\"CurveMinVal + \"+ curve +\"CurveLift)\")\n        seed.setVisible(False)\n        seed_regen.setVisible(False)\n        amplitude.setVisible(True)\n        frequency.setVisible(True)\n        bloop_length.setVisible(False)\n        max_value.setVisible(True)\n        min_value.setVisible(True)\n        lift_lower.setVisible(True)\n        time_offset.setVisible(True)\n        framehold.setVisible(True)\n        custom.setVisible(False)\n        \n    elif user_choice == \"Blips\":\n        result.setExpression(curve + \"CurveAmplitude*((((frame+(((\"+ curve +\"CurveOffset/-1)-1)+\"+ curve +\"CurveWaveLength)) % (\"+ curve +\"CurveWaveLength+\"+ curve +\"CurveBloopLength)/(\"+ curve +\"CurveWaveLength)) *(\"+ curve +\"CurveWaveLength/\"+ curve +\"CurveBloopLength) - (\"+ curve +\"CurveWaveLength/\"+ curve +\"CurveBloopLength) >= 0 ? \"+ curve +\"CurveMaxVal : \"+ curve +\"CurveMinVal) + \"+ curve +\"CurveLift)\")\n        seed.setVisible(False)\n        seed_regen.setVisible(False)\n        amplitude.setVisible(True)\n        frequency.setVisible(True)\n        bloop_length.setVisible(True)\n        bloop_length.setLabel(\"Blip Length\")\n        max_value.setVisible(True)\n        min_value.setVisible(True)\n        lift_lower.setVisible(True)\n        time_offset.setVisible(True)\n        framehold.setVisible(False)\n        custom.setVisible(False)\n        \n    elif user_choice == \"Bloops\":\n        result.setExpression(curve + \"CurveAmplitude*(((int((frame+((\"+ curve +\"CurveOffset/-1)-0.5)) % \"+ curve +\"CurveWaveLength)) >= 0 ? ((int((frame+((\"+ curve +\"CurveOffset/-1)-0.5)) % \"+ curve +\"CurveWaveLength)) <= (0+(\"+ curve +\"CurveBloopLength-1)) ? ((sin(pi*((frame+((\"+ curve +\"CurveOffset/-1)-0.5)) % \"+ curve +\"CurveWaveLength)/\"+ curve +\"CurveBloopLength)/2+1/2) * (2*\"+ curve +\"CurveMaxVal-2*\"+ curve +\"CurveMinVal) + (2*\"+ curve +\"CurveMinVal-\"+ curve +\"CurveMaxVal)) : \"+ curve +\"CurveMinVal)  : \"+ curve +\"CurveMinVal) + \"+ curve +\"CurveLift)\")\n        seed.setVisible(False)\n        seed_regen.setVisible(False)\n        amplitude.setVisible(True)\n        frequency.setVisible(True)\n        bloop_length.setVisible(True)\n        bloop_length.setLabel(\"Bloop Length\")\n        max_value.setVisible(True)\n        min_value.setVisible(True)\n        lift_lower.setVisible(True)\n        time_offset.setVisible(True)\n        framehold.setVisible(False)\n        custom.setVisible(False)\n\n    elif user_choice == \"Custom\":\n        result.setExpression(curve + \"CurveCustom\")\n        seed.setVisible(False)\n        seed_regen.setVisible(False)\n        amplitude.setVisible(False)\n        frequency.setVisible(False)\n        bloop_length.setVisible(False)\n        max_value.setVisible(False)\n        min_value.setVisible(False)\n        lift_lower.setVisible(False)\n        time_offset.setVisible(False)\n        framehold.setVisible(False)\n        custom.setVisible(True)\n        \n## Checks if the CurveTypePDC knobs have been used and runs corresponding update\nif this_knob.name() in (\"aCurveTypePDC\"):\n    update_curve_type(\"a\")\nelif this_knob.name() in (\"bCurveTypePDC\"):\n    update_curve_type(\"b\") \nelif this_knob.name() in (\"cCurveTypePDC\"):\n    update_curve_type(\"c\")     \n   \nlabel.setValue(user_choice_a + \", \" + user_choice_b + \", \" + user_choice_c)\nmix_a.setLabel(user_choice_a + \" | A\")\nmix_b.setLabel(user_choice_b + \" | B\")\nmix_c.setLabel(user_choice_c + \" | C\")"
+  label Random
+  note_font Verdana
+  selected true
+  xpos 0
+  ypos 188
+  addUserKnob {20 optionsTAB l Options}
+  addUserKnob {26 aCurveTXT l "<b><p style=\"color:#5D6BDD\">A Curve</p></b>"}
+  addUserKnob {4 aCurveTypePDC l <b>Type</b> M {Random Noise Sine Triangle Square Sawtooth "Parabolic +" "Parabolic -" Exponential Bounce Blips Bloops Custom}}
+  addUserKnob {3 aCurveSeed l Seed}
+  addUserKnob {22 aCurveRegenSeedBTN l Regen -STARTLINE T "import random\n\nseed_value = random.randint(-100000,100000)\nnuke.thisNode().knob('aCurveSeed').setValue(seed_value)"}
+  addUserKnob {7 aCurveAmplitude l Amplitude}
+  aCurveAmplitude 1
+  addUserKnob {7 aCurveWaveLength l Frequency R 1 100}
+  aCurveWaveLength 10
+  addUserKnob {7 aCurveMaxVal l "Max Value" R -100 100}
+  aCurveMaxVal 1
+  addUserKnob {7 aCurveMinVal l "Min Value" R -100 100}
+  addUserKnob {7 aCurveLift l Lift/Lower R -100 100}
+  addUserKnob {7 aCurveOffset l "Time Offset" R -100 100}
+  addUserKnob {7 aCurveFramehold l Framehold R 0 10}
+  addUserKnob {7 aCurveBloopLength l "Bloop Length" R 0 10}
+  aCurveBloopLength 2
+  addUserKnob {7 aCurveCustom l Custom R -10 10}
+  addUserKnob {26 bCurveTXT l "<b><p style=\"color:#5D6BDD\">B Curve</p></b>"}
+  addUserKnob {4 bCurveTypePDC l <b>Type</b> M {Random Noise Sine Triangle Square Sawtooth "Parabolic +" "Parabolic -" Exponential Bounce Blips Bloops Custom}}
+  bCurveTypePDC Sine
+  addUserKnob {3 bCurveSeed l Seed}
+  bCurveSeed 19225
+  addUserKnob {22 bCurveRegenSeedBTN l Regen -STARTLINE T "import random\n\nseed_value = random.randint(-100000,100000)\nnuke.thisNode().knob('bCurveSeed').setValue(seed_value)"}
+  addUserKnob {7 bCurveAmplitude l Amplitude}
+  bCurveAmplitude 1
+  addUserKnob {7 bCurveWaveLength l Frequency R 1 100}
+  bCurveWaveLength 10
+  addUserKnob {7 bCurveMaxVal l "Max Value" R -100 100}
+  bCurveMaxVal 1
+  addUserKnob {7 bCurveMinVal l "Min Value" R -100 100}
+  addUserKnob {7 bCurveLift l Lift/Lower R -100 100}
+  addUserKnob {7 bCurveOffset l "Time Offset" R -100 100}
+  addUserKnob {7 bCurveFramehold l Framehold R 0 10}
+  addUserKnob {7 bCurveBloopLength l "Bloop Length" R 0 10}
+  bCurveBloopLength 2
+  addUserKnob {7 bCurveCustom l Custom R -10 10}
+  addUserKnob {26 cCurveTXT l "<b><p style=\"color:#5D6BDD\">C Curve</p></b>"}
+  addUserKnob {4 cCurveTypePDC l <b>Type</b> M {Random Noise Sine Triangle Square Sawtooth "Parabolic +" "Parabolic -" Exponential Bounce Blips Bloops Custom}}
+  cCurveTypePDC Blips
+  addUserKnob {3 cCurveSeed l Seed}
+  cCurveSeed -13149
+  addUserKnob {22 cCurveRegenSeedBTN l Regen -STARTLINE T "import random\n\nseed_value = random.randint(-100000,100000)\nnuke.thisNode().knob('cCurveSeed').setValue(seed_value)"}
+  addUserKnob {7 cCurveAmplitude l Amplitude}
+  cCurveAmplitude 1
+  addUserKnob {7 cCurveWaveLength l Frequency R 1 100}
+  cCurveWaveLength 10
+  addUserKnob {7 cCurveMaxVal l "Max Value" R -100 100}
+  cCurveMaxVal 1
+  addUserKnob {7 cCurveMinVal l "Min Value" R -100 100}
+  addUserKnob {7 cCurveLift l Lift/Lower R -100 100}
+  addUserKnob {7 cCurveOffset l "Time Offset" R -100 100}
+  addUserKnob {7 cCurveFramehold l Framehold R 0 10}
+  addUserKnob {7 cCurveBloopLength l "Bloop Length" R 0 10}
+  cCurveBloopLength 2
+  addUserKnob {7 cCurveCustom l Custom R -10 10}
+  addUserKnob {26 mixTXT l "<b><p style=\"color:#5D6BDD\">Mix</p></b>"}
+  addUserKnob {7 mixAmplitude l Amplitude}
+  mixAmplitude 1
+  addUserKnob {7 aMixAmount l A}
+  aMixAmount 1
+  addUserKnob {7 bMixAmount l B}
+  bMixAmount 1
+  addUserKnob {7 cMixAmount l C}
+  cMixAmount 1
+  addUserKnob {20 Info}
+  addUserKnob {22 helpBTN l Help t "Open the docs for tool in your default browser" T nukescripts.start('http://url.com') +STARTLINE}
+  addUserKnob {26 classTXT l "&nbsp;" T AnimBuddy}
+  addUserKnob {26 versionTXT l "&nbsp;" T "v001 - Hiram Gifford"}
+  addUserKnob {78 Array l 9_Array n 1}
+  Array 1
+ }
+ Output {
+  name Output
+  xpos 0
+  ypos 300
+ }
+end_group

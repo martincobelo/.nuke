@@ -1,0 +1,3438 @@
+Group {
+ name CardBuddy
+ inputs 5
+ tile_color 0x991300ff
+ label "\[value shapeTypesPDC]|\[value holdoutTypePDC]"
+ addUserKnob {20 optionsTAB l Options}
+ addUserKnob {41 aovSelectionCHNKNB l AOV t "Select what type of position data you'd like to project onto" T InputAOV.in}
+ addUserKnob {6 enableInputAOVsCHK l All -STARTLINE}
+ enableInputAOVsCHK true
+ addUserKnob {6 useImageAlphaCHK l Preview t "Disables BW Preview image" +STARTLINE}
+ useImageAlphaCHK true
+ addUserKnob {6 previewCheckerBoardCHK l "Calibration Image" t "Enables a calibration preview for 3D projections to help with orientation of the image" -STARTLINE}
+ addUserKnob {6 pointCloudPreviewCHK l "Point Cloud " -STARTLINE}
+ addUserKnob {26 shapeTXT l "<b><p style=\"color:#cf2d2d\">3D</p></b>"}
+ addUserKnob {41 filter2DPDC l Filter +HIDDEN T STMap2DMode.filter}
+ addUserKnob {41 shapeTypesPDC l Shape T ShapeSwitch.shapeTypesPDC}
+ addUserKnob {41 positionSamplerCKNB l Position T Sampler.positionSamplerCKNB}
+ addUserKnob {13 rotation3DKNB l Rotation t "Rotate your 3D projection"}
+ addUserKnob {13 scale3DKNB l Scale t "Use to adjust scale along an axis for your 3D projection"}
+ scale3DKNB {1 1 1}
+ addUserKnob {7 uniScaleSLD l "Uni Scale" t "Use to adjust overall scale" R 0.001 10}
+ uniScaleSLD 1
+ addUserKnob {13 skew3DKNB l Skew t "Use to skew your 3D projection"}
+ addUserKnob {13 pivot3DKNB l Pivot t "Use to offset or pivot your 3D projection"}
+ addUserKnob {26 cardTXT l "<b><p style=\"color:#Grey\">Card</p></b>"}
+ addUserKnob {41 cardOrientationPDC l Orientation T Card1.orientation}
+ addUserKnob {41 cardImageAspectCHK l "Image Aspect" -STARTLINE T Card1.image_aspect}
+ addUserKnob {41 cardRowsINT l Rows/Columns T Card1.rows}
+ addUserKnob {41 cardColumnsINT l "" -STARTLINE T Card1.columns}
+ addUserKnob {26 sphereTXT l "<b><p style=\"color:#Grey\">Sphere</p></b>" +HIDDEN}
+ addUserKnob {41 sphereRowsINT l Rows/Columns +HIDDEN T Sphere1.rows}
+ addUserKnob {41 sphereColumnsINT l "" -STARTLINE +HIDDEN T Sphere1.columns}
+ addUserKnob {41 sphereUextentSLD l "U Extent" +HIDDEN T Sphere1.u_extent}
+ addUserKnob {41 sphereVextentSLD l "V Extent" +HIDDEN T Sphere1.v_extent}
+ addUserKnob {41 sphereCloseTopCHK l "Close Top" +HIDDEN T Sphere1.close_top}
+ addUserKnob {41 sphereCloseBottomCHK l "Close Bottom" -STARTLINE +HIDDEN T Sphere1.close_bottom}
+ addUserKnob {26 cubeTXT l "<b><b><p style=\"color:#Grey\">Cube</p></b>" +HIDDEN}
+ addUserKnob {41 cubeRowsINT l Rows/Columns +HIDDEN T Cube1.rows}
+ addUserKnob {41 cubeColumnsINT l "" -STARTLINE +HIDDEN T Cube1.columns}
+ addUserKnob {41 cubeSeparateFacesCHK l "Separate Faces" -STARTLINE +HIDDEN T Cube1.separate_faces}
+ addUserKnob {26 cylinderTXT l "<b><p style=\"color:#Grey\">Cylinder</p></b>" +HIDDEN}
+ addUserKnob {41 cylinderRowsINT l Rows/Columns +HIDDEN T Cylinder1.rows}
+ addUserKnob {41 cylinderColumnsINT l "" -STARTLINE +HIDDEN T Cylinder1.columns}
+ addUserKnob {41 cylinderRadiusSLD l Radius +HIDDEN T Cylinder1.radius}
+ addUserKnob {41 cylinderHeightSLD l Height +HIDDEN T Cylinder1.height}
+ addUserKnob {41 cylinderUExtentSLD l "U Extent" +HIDDEN T Cylinder1.u_extent}
+ addUserKnob {41 cylinderCloseTopCHK l "Close Top" +HIDDEN T Cylinder1.close_top}
+ addUserKnob {41 cylinderCloseBottomCHK l "Close Bottom" -STARTLINE +HIDDEN T Cylinder1.close_bottom}
+ addUserKnob {26 lookAtCamTXT l "<b><p style=\"color:#Grey\">Look At Cam</p></b>"}
+ addUserKnob {6 lookAtCamCHK l Enable +STARTLINE}
+ addUserKnob {41 lookAxisPDC l Axis T TransformGeo1.look_axis}
+ addUserKnob {41 lookRotateXCHK l "Rotate X" -STARTLINE T TransformGeo1.look_rotate_x}
+ addUserKnob {41 lookRotateYCHK l "Rotate Y" -STARTLINE T TransformGeo1.look_rotate_y}
+ addUserKnob {41 lookRotateZCHK l "Rotate Z" -STARTLINE T TransformGeo1.look_rotate_z}
+ addUserKnob {41 lookUseQuaternionsCHK l "Use Quaternions" -STARTLINE T TransformGeo1.look_use_quaternions}
+ addUserKnob {41 lookStrengthSLD l Strength T TransformGeo1.look_strength}
+ addUserKnob {26 cameraTXT l "<b><p style=\"color:#cf2d2d\">Projection</p></b>"}
+ addUserKnob {6 projectCamCHK l "Enable Cam Projection" +STARTLINE}
+ addUserKnob {3 projectionFrameINT l Frame}
+ projectionFrameINT 1
+ addUserKnob {22 setCurrentFrameBTN l "Set Current" -STARTLINE T nuke.thisNode().knob('projectionFrameINT').setValue(nuke.frame())}
+ addUserKnob {22 goToCurrentFrameBTN l "Go To Frame" -STARTLINE T "refFrame = nuke.thisNode().knob('projectionFrameINT').getValue()\nnuke.frame(refFrame)"}
+ addUserKnob {3 refFrameINKNB l "Reference Frame" +HIDDEN}
+ refFrameINKNB 1075
+ addUserKnob {26 holdoutTXT l "<b><p style=\"color:#cf2d2d\">Holdout</p></b>"}
+ addUserKnob {41 holdoutTypePDC l Type T HoldoutSwitch.holdoutTypePDC}
+ addUserKnob {26 deepInputTXT l "" -STARTLINE +HIDDEN T "Connect Deep Input"}
+ addUserKnob {6 invertHoldoutCHK l Invert -STARTLINE +HIDDEN}
+ addUserKnob {7 dilateFixSizeSLD l Erode +HIDDEN R -10 10}
+ addUserKnob {41 rampOffsetSLD l Offset +HIDDEN T Holdout.rampOffsetSLD}
+ addUserKnob {41 rampFalloffSLD l Falloff +HIDDEN T Holdout.rampFalloffSLD}
+ addUserKnob {7 dilateFixDeepSLD l Offset +HIDDEN}
+ addUserKnob {41 pointDetailSLD l "Point Detail" +HIDDEN T PositionToPoints1.detail}
+ addUserKnob {41 pointSizeSLD l "Point Size" +HIDDEN T PositionToPoints1.pointSize}
+ addUserKnob {7 edgeBlurSLD l "Edge Blur" +HIDDEN R 0 10}
+ addUserKnob {7 edgeFixFalloffSLD l "Blur Falloff" +HIDDEN}
+ edgeFixFalloffSLD 0.2
+ addUserKnob {26 mask l "<b><p style=\"color:#cf2d2d\">Mask</p></b>"}
+ addUserKnob {41 maskChannelMask l "&nbsp;" T MaskMult.maskChannelMask}
+ addUserKnob {6 maskInvertCHK l Invert t "Use to invert mask alpha" -STARTLINE}
+ addUserKnob {7 maskValueSLD l Value t "Use to adjust mask value \n0 = Off\n1 = On"}
+ addUserKnob {20 advancedTAB l Advanced}
+ addUserKnob {26 fixesTXT l "<b><p style=\"color:#cf2d2d\">Fixes</p></b>"}
+ addUserKnob {6 blackOutsideCHK l "Black Outside" +STARTLINE}
+ addUserKnob {26 previewTXT l "<b><p style=\"color:#cf2d2d\">Preview</p></b>"}
+ addUserKnob {6 previewBwCHK l "Black And White" +STARTLINE}
+ previewBwCHK true
+ addUserKnob {6 previewClampCHK l Clamp -STARTLINE}
+ addUserKnob {6 previewAlphaCHK l "Transparent Geo" -STARTLINE}
+ addUserKnob {18 previewColourCKNB l Colour}
+ previewColourCKNB {0.36 0 0}
+ addUserKnob {6 previewColourCKNB_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {6 color_rgb_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {26 deepTXT l "<b><p style=\"color:#cf2d2d\">Point Clouds</p></b>"}
+ addUserKnob {41 deepDetailSLD l "Deep Detail" T DeepToPoints1.detail}
+ addUserKnob {41 DeepSizeSLD l "Deep Size" T DeepToPoints1.pointSize}
+ addUserKnob {41 wpDetailSLD l "WP Detail" T PositionToPoints1.detail}
+ addUserKnob {41 wpSizeSLD l "WP Size" T PositionToPoints1.pointSize}
+ addUserKnob {26 renderTXT l "<b><p style=\"color:#cf2d2d\">Render</p></b>"}
+ addUserKnob {41 renderFilterPDC l Filter T ScanlineRender1.filter}
+ addUserKnob {41 renderAaPDC l Antialiasing T ScanlineRender1.antialiasing}
+ addUserKnob {41 renderOverscan l Overscan T ScanlineRender1.overscan}
+ addUserKnob {26 motionBlurTXT l "<b><p style=\"color:#cf2d2d\">Motion Blur</p></b>"}
+ addUserKnob {41 motionBlurSamplesSLD l Samples T ScanlineRender1.samples}
+ addUserKnob {41 motionBlurShutterSLD l Shutter T ScanlineRender1.shutter}
+ addUserKnob {41 motionBlurShutterOffsetPDC l Offset T ScanlineRender1.shutteroffset}
+ addUserKnob {41 motionBlurShutterCustomOffsetSLD l "" -STARTLINE T ScanlineRender1.shuttercustomoffset}
+ addUserKnob {26 inputAOVsTXT l "<b><p style=\"color:#cf2d2d\">Input AOVs</p></b>"}
+ addUserKnob {6 unpremultCHK l Unpremult t "Unpremulits the input data" +STARTLINE}
+ addUserKnob {41 inputAOV1CHKNB l "&nbsp;" T Remove1.channels}
+ addUserKnob {41 inputAOV2CHKNB l "&nbsp;" T Remove1.channels2}
+ addUserKnob {41 inputAOV3CHKNB l "&nbsp;" T Remove1.channels3}
+ addUserKnob {41 inputAOV4CHKNB l "&nbsp;" T Remove1.channels4}
+ addUserKnob {26 calibrationTXT l "<b><p style=\"color:#cf2d2d\">Calibration</p></b>"}
+ addUserKnob {41 format l Format T PreviewReformat.format}
+ addUserKnob {6 autoCalImageCHK l "Match to Image Input" +STARTLINE}
+ autoCalImageCHK true
+ addUserKnob {6 worldSpaceCHK l "Convert \"Z Up\" to \"Y Up\"" +STARTLINE}
+ addUserKnob {7 globalScaleSLD l "Global Scale" R 1 100}
+ globalScaleSLD 1
+ addUserKnob {20 Info}
+ addUserKnob {26 aboutTXT l "&nbsp;" T "<h3>About</h3> \n<p>This is a tool that can create 3D cards and  other primitive shapes in world position\n<br>Useful for placing 2D elements into an environment</p> \n<hr>\n <h3>How To Use</h3> \n<p>Step 1: Connect the primary input to a render or pipe that contains World Position data</p>\n<p>Step 2: Connect the Camera to the Cam input</p>\n<p>Step 3: Connect the image you want to have on the card to the Image input</p>\n<p>Step 4: Use the Position sampler while holding Ctrl+Alt to sample an area in your viewer, to place the card there</p>\n<p>Step 5: disable preview/calibration, and merge the result back into your scene</p>\n<hr>"}
+ addUserKnob {26 help1TXT l "&nbsp;" T "Press the "}
+ addUserKnob {22 helpBTN l Help t "Open the docs for tool in your default browser" -STARTLINE T "import webbrowser \nwebbrowser.open(\"https://www.hiramgifford.com/buddy-system/cardbuddy\")"}
+ addUserKnob {26 help2TXT l "&nbsp;" -STARTLINE T "button to view the full documentation"}
+ addUserKnob {26 classTXT l "&nbsp;" T "<font color=grey><i>CardBuddy</i>"}
+ addUserKnob {26 versionTXT l "&nbsp;" -STARTLINE T "<font color=grey><i>v1.2</i>"}
+ addUserKnob {26 infoTXT l "&nbsp;" T "<font color=grey><i>Hiram Gifford - 17/05/2026 - hiramgifford.com</i>"}
+}
+ BackdropNode {
+  inputs 0
+  name BackdropNode1
+  tile_color 0x7f2626ff
+  label <center>Image
+  note_font_size 42
+  xpos -3168
+  ypos -1472
+  bdwidth 582
+  bdheight 1177
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode2
+  tile_color 0x7f2626ff
+  label "<center>Card Generation"
+  note_font_size 42
+  xpos -2568
+  ypos -1472
+  bdwidth 2052
+  bdheight 1978
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode3
+  tile_color 0x7f2626ff
+  label <center>Mask
+  note_font_size 42
+  xpos -498
+  ypos -1472
+  bdwidth 363
+  bdheight 1525
+ }
+ Input {
+  inputs 0
+  name Input
+  xpos -2007
+  ypos -1396
+ }
+ Reformat {
+  format {{{parent.PreviewReformat.format}}}
+  black_outside {{blackOutsideCHK}}
+  pbb true
+  name PreviewReformat3
+  xpos -2007
+  ypos -1326
+ }
+ Dot {
+  name Dot3
+  xpos -1973
+  ypos -1199
+ }
+set N5e289400 [stack 0]
+ Dot {
+  name Dot6
+  xpos -2254
+  ypos -1199
+ }
+ Dot {
+  name Dot7
+  xpos -2254
+  ypos -1027
+ }
+set N5e289c00 [stack 0]
+ Saturation {
+  saturation 0
+  name PreviewSaturation
+  xpos -2288
+  ypos 768
+  disable {{!previewBwCHK}}
+ }
+ Clamp {
+  channels rgba
+  name PreviewClamp
+  xpos -2288
+  ypos 792
+  disable {{!previewClampCHK}}
+ }
+ Dot {
+  name Dot5
+  xpos -2254
+  ypos 832
+ }
+ Input {
+  inputs 0
+  name Mask
+  xpos -359
+  ypos -1389
+  number 1
+ }
+ Shuffle {
+  name FixEmpty
+  xpos -359
+  ypos -1339
+ }
+ Dot {
+  name Dot22
+  xpos -325
+  ypos 763
+ }
+ Input {
+  inputs 0
+  name Cam
+  xpos -2480
+  ypos -1389
+  number 3
+ }
+ Dot {
+  name Dot2
+  xpos -2446
+  ypos -1147
+ }
+set N5e2a1c00 [stack 0]
+ Dot {
+  name Dot19
+  xpos -2446
+  ypos -801
+ }
+set N5e2ca000 [stack 0]
+ Dot {
+  name Dot13
+  xpos -2446
+  ypos -613
+ }
+set N5e2ca400 [stack 0]
+ Dot {
+  name Dot14
+  xpos -2446
+  ypos -427
+ }
+set N5e2ca800 [stack 0]
+ Dot {
+  name Dot15
+  xpos -2446
+  ypos -326
+ }
+push $N5e2ca800
+ Switch {
+  which 1
+  name LookAtSwitch
+  xpos -2218
+  ypos -431
+  disable {{lookAtCamCHK}}
+ }
+push 0
+push $N5e2ca400
+ FrameHold {
+  first_frame {{projectionFrameINT}}
+  name FrameHold1
+  xpos -2214
+  ypos -622
+  disable {{!projectCamCHK}}
+ }
+ Crop {
+  inputs 0
+  box {0 0 2000 1000}
+  reformat true
+  crop false
+  name Crop6
+  xpos -2845
+  ypos -1167
+ }
+ Roto {
+  cliptype none
+  curves {{{v x3f99999a}
+  {f 0}
+  {n
+   {layer Root
+    {f 2097664}
+    {t x447a0000 x43fa0000}
+    {a pt1x 0 pt1y 0 pt2x 0 pt2y 0 pt3x 0 pt3y 0 pt4x 0 pt4y 0 ptex00 0 ptex01 0 ptex02 0 ptex03 0 ptex10 0 ptex11 0 ptex12 0 ptex13 0 ptex20 0 ptex21 0 ptex22 0 ptex23 0 ptex30 0 ptex31 0 ptex32 0 ptex33 0 ptof1x 0 ptof1y 0 ptof2x 0 ptof2y 0 ptof3x 0 ptof3y 0 ptof4x 0 ptof4y 0 pterr 0 ptrefset 0 ptmot x40800000 ptref 0}
+    {curvegroup Arrow 512 bezier
+     {{cc
+       {f 8192}
+       {p
+        {}
+        {x44740edc x443918e0}
+        {}
+        {}
+        {x4476bba9 x443916ae}
+        {}
+        {}
+        {x447a2edb x44419e2e}
+        {}
+        {}
+        {x447daedb x443918e0}
+        {}
+        {}
+        {x44803dd4 x44391854}
+        {}
+        {}
+        {x447b8873 x44449160}
+        {}
+        {}
+        {x44790edb x44449160}
+        {}}}
+      {cc
+       {f 8192}
+       {p
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}}}}
+     {t x44802ea1 x44321508}
+     {a osw x41200000 osf 0 str 1 spx x447a0000 spy x43fa0000 sb 1 tt x40a00000}}
+    {curvegroup Arrow_Line 512 bezier
+     {{cc
+       {f 8192}
+       {p
+        {}
+        {x4478c8d7 x441fd160}
+        {}
+        {}
+        {x447b4f3d x441fd160}
+        {}
+        {}
+        {x447b4f3d x4438cafa}
+        {}
+        {}
+        {x4478c8d7 x4438cafa}
+        {}}}
+      {cc
+       {f 8192}
+       {p
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}}}}
+     {t x44801e66 x4415899a}
+     {a osw x41200000 osf 0 str 1 spx x447a0000 spy x43fa0000 sb 1 tt x41100000}}
+    {curvegroup BezierCusped3 512 bezier
+     {{cc
+       {f 8192}
+       {p
+        {}
+        {x4481546c x441d2afa}
+        {}
+        {}
+        {x44815138 x441597c6}
+        {}
+        {xbd520000 xc178e0c0}
+        {x4483af80 x441934a0}
+        {x3d520000 x4178e080}}}
+      {cc
+       {f 8192}
+       {p
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {xbd520000 xc178e0c0}
+        {}
+        {x3d520000 x4178e080}}}}
+     {t x44852ccd x44029111}
+     {a bm x41400000 osw x41200000 osf 0 str 1 spx x447a0000 spy x43fa0000 sb 1 tt x40a00000}}
+    {curvegroup BezierCusped2 512 bezier
+     {{cc
+       {f 8192}
+       {p
+        {}
+        {x447c88d7 x440d0780}
+        {}
+        {}
+        {x4482879e x440d080c}
+        {}
+        {}
+        {x44828ad2 x440e13d8}
+        {}
+        {}
+        {x44814138 x440e146e}
+        {}
+        {}
+        {x4481479e x44141160}
+        {}
+        {}
+        {x44832e04 x44143e2d}
+        {}
+        {xbe198000 xc1a00000}
+        {x4485c138 x44195160}
+        {x3e264000 x419fffc0}
+        {}
+        {x4483a138 x441e3a46}
+        {}
+        {}
+        {x447c88d7 x441e3a46}
+        {}
+        {}
+        {x447c88d7 x441d45f8}
+        {}
+        {}
+        {x447e5c09 x441d3e2e}
+        {}
+        {}
+        {x447e8f3d x440e146e}
+        {}
+        {}
+        {x447c8271 x440e1550}
+        {}}}
+      {cc
+       {f 8192}
+       {p
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {xbe198000 xc1a00000}
+        {}
+        {x3e264000 x419fffc0}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}}}}
+     {t x4483fe86 x43fb92b5}
+     {a osw x41200000 osf 0 str 1 spx x447a0000 spy x43fa0000 sb 1 tt x40a00000}}
+    {curvegroup BezierCusped1 512 bezier
+     {{cc
+       {f 8192}
+       {p
+        {}
+        {x4468c800 x441e4520}
+        {}
+        {}
+        {x4470c8d6 x441e45ae}
+        {}
+        {}
+        {x4470c7b8 x441d4e2e}
+        {}
+        {}
+        {x446ee26f x441d4e2e}
+        {}
+        {}
+        {x446ee270 x4410be2d}
+        {}
+        {xc14c0040 x3e19a000}
+        {x4471ef3d x440e2afa}
+        {x414c0040 xbe19a000}
+        {}
+        {x447515a3 x44111e2d}
+        {}
+        {}
+        {x4474f5a2 x441d4e2e}
+        {}
+        {}
+        {x447335a2 x441d4e2e}
+        {}
+        {}
+        {x447335a2 x441e437a}
+        {}
+        {}
+        {x447b0271 x441e437a}
+        {}
+        {}
+        {x447b0013 x441d4fdc}
+        {}
+        {}
+        {x4478fc09 x441d4e2e}
+        {}
+        {}
+        {x4478d5a3 x44110494}
+        {}
+        {x41eb5240 xbf115800}
+        {x4471d5a3 x440cde2c}
+        {xc1eb3300 x3f19a000}
+        {}
+        {x446ac8d7 x44114494}
+        {}
+        {}
+        {x446ab5a2 x441d4e2e}
+        {}
+        {}
+        {x4468c26f x441d4e2e}
+        {}}}
+      {cc
+       {f 8192}
+       {p
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {xc14c0040 x3e19a000}
+        {}
+        {x414c0040 xbe19a000}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {x41eb5240 xbf115800}
+        {}
+        {xc1eb3300 x3f19a000}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}}}}
+     {t x447819f5 x440241c6}
+     {a osw x41200000 osf 0 str 1 spx x447a0000 spy x43fa0000 sb 1 tt x40a00000}}}}}}
+  toolbox {selectAll {
+  { selectAll str 1 ssx 1 ssy 1 sf 1 }
+  { createBezier str 1 ssx 1 ssy 1 sf 1 sb 1 tt 4 }
+  { createBezierCusped str 1 ssx 1 ssy 1 sf 1 sb 1 tt 5 }
+  { createBSpline str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createEllipse str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createRectangle str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createRectangleCusped str 1 ssx 1 ssy 1 sf 1 sb 1 tt 9 }
+  { brush str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { eraser src 2 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { clone src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { reveal src 3 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { dodge src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { burn src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { blur src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { sharpen src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { smear src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+} }
+  toolbar_brush_hardness 0.200000003
+  toolbar_source_transform_scale {1 1}
+  toolbar_source_transform_center {1000 500}
+  colorOverlay {0 0 0 0}
+  blending_mode minus
+  lifetime_type "all frames"
+  motionblur_shutter_offset_type centred
+  source_black_outside true
+  name Up
+  xpos -2845
+  ypos -1139
+ }
+ Roto {
+  curves {{{v x3f99999a}
+  {f 0}
+  {n
+   {layer Root
+    {f 2097664}
+    {t x447a0000 x43fa0000}
+    {a pt1x 0 pt1y 0 pt2x 0 pt2y 0 pt3x 0 pt3y 0 pt4x 0 pt4y 0 ptex00 0 ptex01 0 ptex02 0 ptex03 0 ptex10 0 ptex11 0 ptex12 0 ptex13 0 ptex20 0 ptex21 0 ptex22 0 ptex23 0 ptex30 0 ptex31 0 ptex32 0 ptex33 0 ptof1x 0 ptof1y 0 ptof2x 0 ptof2y 0 ptof3x 0 ptof3y 0 ptof4x 0 ptof4y 0 pterr 0 ptrefset 0 ptmot x40800000 ptref 0}
+    {curvegroup BezierCusped4 512 bezier
+     {{cc
+       {f 8192}
+       {p
+        {}
+        {x448be8ce x43b4fc50}
+        {}
+        {}
+        {x4488ed9a x43b4f450}
+        {}
+        {}
+        {x4488ed9a x43b6e576}
+        {}
+        {}
+        {x4489bd9a x43b6e576}
+        {}
+        {}
+        {x4489d402 x43d5311c}
+        {}
+        {}
+        {x4488ed9a x43d52d46}
+        {}
+        {}
+        {x4488ed9a x43d74b98}
+        {}
+        {}
+        {x448bd400 x43d749a2}
+        {}
+        {}
+        {x448fcd9a x43bfadea}
+        {}
+        {}
+        {x448fd728 x43d534f8}
+        {}
+        {}
+        {x448e8d9a x43d533ac}
+        {}
+        {}
+        {x448e90cc x43d749a2}
+        {}
+        {}
+        {x4491854c x43d743d0}
+        {}
+        {}
+        {x4491843c x43d53b58}
+        {}
+        {}
+        {x4490ad9a x43d533ac}
+        {}
+        {}
+        {x44909a68 x43b4d450}
+        {}
+        {}
+        {x448f40ce x43b4d450}
+        {}
+        {}
+        {x448a9402 x43d08784}
+        {}
+        {}
+        {x448ab0ce x43b6e7ec}
+        {}
+        {}
+        {x448bea68 x43b6e990}
+        {}}}
+      {cc
+       {f 8192}
+       {p
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}}}}
+     {t x448f09ac x439b8669}
+     {a osw x41200000 osf 0 str 1 spx x447a0000 spy x43fa0000 sb 1 tt x40a00000}}
+    {curvegroup BezierCusped3 512 bezier
+     {{cc
+       {f 8192}
+       {p
+        {}
+        {x4477bb5d x43d73fe0}
+        {}
+        {}
+        {x447f0ccd x43d73fde}
+        {}
+        {}
+        {x447f0ccd x43d57de6}
+        {}
+        {}
+        {x447d2001 x43d58346}
+        {}
+        {}
+        {x44802cce x43bd1fb8}
+        {}
+        {}
+        {x4481acce x43d73628}
+        {}
+        {}
+        {x44832000 x43d738d0}
+        {}
+        {}
+        {x4484c666 x43bd25c2}
+        {}
+        {}
+        {x44864ccc x43d58794}
+        {}
+        {}
+        {x44852332 x43d5800e}
+        {}
+        {}
+        {x44852334 x43d74286}
+        {}
+        {}
+        {x4487f224 x43d73fe0}
+        {}
+        {}
+        {x4487f110 x43d5845a}
+        {}
+        {}
+        {x4487499a x43d58794}
+        {}
+        {}
+        {x44850332 x43b51484}
+        {}
+        {}
+        {x44838666 x43b515f2}
+        {}
+        {}
+        {x4481e99a x43cc55f0}
+        {}
+        {}
+        {x44805ccc x43b516e6}
+        {}
+        {}
+        {x447d9333 x43b51760}
+        {}
+        {}
+        {x44790cce x43d5800e}
+        {}
+        {}
+        {x4477b7d9 x43d5800e}
+        {}}}
+      {cc
+       {f 8192}
+       {p
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}}}}
+     {t x4485441e x43a0b5a3}
+     {a osw x41200000 osf 0 str 1 spx x447a0000 spy x43fa0000 sb 1 tt x40a00000}}
+    {curvegroup Ellipse2 512 bezier
+     {{cc
+       {f 8192}
+       {p
+        {xc1940320}
+        {x446f26fc x43b6d7d8}
+        {x41940320}
+        {}
+        {x44736c3c x43c5d77a}
+        {}
+        {x41940320}
+        {x446f26fc x43d5a93c}
+        {xc1940320}
+        {}
+        {x446aeb48 x43c5c45e}
+        {}}}
+      {cc
+       {f 8192}
+       {p
+        {xc1940320}
+        {}
+        {x41940320}
+        {}
+        {}
+        {}
+        {x41940320}
+        {}
+        {xc1940320}
+        {}
+        {}
+        {}}}}
+     {t x4475d99a x439aa666}
+     {a osw x41200000 osf 0 str 1 spx x447a0000 spy x43fa0000 sb 1 tt x40e00000 bm x41400000}}
+    {curvegroup Ellipse1 512 bezier
+     {{cc
+       {f 8192}
+       {p
+        {xc1940320}
+        {x446f1d6e x43b4c0ec}
+        {x41940320}
+        {0 xc1c52560}
+        {x4477f99c x43c65d34}
+        {xb8800000 x41c52560}
+        {x41940320}
+        {x446f1d6e x43d845e4}
+        {xc1940320}
+        {xbc150000 x41c5f540}
+        {x4466c6fc x43c6836a}
+        {x3c280000 xc1c5f540}}}
+      {cc
+       {f 8192}
+       {p
+        {xc1940320}
+        {}
+        {x41940320}
+        {0 xc1c52560}
+        {}
+        {xb8800000 x41c52560}
+        {x41940320}
+        {}
+        {xc1940320}
+        {xbc150000 x41c5f540}
+        {}
+        {x3c280000 xc1c5f540}}}}
+     {t x4475d99a x439aa666}
+     {a osw x41200000 osf 0 str 1 spx x447a0000 spy x43fa0000 sb 1 tt x40e00000}}
+    {curvegroup BezierCusped2 512 bezier
+     {{cc
+       {f 8192}
+       {p
+        {}
+        {x4458e001 x43d4e2be}
+        {}
+        {}
+        {x4458d99b x43b7ef8a}
+        {}
+        {xbdccc000 xc2086670}
+        {x44601334 x43c61bde}
+        {x3db00000 x42086670}}}
+      {cc
+       {f 8192}
+       {p
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {xbdccc000 xc2086670}
+        {}
+        {x3db00000 x42086670}}}}
+     {t x44618444 x4399cccd}
+     {a bm x41400000 mbo 1 osw x41200000 osf 0 str 1 spx x447a0000 spy x43fa0000 sb 1 tt x40a00000}}
+    {curvegroup BezierCusped1 512 bezier
+     {{cc
+       {f 8192}
+       {p
+        {}
+        {x4452d7c3 x43b50922}
+        {}
+        {}
+        {x445db26c x43b515f0}
+        {}
+        {xbeccd000 xc1fe6660}
+        {x4464acce x43c6372e}
+        {x3ec05000 x41fe6720}
+        {}
+        {x445dad95 x43d74924}
+        {}
+        {}
+        {x4452d99b x43d795f0}
+        {}
+        {}
+        {x4452db73 x43d56f8a}
+        {}
+        {}
+        {x4454d99c x43d57c58}
+        {}
+        {}
+        {x4454d99c x43b6fc58}
+        {}
+        {}
+        {x4452db73 x43b70922}
+        {}}}
+      {cc
+       {f 8192}
+       {p
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {xbeccd000 xc1fe6660}
+        {}
+        {x3ec05000 x41fe6720}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}}}}
+     {t x445deccc x4399f60b}
+     {a osw x41200000 osf 0 str 1 spx x447a0000 spy x43fa0000 sb 1 tt x40a00000}}
+    {curvegroup Arrow 512 bezier
+     {{cc
+       {f 8192}
+       {p
+        {}
+        {x44800c4c x436c4e84}
+        {}
+        {}
+        {x447d6bcd x436c5750}
+        {}
+        {}
+        {x4479f89b x434a3950}
+        {}
+        {}
+        {x4476789b x436c4e84}
+        {}
+        {}
+        {x4473abcd x436c50bc}
+        {}
+        {}
+        {x44789f03 x433e6c84}
+        {}
+        {}
+        {x447b1899 x433e6c84}
+        {}}}
+      {cc
+       {f 8192}
+       {p
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}}}}
+     {t x44802ea1 x44321508}
+     {a osw x41200000 osf 0 str 1 spx x447a0000 spy x43fa0000 sb 1 tt x40a00000}}
+    {curvegroup Arrow_Line 512 bezier
+     {{cc
+       {f 8192}
+       {p
+        {}
+        {x447b5e9d x43a8b642}
+        {}
+        {}
+        {x4478d839 x43a8b642}
+        {}
+        {}
+        {x4478d839 x436d8620}
+        {}
+        {}
+        {x447b5e9d x436d8620}
+        {}}}
+      {cc
+       {f 8192}
+       {p
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}}}}
+     {t x44801e66 x4415899a}
+     {a osw x41200000 osf 0 str 1 spx x447a0000 spy x43fa0000 sb 1 tt x41100000}}}}}}
+  toolbox {selectAll {
+  { selectAll str 1 ssx 1 ssy 1 sf 1 }
+  { createBezier str 1 ssx 1 ssy 1 sf 1 sb 1 tt 4 }
+  { createBezierCusped str 1 ssx 1 ssy 1 sf 1 sb 1 tt 5 }
+  { createBSpline str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createEllipse str 1 ssx 1 ssy 1 sf 1 sb 1 tt 7 }
+  { createRectangle str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createRectangleCusped str 1 ssx 1 ssy 1 sf 1 sb 1 tt 9 }
+  { brush str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { eraser src 2 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { clone src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { reveal src 3 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { dodge src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { burn src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { blur src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { sharpen src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { smear src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+} }
+  toolbar_brush_hardness 0.200000003
+  toolbar_source_transform_scale {1 1}
+  toolbar_source_transform_center {1000 500}
+  colorOverlay {0 0 0 0}
+  blending_mode minus
+  lifetime_type "all frames"
+  view {}
+  motionblur_on true
+  motionblur_shutter_offset_type centred
+  source_black_outside true
+  name Down
+  xpos -2845
+  ypos -1115
+ }
+ Roto {
+  curves {{{v x3f99999a}
+  {f 0}
+  {n
+   {layer Root
+    {f 2097664}
+    {t x447a0000 x43fa0000}
+    {a pt1x 0 pt1y 0 pt2x 0 pt2y 0 pt3x 0 pt3y 0 pt4x 0 pt4y 0 ptex00 0 ptex01 0 ptex02 0 ptex03 0 ptex10 0 ptex11 0 ptex12 0 ptex13 0 ptex20 0 ptex21 0 ptex22 0 ptex23 0 ptex30 0 ptex31 0 ptex32 0 ptex33 0 ptof1x 0 ptof1y 0 ptof2x 0 ptof2y 0 ptof3x 0 ptof3y 0 ptof4x 0 ptof4y 0 pterr 0 ptrefset 0 ptmot x40800000 ptref 0}
+    {curvegroup BezierCusped7 512 bezier
+     {{cc
+       {f 8192}
+       {p
+        {}
+        {x44b46778 x44021274}
+        {}
+        {}
+        {x44b46779 x44052b24}
+        {}
+        {}
+        {x44b3a446 x440524df}
+        {}
+        {}
+        {x44b29f78 x440212f1}
+        {}
+        {}
+        {x44b1c2ab x4402117c}
+        {}
+        {}
+        {x44b1bf77 x4400bc70}
+        {}
+        {}
+        {x44b29aaa x4400bd2c}
+        {}
+        {}
+        {x44b28911 x43efd99c}
+        {}
+        {xc12b3880 xbc068000}
+        {x44b40445 x43eb399c}
+        {x41319980}
+        {}
+        {x44b61d60 x43ef26e7}
+        {}
+        {x40199a00 xbf0ccc00}
+        {x44b4ff78 x43ef0002}
+        {xc076a600 x3f621600}
+        {}
+        {x44b472ab x43f14ccf}
+        {}
+        {}
+        {x44b46ddd x4400bd2c}
+        {}
+        {}
+        {x44b5b2aa x4400bc70}
+        {}
+        {}
+        {x44b5b778 x44021044}
+        {}}}
+      {cc
+       {f 8192}
+       {p
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {xc12b3880 xbc068000}
+        {}
+        {x41319980}
+        {}
+        {}
+        {}
+        {x40199a00 xbf0ccc00}
+        {}
+        {xc076a600 x3f621600}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}}}}
+     {t x44b51800 x43dcb4e7}
+     {a osw x41200000 osf 0 str 1 spx x447a0000 spy x43fa0000 sb 1 tt x40a00000}}
+    {curvegroup BezierCusped6 512 bezier
+     {{cc
+       {f 8192}
+       {p
+        {}
+        {x44a9baf9 x43ec199a}
+        {}
+        {}
+        {x44ad1f79 x43ec1b9e}
+        {}
+        {}
+        {x44ad22aa x43ee0002}
+        {}
+        {}
+        {x44ac5f77 x43ee0002}
+        {}
+        {}
+        {x44ac5aab x43fdc668}
+        {}
+        {xc120cd00 xbf199c00}
+        {x44ada778 x4400c668}
+        {x40f7e300 x3eecc800}
+        {}
+        {x44aea445 x43fe399c}
+        {}
+        {}
+        {x44aeb5dd x43ee0002}
+        {}
+        {}
+        {x44adf777 x43ee0002}
+        {}
+        {}
+        {x44adf779 x43ec1a69}
+        {}
+        {}
+        {x44b152ac x43ec1b9e}
+        {}
+        {}
+        {x44b152dd x43edfc02}
+        {}
+        {}
+        {x44b08444 x43ee0002}
+        {}
+        {}
+        {x44b082ab x43ffb99c}
+        {}
+        {x412f9300 xbe6bf000}
+        {x44af0911 x4402a334}
+        {xc13e6600 x3e800000}
+        {}
+        {x44ac7111 x44011334}
+        {}
+        {}
+        {x44ac6911 x44087001}
+        {}
+        {}
+        {x44a9c911 x4407d99a}
+        {}
+        {}
+        {x44a9c911 x4406ecce}
+        {}
+        {}
+        {x44aa8445 x4406f668}
+        {}
+        {}
+        {x44aa8444 x43ee0002}
+        {}
+        {}
+        {x44a9bb5d x43ee0202}
+        {}}}
+      {cc
+       {f 8192}
+       {p
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {xc120cd00 xbf199c00}
+        {}
+        {x40f7e300 x3eecc800}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {x412f9300 xbe6bf000}
+        {}
+        {xc13e6600 x3e800000}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}}}}
+     {t x44ae4ec3 x43d85129}
+     {a osw x41200000 osf 0 str 1 spx x447a0000 spy x43fa0000 sb 1 tt x40a00000}}
+    {curvegroup Ellipse2 512 bezier
+     {{cc
+       {f 8192}
+       {p
+        {xc0923f00}
+        {x44a62378 x43f72668}
+        {x40923f00}
+        {0 xc0d64940}
+        {x44a72c45 x43fd3668}
+        {0 x40d64900}
+        {x40923f00}
+        {x44a62378 x4401a334}
+        {xc0923f00}
+        {0 x40d64900}
+        {x44a51aab x43fd3668}
+        {0 xc0d64940}}}
+      {cc
+       {f 8192}
+       {p
+        {xc0923f00}
+        {}
+        {x40923f00}
+        {0 xc0d64940}
+        {}
+        {0 x40d64900}
+        {x40923f00}
+        {}
+        {xc0923f00}
+        {0 x40d64900}
+        {}
+        {0 xc0d64940}}}}
+     {t x44a748cd x43dcb666}
+     {a bm x41400000 osw x41200000 osf 0 str 1 spx x447a0000 spy x43fa0000 sb 1 tt x40e00000}}
+    {curvegroup BezierCusped5 512 bezier
+     {{cc
+       {f 8192}
+       {p
+        {x41199980 xbd4cc000}
+        {x44a65778 x43eaf335}
+        {xc1199980 x3d5de000}
+        {xbe41c000 x40542e00}
+        {x44a4ec45 x43e709db}
+        {x3e41c000 xc0542e00}
+        {xc10b3300 xbe4cd000}
+        {x44a675de x43e2a002}
+        {x40f1ab00 x3e327000}
+        {x3e6a2000 xc0804340}
+        {x44a81dde x43e73335}
+        {xbe6a2000 x40804340}}}
+      {cc
+       {f 8192}
+       {p
+        {x41199980 xbd4cc000}
+        {}
+        {xc1199980 x3d5de000}
+        {xbe41c000 x40542e00}
+        {}
+        {x3e41c000 xc0542e00}
+        {xc10b3300 xbe4cd000}
+        {}
+        {x40f1ab00 x3e327000}
+        {x3e6a2000 xc0804340}
+        {}
+        {xbe6a2000 x40804340}}}}
+     {t x44a79b34 x43c6919a}
+     {a bm x41400000 osw x41200000 osf 0 str 1 spx x447a0000 spy x43fa0000 sb 1 tt x40a00000}}
+    {curvegroup BezierCusped4 512 bezier
+     {{cc
+       {f 8192}
+       {p
+        {}
+        {x44a7fdde x4401ecce}
+        {}
+        {}
+        {x44a9b7b7 x44031d0c}
+        {}
+        {}
+        {x44a962ab x44009cce}
+        {}
+        {}
+        {x44a89dde x4400899a}
+        {}
+        {0 x40700000}
+        {x44a8f111 x43fc8ccf}
+        {x3a600000 xc15667e0}
+        {x400fca00 x3f2a0e00}
+        {x44a6dcd2 x43f4cbb3}
+        {xc002b400 xbf1a9600}
+        {x3f89d400 x3e98f000}
+        {x44a57778 x43f4a668}
+        {xbf89d400 xbe98f000}
+        {x3e198000 x40266680}
+        {x44a50c45 x43f2c668}
+        {xbe172000 xc023b500}
+        {xbfbfe800 x3e78f000}
+        {x44a5c911 x43f10ccf}
+        {x3fbfe800 xbe78f000}
+        {xc04b3600 x3ef51400}
+        {x44a79778 x43f12002}
+        {x41599980 xc0033300}
+        {x3ee4f000 x40a1cec0}
+        {x44a98521 x43e8b3b4}
+        {xbfb6a400 xc1813b20}
+        {x402d6600 x3dc64000}
+        {x44a6f778 x43e04668}
+        {xc0333400 xbdccc000}
+        {x402d7c00 x3c530000}
+        {x44a57111 x43e04ccf}
+        {xc1333300 xbd4ce000}
+        {xbe2c8000 xc0d66d40}
+        {x44a3265c x43e6e374}
+        {x3e3d2000 x40ea56c0}
+        {}
+        {x44a48c45 x43eba668}
+        {}
+        {x3f000000 xc0d00000}
+        {x44a36445 x43f07335}
+        {xbe686000 x403d0a80}
+        {xc10f3300 xc0233380}
+        {x44a4d2ab x43f5599c}
+        {xc0db3300 x3fc66600}
+        {x3f1b4000 xc119a560}
+        {x44a33f78 x43fcc668}
+        {xbe99a000 x40980000}
+        {xc1866680 x3f1bec00}
+        {x44a5ff78 x4402a906}
+        {x4163ea80 xbf05f800}}}
+      {cc
+       {f 8192}
+       {p
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {0 x40700000}
+        {}
+        {x3a600000 xc15667e0}
+        {x400fca00 x3f2a0e00}
+        {}
+        {xc002b400 xbf1a9600}
+        {x3f89d400 x3e98f000}
+        {}
+        {xbf89d400 xbe98f000}
+        {x3e198000 x40266680}
+        {}
+        {xbe172000 xc023b500}
+        {xbfbfe800 x3e78f000}
+        {}
+        {x3fbfe800 xbe78f000}
+        {xc04b3600 x3ef51400}
+        {}
+        {x41599980 xc0033300}
+        {x3ee4f000 x40a1cec0}
+        {}
+        {xbfb6a400 xc1813b20}
+        {x402d6600 x3dc64000}
+        {}
+        {xc0333400 xbdccc000}
+        {x402d7c00 x3c530000}
+        {}
+        {xc1333300 xbd4ce000}
+        {xbe2c8000 xc0d66d40}
+        {}
+        {x3e3d2000 x40ea56c0}
+        {}
+        {}
+        {}
+        {x3f000000 xc0d00000}
+        {}
+        {xbe686000 x403d0a80}
+        {xc10f3300 xc0233380}
+        {}
+        {xc0db3300 x3fc66600}
+        {x3f1b4000 xc119a560}
+        {}
+        {xbe99a000 x40980000}
+        {xc1866680 x3f1bec00}
+        {}
+        {x4163ea80 xbf05f800}}}}
+     {t x44a79910 x43d44829}
+     {a osw x41200000 osf 0 str 1 spx x447a0000 spy x43fa0000 sb 1 tt x40a00000}}
+    {curvegroup BezierCusped3 512 bezier
+     {{cc
+       {f 8192}
+       {p
+        {}
+        {x449f4444 x43ebfcef}
+        {}
+        {}
+        {x449f4446 x43ee13b7}
+        {}
+        {}
+        {x44a00912 x43ee10ae}
+        {}
+        {}
+        {x44a012ab x4400c001}
+        {}
+        {}
+        {x449f4911 x4400c99a}
+        {}
+        {}
+        {x449f4ba7 x4401d4ae}
+        {}
+        {}
+        {x44a1f111 x44027001}
+        {}
+        {}
+        {x44a1f112 x43ee1112}
+        {}
+        {}
+        {x44a2b2ac x43ee15bc}
+        {}
+        {}
+        {x44a2b2aa x43ec097b}
+        {}}}
+      {cc
+       {f 8192}
+       {p
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}}}}
+     {t x44a1cb0a x43d5816d}
+     {a osw x41200000 osf 0 str 1 spx x447a0000 spy x43fa0000 sb 1 tt x40a00000}}
+    {curvegroup Ellipse1 512 bezier
+     {{cc
+       {f 8192}
+       {p
+        {xc099c200}
+        {x44a0e511 x4403de66}
+        {x4099c200}
+        {0 xc099c200}
+        {x44a1fb77 x44060b34}
+        {0 x4099c100}
+        {x4099c200}
+        {x44a0e511 x44083800}
+        {xc099c200}
+        {0 x4099c100}
+        {x449fceab x44060b34}
+        {0 xc099c200}}}
+      {cc
+       {f 8192}
+       {p
+        {xc099c200}
+        {}
+        {x4099c200}
+        {0 xc099c200}
+        {}
+        {0 x4099c100}
+        {x4099c200}
+        {}
+        {xc099c200}
+        {0 x4099c100}
+        {}
+        {0 xc099c200}}}}
+     {t x44a1a666 x43ed2666}
+     {a osw x41200000 osf 0 str 1 spx x447a0000 spy x43fa0000 sb 1 tt x40e00000}}
+    {curvegroup BezierCusped2 512 bezier
+     {{cc
+       {f 8192}
+       {p
+        {}
+        {x4499c111 x43fe999c}
+        {}
+        {}
+        {x4499c111 x4406099a}
+        {}
+        {0 x41751ac0}
+        {x449c3bde x4402d4ce}
+        {0 xc1751ac0}}}
+      {cc
+       {f 8192}
+       {p
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {0 x41751ac0}
+        {}
+        {0 xc1751ac0}}}}
+     {t x449bb2ab x43e4f778}
+     {a bm x41400000 osw x41200000 osf 0 str 1 spx x447a0000 spy x43fa0000 sb 1 tt x40a00000}}
+    {curvegroup BezierCusped1 512 bezier
+     {{cc
+       {f 8192}
+       {p
+        {}
+        {x4496b778 x43ec19cb}
+        {}
+        {}
+        {x449ae111 x43ec263c}
+        {}
+        {}
+        {x449ae110 x43ee3f99}
+        {}
+        {}
+        {x4499c4f0 x43ee3af5}
+        {}
+        {}
+        {x4499c49a x43fc06be}
+        {}
+        {xc0b66700 x40966640}
+        {x449b4445 x43fa4c23}
+        {x408e4500 xc06aab80}
+        {xbf0cc800 x40233300}
+        {x449bc111 x43f4599c}
+        {x3ef7a000 xc00f7b80}
+        {xc0072600 x403b6580}
+        {x449c246f x43ef6dd2}
+        {x40b10300 xc0f57940}
+        {}
+        {x449d2dde x43ec0002}
+        {}
+        {}
+        {x449f1dde x43ec0002}
+        {}
+        {}
+        {x449f1778 x43ee06e2}
+        {}
+        {x40360400 xc0ae6dc0}
+        {x449e4778 x43f00ccf}
+        {xc0400000 x40b80000}
+        {x3fc15c00 xc0b86bc0}
+        {x449dc3ee x43f5fb4b}
+        {xc06a2e00 x415f5fa0}
+        {}
+        {x449c4778 x43fd999c}
+        {}
+        {x3e0be000 xc17702e0}
+        {x449e56ab x4402de68}
+        {xbe0be000 x41770280}
+        {}
+        {x449c3dde x44075126}
+        {}
+        {}
+        {x4496c111 x44074edd}
+        {}
+        {}
+        {x4496c111 x4406399a}
+        {}
+        {}
+        {x4497c8a8 x440632ba}
+        {}
+        {}
+        {x4497bddd x43ee3208}
+        {}
+        {}
+        {x4496b7f5 x43ee2faf}
+        {}}}
+      {cc
+       {f 8192}
+       {p
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {xc0b66700 x40966640}
+        {}
+        {x408e4500 xc06aab80}
+        {xbf0cc800 x40233300}
+        {}
+        {x3ef7a000 xc00f7b80}
+        {xc0072600 x403b6580}
+        {}
+        {x40b10300 xc0f57940}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {x40360400 xc0ae6dc0}
+        {}
+        {xc0400000 x40b80000}
+        {x3fc15c00 xc0b86bc0}
+        {}
+        {xc06a2e00 x415f5fa0}
+        {}
+        {}
+        {}
+        {x3e0be000 xc17702e0}
+        {}
+        {xbe0be000 x41770280}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}}}}
+     {t x449c0d42 x43d734be}
+     {a osw x41200000 osf 0 str 1 spx x447a0000 spy x43fa0000 sb 1 tt x40a00000}}
+    {curvegroup Arrow 512 bezier
+     {{cc
+       {f 8192}
+       {p
+        {}
+        {x44be8f84 x44024029}
+        {}
+        {}
+        {x44be8e6a x43ff26ba}
+        {}
+        {}
+        {x44c2d22a x43f84056}
+        {}
+        {}
+        {x44be8f84 x43f14056}
+        {}
+        {}
+        {x44be8f3d x43eba6ba}
+        {}
+        {}
+        {x44c44bc4 x43f58d26}
+        {}
+        {}
+        {x44c44bc4 x43fa8052}
+        {}}}
+      {cc
+       {f 8192}
+       {p
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}}}}
+     {t x44802ea1 x44321508}
+     {a osw x41200000 osf 0 str 1 spx x447a0000 spy x43fa0000 sb 1 tt x40a00000}}
+    {curvegroup Arrow_Line 512 bezier
+     {{cc
+       {f 8192}
+       {p
+        {}
+        {x44b985a4 x43fb1087}
+        {}
+        {}
+        {x44b985a4 x43f603bf}
+        {}
+        {}
+        {x44be6890 x43f5ff92}
+        {}
+        {}
+        {x44be6890 x43fb0c5a}
+        {}}}
+      {cc
+       {f 8192}
+       {p
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}}}}
+     {t x44801e66 x4415899a}
+     {a osw x41200000 osf 0 str 1 spx x447a0000 spy x43fa0000 sb 1 tt x41100000}}}}}}
+  toolbox {selectAll {
+  { selectAll str 1 ssx 1 ssy 1 sf 1 }
+  { createBezier str 1 ssx 1 ssy 1 sf 1 sb 1 tt 4 }
+  { createBezierCusped str 1 ssx 1 ssy 1 sf 1 sb 1 tt 5 }
+  { createBSpline str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createEllipse str 1 ssx 1 ssy 1 sf 1 sb 1 tt 7 }
+  { createRectangle str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createRectangleCusped str 1 ssx 1 ssy 1 sf 1 sb 1 tt 9 }
+  { brush str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { eraser src 2 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { clone src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { reveal src 3 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { dodge src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { burn src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { blur src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { sharpen src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { smear src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+} }
+  toolbar_brush_hardness 0.200000003
+  toolbar_source_transform_scale {1 1}
+  toolbar_source_transform_center {1000 500}
+  colorOverlay {0 0 0 0}
+  lifetime_type "all frames"
+  view {}
+  motionblur_on true
+  motionblur_shutter_offset_type centred
+  source_black_outside true
+  name Right
+  xpos -2845
+  ypos -1089
+ }
+ Roto {
+  curves {{{v x3f99999a}
+  {f 0}
+  {n
+   {layer Root
+    {f 2097664}
+    {t x447a0000 x43fa0000}
+    {a pt1x 0 pt1y 0 pt2x 0 pt2y 0 pt3x 0 pt3y 0 pt4x 0 pt4y 0 ptex00 0 ptex01 0 ptex02 0 ptex03 0 ptex10 0 ptex11 0 ptex12 0 ptex13 0 ptex20 0 ptex21 0 ptex22 0 ptex23 0 ptex30 0 ptex31 0 ptex32 0 ptex33 0 ptof1x 0 ptof1y 0 ptof2x 0 ptof2y 0 ptof3x 0 ptof3y 0 ptof4x 0 ptof4y 0 pterr 0 ptrefset 0 ptmot x40800000 ptref 0}
+    {curvegroup BezierCusped4 512 bezier
+     {{cc
+       {f 8192}
+       {p
+        {}
+        {x4434b258 x44062d9f}
+        {}
+        {}
+        {x44437d96 x44062cd4}
+        {}
+        {}
+        {x44437aad x44017718}
+        {}
+        {}
+        {x4442877a x440179b8}
+        {}
+        {x4108ccc0 xbd670000}
+        {x443ff445 x44050b1e}
+        {xbfe4e200 x3c410000}
+        {}
+        {x443df111 x44050dd3}
+        {}
+        {}
+        {x443deaaa x43ebed31}
+        {}
+        {}
+        {x444085de x43ebea46}
+        {}
+        {}
+        {x444085de x43e9c5b9}
+        {}
+        {}
+        {x4437c240 x43e9c4f2}
+        {}
+        {}
+        {x4437c316 x43ebe662}
+        {}
+        {}
+        {x443a1777 x43ebf115}
+        {}
+        {}
+        {x4439fdde x44050b92}
+        {}
+        {x40064f00 x3c460000}
+        {x4437e445 x44050a36}
+        {xc0eb3380 xbd2d0000}
+        {}
+        {x4435c447 x44017b08}
+        {}
+        {}
+        {x4434bde0 x440179b8}
+        {}}}
+      {cc
+       {f 8192}
+       {p
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {x4108ccc0 xbd670000}
+        {}
+        {xbfe4e200 x3c410000}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {x40064f00 x3c460000}
+        {}
+        {xc0eb3380 xbd2d0000}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}}}}
+     {t x4454a77c x43de2f71}
+     {a osw x41200000 osf 0 str 1 spx x447a0000 spy x43fa0000 sb 1 tt x40a00000}}
+    {curvegroup BezierCusped3 512 bezier
+     {{cc
+       {f 8192}
+       {p
+        {}
+        {x44267aab x44062aaa}
+        {}
+        {}
+        {x4433d778 x44062778}
+        {}
+        {}
+        {x4433e111 x44017a76}
+        {}
+        {}
+        {x4432d111 x44017ade}
+        {}
+        {x40e19980 xbdcce000}
+        {x44308778 x44050778}
+        {xc0666200 x3d548000}
+        {}
+        {x442c7aab x44050dde}
+        {}
+        {}
+        {x442c6aab x43fc7bbb}
+        {}
+        {xc0136c00 xb8000000}
+        {x44307835 x43fc5e31}
+        {x40a19980}
+        {}
+        {x44319aaa x44004fa4}
+        {}
+        {}
+        {x44329110 x44004f4a}
+        {}
+        {}
+        {x44328ddf x43f56481}
+        {}
+        {}
+        {x44318ddf x43f56628}
+        {}
+        {x40499a00 xbdccd000}
+        {x44307dde x43f9ceef}
+        {xc00a4900 x3d8c9000}
+        {}
+        {x442c6dde x43f9ceef}
+        {}
+        {}
+        {x442c6ddf x43ebcfa0}
+        {}
+        {}
+        {x442edbdb x43ebc949}
+        {}
+        {}
+        {x442edfe3 x43e9eeee}
+        {}
+        {}
+        {x4426aaaa x43e9eeef}
+        {}
+        {}
+        {x4426aaac x43ebcc2b}
+        {}
+        {}
+        {x44288eac x43ebcfc5}
+        {}
+        {}
+        {x44288111 x44052778}
+        {}
+        {}
+        {x44267dde x44052b42}
+        {}}}
+      {cc
+       {f 8192}
+       {p
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {x40e19980 xbdcce000}
+        {}
+        {xc0666200 x3d548000}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {xc0136c00 xb8000000}
+        {}
+        {x40a19980}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {x40499a00 xbdccd000}
+        {}
+        {xc00a4900 x3d8c9000}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}}}}
+     {t x44465e96 x43dcf3dd}
+     {a osw x41200000 osf 0 str 1 spx x447a0000 spy x43fa0000 sb 1 tt x40a00000}}
+    {curvegroup BezierCusped2 512 bezier
+     {{cc
+       {f 8192}
+       {p
+        {}
+        {x44168039 x44062588}
+        {}
+        {}
+        {x44241445 x44062608}
+        {}
+        {}
+        {x44240111 x440192aa}
+        {}
+        {}
+        {x44232111 x440192aa}
+        {}
+        {x41166680 xbe828000}
+        {x44205aab x44051e2e}
+        {xc0576700 x3dbb8000}
+        {}
+        {x441c8830 x44051f1e}
+        {}
+        {}
+        {x441c805b x43fd6222}
+        {}
+        {xc014a300 xbdb39000}
+        {x44203111 x43fd8088}
+        {x40299a00 x3dccd000}
+        {}
+        {x44215111 x4400cce2}
+        {}
+        {}
+        {x442237b5 x4400cba5}
+        {}
+        {}
+        {x44223a6d x43f64222}
+        {}
+        {}
+        {x44214778 x43f64888}
+        {}
+        {x40800000 xbe800000}
+        {x44203445 x43fabbbb}
+        {xc0346200 x3e346800}
+        {}
+        {x441c805b x43fabbba}
+        {}
+        {}
+        {x441c8445 x43ec6887}
+        {}
+        {xc0842e00 xbe327000}
+        {x44212aab x43ec3555}
+        {x4104ccc0 x3eb33400}
+        {}
+        {x4423d111 x43f42222}
+        {}
+        {}
+        {x4424c111 x43f42888}
+        {}
+        {}
+        {x44249110 x43ea0f65}
+        {}
+        {}
+        {x441682cc x43ea0811}
+        {}
+        {}
+        {x441685be x43ebfd56}
+        {}
+        {}
+        {x441896a0 x43ebf047}
+        {}
+        {}
+        {x44189111 x44051cec}
+        {}
+        {}
+        {x44168168 x44051c9c}
+        {}}}
+      {cc
+       {f 8192}
+       {p
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {x41166680 xbe828000}
+        {}
+        {xc0576700 x3dbb8000}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {xc014a300 xbdb39000}
+        {}
+        {x40299a00 x3dccd000}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {x40800000 xbe800000}
+        {}
+        {xc0346200 x3e346800}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {xc0842e00 xbe327000}
+        {}
+        {x4104ccc0 x3eb33400}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}}}}
+     {t x44372f4d x43dcb2fd}
+     {a osw x41200000 osf 0 str 1 spx x447a0000 spy x43fa0000 sb 1 tt x40a00000}}
+    {curvegroup BezierCusped1 512 bezier
+     {{cc
+       {f 8192}
+       {p
+        {}
+        {x4407c0b8 x44063111}
+        {}
+        {}
+        {x44100aac x44063111}
+        {}
+        {}
+        {x44100b23 x44052bca}
+        {}
+        {}
+        {x440dd777 x4405296a}
+        {}
+        {}
+        {x440dcaab x43ec6eef}
+        {}
+        {xc05a6500 xbe322000}
+        {x44123dde x43ec6222}
+        {x4103d700 x3ed70800}
+        {}
+        {x44149b78 x43f3ffbb}
+        {}
+        {}
+        {x44159378 x43f3f3bb}
+        {}
+        {}
+        {x441557ce x43e9dd6a}
+        {}
+        {}
+        {x4407bdde x43e9e222}
+        {}
+        {}
+        {x4407be8a x43ec2b90}
+        {}
+        {}
+        {x44099dde x43ec2eef}
+        {}
+        {}
+        {x4409caaa x4405282c}
+        {}
+        {}
+        {x4407bddd x44052d2a}
+        {}}}
+      {cc
+       {f 8192}
+       {p
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {xc05a6500 xbe322000}
+        {}
+        {x4103d700 x3ed70800}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}}}}
+     {t x442642c3 x43db5fab}
+     {a osw x41200000 osf 0 str 1 spx x447a0000 spy x43fa0000 sb 1 tt x40a00000}}
+    {curvegroup Arrow 512 bezier
+     {{cc
+       {f 8192}
+       {p
+        {}
+        {x43ec693c x43ea3aed}
+        {}
+        {}
+        {x43ec6da4 x43ef9485}
+        {}
+        {}
+        {x43db5ea0 x43f67ae9}
+        {}
+        {}
+        {x43ec693c x43fd7ae9}
+        {}
+        {}
+        {x43ec6a58 x44018a42}
+        {}
+        {}
+        {x43d57838 x43f92e1a}
+        {}
+        {}
+        {x43d57838 x43f43aee}
+        {}}}
+      {cc
+       {f 8192}
+       {p
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}}}}
+     {t x44802ea1 x44321508}
+     {a osw x41200000 osf 0 str 1 spx x447a0000 spy x43fa0000 sb 1 tt x40a00000}}
+    {curvegroup Arrow_Line 512 bezier
+     {{cc
+       {f 8192}
+       {p
+        {}
+        {x4400485e x43f3aab8}
+        {}
+        {}
+        {x4400485e x43f8b780}
+        {}
+        {}
+        {x43ed050c x43f8bbad}
+        {}
+        {}
+        {x43ed050c x43f3aee5}
+        {}}}
+      {cc
+       {f 8192}
+       {p
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}
+        {}}}}
+     {t x44801e66 x4415899a}
+     {a osw x41200000 osf 0 str 1 spx x447a0000 spy x43fa0000 sb 1 tt x41100000}}}}}}
+  toolbox {selectAll {
+  { selectAll str 1 ssx 1 ssy 1 sf 1 }
+  { createBezier str 1 ssx 1 ssy 1 sf 1 sb 1 tt 4 }
+  { createBezierCusped str 1 ssx 1 ssy 1 sf 1 sb 1 tt 5 }
+  { createBSpline str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createEllipse str 1 ssx 1 ssy 1 sf 1 sb 1 tt 7 }
+  { createRectangle str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createRectangleCusped str 1 ssx 1 ssy 1 sf 1 sb 1 tt 9 }
+  { addPoints str 1 ssx 1 ssy 1 sf 1 }
+  { brush str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { eraser src 2 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { clone src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { reveal src 3 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { dodge src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { burn src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { blur src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { sharpen src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { smear src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+} }
+  toolbar_brush_hardness 0.200000003
+  toolbar_source_transform_scale {1 1}
+  toolbar_source_transform_center {1000 500}
+  colorOverlay {0 0 0 0}
+  lifetime_type "all frames"
+  view {}
+  motionblur_on true
+  motionblur_shutter_offset_type centred
+  source_black_outside true
+  name Left
+  xpos -2843
+  ypos -1063
+ }
+ Dilate {
+  channels alpha
+  size 6
+  name Stroke
+  xpos -2843
+  ypos -1037
+ }
+ Reformat {
+  format {{{parent.PreviewReformat.format}}}
+  name Reformat2
+  xpos -2843
+  ypos -981
+ }
+ CheckerBoard2 {
+  inputs 0
+  format {{{parent.PreviewReformat.format}}}
+  color0 0.25
+  color1 0.5
+  color2 0.25
+  color3 0.5
+  centerlinecolor 0.8
+  centerlinewidth 6
+  name CheckerBoard
+  xpos -2975
+  ypos -1209
+ }
+ Grade {
+  white {{previewColourCKNB} {previewColourCKNB} {previewColourCKNB} 1}
+  name PreviewGRD
+  xpos -2975
+  ypos -1113
+ }
+ Shuffle {
+  alpha white
+  name FloodAlpha
+  xpos -2975
+  ypos -1049
+  disable {{previewAlphaCHK}}
+ }
+ Merge2 {
+  inputs 2
+  name PreviewMergeTXT
+  xpos -2975
+  ypos -981
+ }
+ Reformat {
+  type "to box"
+  box_width {{parent.ImageCrop.box.r}}
+  box_height {{parent.ImageCrop.box.t}}
+  box_fixed true
+  resize fill
+  black_outside {{blackOutsideCHK}}
+  name PreviewReformat2
+  xpos -2975
+  ypos -946
+  disable {{!autoCalImageCHK}}
+ }
+ Wireframe {
+  operation over
+  line_width 1
+  line_color 0.5
+  name Wireframe1
+  xpos -2975
+  ypos -885
+ }
+ Input {
+  inputs 0
+  name Image
+  xpos -3109
+  ypos -1389
+  number 2
+ }
+ Shuffle {
+  name FixEmpty1
+  xpos -3109
+  ypos -1356
+ }
+ Switch {
+  inputs 2
+  which 1
+  name PreviewSwitch
+  xpos -3109
+  ypos -885
+  disable {{!previewCheckerBoardCHK}}
+ }
+ Crop {
+  box {0 0 {input.width} {input.height}}
+  intersect true
+  crop {{blackOutsideCHK}}
+  name ImageCrop
+  xpos -3109
+  ypos -842
+ }
+ Dot {
+  name Dot4
+  xpos -3075
+  ypos -727
+ }
+ Dot {
+  name Dot8
+  xpos -1973
+  ypos -727
+ }
+ Project3D2 {
+  inputs 2
+  crop false
+  name Project3D1
+  xpos -2007
+  ypos -617
+  disable {{!projectCamCHK}}
+ }
+set N5e3d6800 [stack 0]
+ Cylinder {
+  selectable false
+  cast_shadow false
+  receive_shadow false
+  rows 20
+  columns 20
+  rotate {0 90 0}
+  uniform_scale 6
+  skew {{skew3DKNB} {skew3DKNB} {skew3DKNB}}
+  pivot {{pivot3DKNB} {pivot3DKNB} {pivot3DKNB}}
+  name Cylinder1
+  xpos -1866
+  ypos -556
+ }
+push $N5e3d6800
+ Cube {
+  selectable false
+  cast_shadow false
+  receive_shadow false
+  rows 1
+  columns 1
+  separate_faces false
+  rotate {0 90 0}
+  uniform_scale 10
+  skew {{skew3DKNB} {skew3DKNB} {skew3DKNB}}
+  pivot {{pivot3DKNB} {pivot3DKNB} {pivot3DKNB}}
+  name Cube1
+  xpos -1961
+  ypos -555
+ }
+push $N5e3d6800
+ Sphere {
+  selectable false
+  cast_shadow false
+  receive_shadow false
+  rows 15
+  columns 15
+  rotate {0 90 0}
+  uniform_scale 5
+  skew {{skew3DKNB} {skew3DKNB} {skew3DKNB}}
+  pivot {{pivot3DKNB} {pivot3DKNB} {pivot3DKNB}}
+  name Sphere1
+  xpos -2060
+  ypos -554
+ }
+push $N5e3d6800
+ Card2 {
+  selectable false
+  cast_shadow false
+  receive_shadow false
+  rows 4
+  columns 4
+  uniform_scale 25
+  skew {{skew3DKNB} {skew3DKNB} {skew3DKNB}}
+  pivot {{pivot3DKNB} {pivot3DKNB} {pivot3DKNB}}
+  control_points {3 3 3 6 
+
+1 {-0.5 -0.5 0} 0 {0 0.1666666865 0} 0 {0 0 0} 0 {0.1666666865 0 0} 0 {0 0 0} 0 {0 0 0} 
+1 {-0.5 0 0} 0 {0 0.1666666716 0} 0 {0 -0.1666666716 0} 0 {0.1666666865 0 0} 0 {0 0 0} 0 {0.5 0 0} 
+1 {-0.5 0.5 0} 0 {0 0 0} 0 {0 -0.1666666865 0} 0 {0.1666666865 0 0} 0 {0 0 0} 0 {1 0 0} 
+1 {0 -0.5 0} 0 {0 0.1666666865 0} 0 {0 0 0} 0 {0.1666666716 0 0} 0 {-0.1666666716 0 0} 0 {0 0.5 0} 
+1 {0 0 0} 0 {0 0.1666666716 0} 0 {0 -0.1666666716 0} 0 {0.1666666716 0 0} 0 {-0.1666666716 0 0} 0 {0.5 0.5 0} 
+1 {0 0.5 0} 0 {0 0 0} 0 {0 -0.1666666865 0} 0 {0.1666666716 0 0} 0 {-0.1666666716 0 0} 0 {1 0.5 0} 
+1 {0.5 -0.5 0} 0 {0 0.1666666865 0} 0 {0 0 0} 0 {0 0 0} 0 {-0.1666666865 0 0} 0 {0 1 0} 
+1 {0.5 0 0} 0 {0 0.1666666716 0} 0 {0 -0.1666666716 0} 0 {0 0 0} 0 {-0.1666666865 0 0} 0 {0.5 1 0} 
+1 {0.5 0.5 0} 0 {0 0 0} 0 {0 -0.1666666865 0} 0 {0 0 0} 0 {-0.1666666865 0 0} 0 {1 1 0} }
+  name Card1
+  xpos -2161
+  ypos -555
+ }
+ Switch {
+  inputs 4
+  name ShapeSwitch
+  knobChanged "## Callback variables\nthis_node = nuke.thisNode()\nthis_knob = nuke.thisKnob()\nthis_group = nuke.thisGroup()\n\n## Checks if the shapeTypesPDC knob has been used and runs statements\nif this_knob.name() in (\"shapeTypesPDC\"):\n    ## Variables\n    userChoice = nuke.thisNode().knob('shapeTypesPDC').value()\n    which = this_node.knob('which')\n    ## Functions for knob visibility\n    def card_visibility(vis):\n        this_group.knobs()\['cardTXT'].setVisible(vis)\n        this_group.knobs()\['cardOrientationPDC'].setVisible(vis)\n        this_group.knobs()\['cardImageAspectCHK'].setVisible(vis)\n        this_group.knobs()\['cardRowsINT'].setVisible(vis)\n        this_group.knobs()\['cardColumnsINT'].setVisible(vis)\n\t\n    def sphere_visibility(vis):\n        this_group.knobs()\['sphereTXT'].setVisible(vis)\n        this_group.knobs()\['sphereRowsINT'].setVisible(vis)\n        this_group.knobs()\['sphereColumnsINT'].setVisible(vis)\n        this_group.knobs()\['sphereUextentSLD'].setVisible(vis)\n        this_group.knobs()\['sphereVextentSLD'].setVisible(vis)\n        this_group.knobs()\['sphereCloseTopCHK'].setVisible(vis)\n        this_group.knobs()\['sphereCloseBottomCHK'].setVisible(vis)\n\t\n    def cube_visibility(vis):\n        this_group.knobs()\['cubeTXT'].setVisible(vis)\n        this_group.knobs()\['cubeRowsINT'].setVisible(vis)\n        this_group.knobs()\['cubeColumnsINT'].setVisible(vis)\n        this_group.knobs()\['cubeSeparateFacesCHK'].setVisible(vis)\n\t\n    def cylinder_visibility(vis):\n        this_group.knobs()\['cylinderTXT'].setVisible(vis)\n        this_group.knobs()\['cylinderRowsINT'].setVisible(vis)\n        this_group.knobs()\['cylinderColumnsINT'].setVisible(vis)\n        this_group.knobs()\['cylinderRadiusSLD'].setVisible(vis)\n        this_group.knobs()\['cylinderHeightSLD'].setVisible(vis)\n        this_group.knobs()\['cylinderUExtentSLD'].setVisible(vis)\n        this_group.knobs()\['cylinderCloseTopCHK'].setVisible(vis)\n        this_group.knobs()\['cylinderCloseBottomCHK'].setVisible(vis)\n    \n    ## Changes expression type and top level knobs based on user choice \n    if userChoice == \"Card\":\n        which.setValue(0)\n        card_visibility(True)\n        sphere_visibility(False)\n        cube_visibility(False)\n        cylinder_visibility(False)\n\n    elif userChoice == \"Sphere\":\n        which.setValue(1)\n        card_visibility(False)\n        sphere_visibility(True)\n        cube_visibility(False)\n        cylinder_visibility(False)\n\n    elif userChoice == \"Cube\":\n        which.setValue(2)\n        card_visibility(False)\n        sphere_visibility(False)\n        cube_visibility(True)\n        cylinder_visibility(False)\n\n    elif userChoice == \"Cylinder\":\n        which.setValue(3)\n        card_visibility(False)\n        sphere_visibility(False)\n        cube_visibility(False)\n        cylinder_visibility(True)"
+  xpos -2007
+  ypos -494
+  addUserKnob {20 User}
+  addUserKnob {4 shapeTypesPDC l Shape M {Card Sphere Cube Cylinder "" ""}}
+ }
+ TransformGeo {
+  inputs 3
+  selectable false
+  translate {{parent.Sampler.positionSamplerCKNB.r} {parent.Sampler.positionSamplerCKNB.g} {parent.Sampler.positionSamplerCKNB.b}}
+  rotate {{rotation3DKNB} {rotation3DKNB} {rotation3DKNB}}
+  scaling {{scale3DKNB} {scale3DKNB} {scale3DKNB}}
+  uniform_scale {{uniScaleSLD*globalScaleSLD}}
+  name TransformGeo1
+  xpos -2007
+  ypos -431
+ }
+ Reformat {
+  inputs 0
+  black_outside {{blackOutsideCHK}}
+  pbb true
+  name PreviewReformat
+  xpos -1842
+  ypos -418
+ }
+ ScanlineRender {
+  inputs 3
+  conservative_shader_sampling false
+  antialiasing high
+  overscan 100
+  shutteroffset centred
+  motion_vectors_type distance
+  name ScanlineRender1
+  xpos -2007
+  ypos -329
+ }
+set N5e420c00 [stack 0]
+ Dot {
+  name Dot23
+  xpos -1973
+  ypos 229
+ }
+set N5e421000 [stack 0]
+ Dot {
+  name Dot24
+  xpos -1973
+  ypos 479
+ }
+push $N5e2ca000
+push $N5e289c00
+ Shuffle {
+  name FixEmpty2
+  xpos -2163
+  ypos -1030
+ }
+push $N5e289400
+ Remove {
+  operation keep
+  channels none
+  name Remove1
+  xpos -2007
+  ypos -1079
+  disable {{enableInputAOVsCHK}}
+ }
+ Copy {
+  inputs 2
+  from0 rgba.alpha
+  to0 rgba.alpha
+  name Copy2
+  xpos -2007
+  ypos -1036
+ }
+set N5e458000 [stack 0]
+ Shuffle {
+  in none
+  in2 rgba
+  alpha alpha2
+  name InputAOV
+  xpos -2007
+  ypos -1000
+ }
+ ColorMatrix {
+  matrix {
+      {1 0 0}
+      {0 -4e-08 1}
+      {0 -1 -4e-08}
+    }
+  name YUpWorld
+  xpos -2007
+  ypos -971
+  disable {{!worldSpaceCHK}}
+ }
+set N5e458800 [stack 0]
+ Dot {
+  name Dot16
+  xpos -729
+  ypos -968
+ }
+ Unpremult {
+  name Unpremult1
+  xpos -763
+  ypos -929
+ }
+push $N5e458000
+ Dot {
+  name Dot20
+  xpos -643
+  ypos -1027
+ }
+ Dot {
+  name Dot21
+  xpos -643
+  ypos -852
+ }
+ PositionToPoints2 {
+  inputs 2
+  display textured
+  selectable false
+  render_mode textured
+  cast_shadow false
+  receive_shadow false
+  detail 1
+  pointSize 1
+  name PositionToPoints1
+  xpos -763
+  ypos -855
+  disable {{"pointCloudPreviewCHK == 0 || holdoutTypePDC == 2 ? 1 : 0"}}
+ }
+push 0
+ ScanlineRender {
+  inputs 3
+  conservative_shader_sampling false
+  antialiasing high
+  motion_vectors_type distance
+  name ScanlineRender2
+  xpos -763
+  ypos -804
+ }
+ DeepExpression {
+  chans1 deep
+  deep.front "deep.front + dilateFixDeepSLD"
+  deep.back "deep.back - dilateFixDeepSLD"
+  name DeepExpression2
+  xpos -763
+  ypos -442
+  addUserKnob {20 User}
+  addUserKnob {7 dilateFixDeepSLD}
+ }
+push $N5e420c00
+ Dot {
+  name Dot10
+  xpos -1191
+  ypos -327
+ }
+set N5e480800 [stack 0]
+ Dot {
+  name Dot12
+  xpos -792
+  ypos -327
+ }
+ DeepMerge2 {
+  inputs 2
+  operation holdout
+  name DeepMerge1
+  xpos -763
+  ypos -264
+ }
+ DeepToImage2 {
+  name DeepToImage1
+  xpos -763
+  ypos -199
+ }
+ EdgeBlur {
+  channels rgba
+  size {{edgeBlurSLD}}
+  edge_mult {{edgeFixFalloffSLD}}
+  name EdgeBlur2
+  xpos -763
+  ypos -6
+ }
+ Dot {
+  name Dot9
+  xpos -729
+  ypos 226
+ }
+ Input {
+  inputs 0
+  name Deep
+  xpos -1205
+  ypos -1398
+  number 4
+ }
+ Dot {
+  name Dot1
+  xpos -1171
+  ypos -1199
+ }
+set N5e4b0400 [stack 0]
+ Dot {
+  name Dot17
+  xpos -1097
+  ypos -1199
+ }
+ DeepExpression {
+  chans1 deep
+  deep.front "deep.front + dilateFixDeepSLD"
+  deep.back "deep.back - dilateFixDeepSLD"
+  name DeepExpression1
+  xpos -1131
+  ypos -442
+  addUserKnob {20 User}
+  addUserKnob {7 dilateFixDeepSLD}
+ }
+push $N5e480800
+ DeepMerge2 {
+  inputs 2
+  operation holdout
+  name DeepMerge2
+  xpos -1131
+  ypos -264
+ }
+ DeepToImage2 {
+  name DeepToImage2
+  xpos -1131
+  ypos -200
+ }
+ EdgeBlur {
+  channels rgba
+  size {{edgeBlurSLD}}
+  edge_mult {{edgeFixFalloffSLD}}
+  name EdgeBlur1
+  xpos -1131
+  ypos -6
+ }
+ Dot {
+  name Dot11
+  xpos -1097
+  ypos 226
+ }
+ Constant {
+  inputs 0
+  channels rgb
+  color 1e+13
+  name Constant1
+  label "Flood RBG\nfor Alpha fix"
+  xpos -1391
+  ypos -551
+  postage_stamp false
+ }
+push $N5e458800
+ Unpremult {
+  name Unpremult
+  xpos -2007
+  ypos -939
+  disable {{!unpremultCHK}}
+ }
+set N5e4d4400 [stack 0]
+ Dot {
+  name Dot18
+  xpos -1500
+  ypos -936
+ }
+ Merge2 {
+  inputs 2
+  operation under
+  name Merge1
+  xpos -1534
+  ypos -538
+ }
+ Add {
+  channels rgb
+  value {{-parent.Sampler.positionSamplerCKNB} {-parent.Sampler.positionSamplerCKNB} {-parent.Sampler.positionSamplerCKNB} 0}
+  name CenterS1
+  xpos -1534
+  ypos -244
+ }
+ ColorMatrix {
+  matrix {
+      {{"max(0.0001, RotAxis.world_matrix.0)"} {RotAxis.world_matrix.1} {RotAxis.world_matrix.2}}
+      {{RotAxis.world_matrix.4} {"max(0.0001, RotAxis.world_matrix.5)"} {RotAxis.world_matrix.6}}
+      {{RotAxis.world_matrix.8} {RotAxis.world_matrix.9} {"max(0.0001, RotAxis.world_matrix.10)"}}
+    }
+  invert true
+  name ColourMatrixS1
+  xpos -1534
+  ypos -219
+ }
+ Expression {
+  temp_name0 distance
+  temp_expr0 "sqrt(pow2(r-rampEndCKNB.r) + pow2(g-rampEndCKNB.g) + pow2(b-rampEndCKNB.b))"
+  temp_name1 start
+  temp_expr1 "sqrt(pow2(r-rampEndCKNB.r-(rampStartCKNB.r-rampEndCKNB.r)) + pow2(g-rampEndCKNB.g-(rampStartCKNB.g-rampEndCKNB.g)) + pow2(b-rampEndCKNB.b-(rampStartCKNB.b-rampEndCKNB.b)))"
+  temp_name2 length
+  temp_expr2 "sqrt(pow2(rampStartCKNB.r-rampEndCKNB.r) + pow2(rampStartCKNB.g-rampEndCKNB.g) + pow2(rampStartCKNB.b-rampEndCKNB.b))"
+  temp_name3 vector
+  temp_expr3 "acos( clamp((pow2(distance)-pow2(start)+pow2(length))/(2*distance*length),-1,1) )"
+  expr3 "clamp((distance * cos(vector)) / length)"
+  name Holdout
+  knobChanged "## Callback variables\nthis_node = nuke.thisNode()\nthis_knob = nuke.thisKnob()\nthis_group = nuke.thisGroup()\n\n## Checks if the shapeTypesPDC knob has been used and runs statements\nif this_knob.name() in (\"shapeTypesPDC\"):\n    ## Variables\n    shape = \"S1\"\n    userChoice = nuke.thisNode().knob('shapeTypesPDC').value()\n    exp = this_node.knob('expr3')\n    tempName0 = this_node.knob('temp_name0')\n    tempName1 = this_node.knob('temp_name1')\n    tempName2 = this_node.knob('temp_name2')\n    tempName3 = this_node.knob('temp_name3')    \n    tempExp0 = this_node.knob('temp_expr0')\n    tempExp1 = this_node.knob('temp_expr1')\n    tempExp2 = this_node.knob('temp_expr2')\n    tempExp3 = this_node.knob('temp_expr3')\n    ramp0 = this_group.knobs()\['rampEnd' + shape + 'CKNB']\n    ramp1 = this_group.knobs()\['rampStart' + shape + 'CKNB']\n    center = this_group.knobs()\['maskCenter' + shape + 'CKNB']\n    radius = this_group.knobs()\['radius' + shape + 'SLD']\n    scale = this_group.knobs()\['scale' + shape + '3DKNB']\n    rotation = this_group.knobs()\['rotation' + shape + '3DKNB']\n    minorRadius = this_group.knobs()\['minorRadius' + shape + 'SLD']\n    \n    ## Changes expression type and top level knobs based on user choice \n    if userChoice == \"Sphere\":\n        tempName0.setValue(\"\")\n        tempExp0.setValue(\"\")\n        tempName1.setValue(\"\")\n        tempExp1.setValue(\"\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        exp.setValue(\"1-sqrt((pow2(r))+(pow2(g))+(pow2(b)))\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)        \n        minorRadius.setVisible(False)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Radius\")\n    elif userChoice == \"Sphere (2 Points)\":\n        tempName0.setValue(\"distance\")\n        tempExp0.setValue(\"sqrt(pow2(r-rampStartCKNB.r) + pow2(g-rampStartCKNB.g) + pow2(b-rampStartCKNB.b))\")\n        tempName1.setValue(\"length\")\n        tempExp1.setValue(\"sqrt(pow(rampEndCKNB.r-rampStartCKNB.r,2) + pow(rampEndCKNB.g-rampStartCKNB.g,2) + pow(rampEndCKNB.b-rampStartCKNB.b,2))\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        exp.setValue(\"1-clamp(distance / length)\")\n        ramp0.setVisible(True)\n        ramp1.setVisible(True)\n        minorRadius.setVisible(False)\n        center.setVisible(False)\n        radius.setVisible(False)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Radius\")\n        ramp0.setLabel(\"Edge\")\n        ramp1.setLabel(\"Center\")\n    elif userChoice == \"Sphere (Hollow)\":\n        tempName0.setValue(\"\")\n        tempExp0.setValue(\"\")\n        tempName1.setValue(\"\")\n        tempExp1.setValue(\"\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        exp.setValue(\"1-pow((sqrt((pow2(r))+(pow2(g))+(pow2(b)))) - 1, 2) / pow2(minorRadiusSLD)\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)\n        minorRadius.setVisible(True)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Major Radius\")\n    elif userChoice == \"Cube (Rounded)\":\n        tempName0.setValue(\"\")\n        tempExp0.setValue(\"\")\n        tempName1.setValue(\"\")\n        tempExp1.setValue(\"\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        exp.setValue(\"smoothstep(startCubeSLD,endCubeSLD, clamp(1-abs(r)) ) * smoothstep(startCubeSLD,endCubeSLD, clamp(1-abs(g)) ) * smoothstep(startCubeSLD,endCubeSLD, clamp(1-abs(b)) )\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)\n        minorRadius.setVisible(False)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Size\")\n    elif userChoice == \"Cube (Sharp)\":\n        tempName0.setValue(\"\")\n        tempExp0.setValue(\"\")\n        tempName1.setValue(\"\")\n        tempExp1.setValue(\"\")\n        exp.setValue(\"1-max(abs(r),abs(g),abs(b))\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)\n        minorRadius.setVisible(False)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Size\")\n    elif userChoice == \"Octahedron\":\n        tempName0.setValue(\"\")\n        tempExp0.setValue(\"\")\n        tempName1.setValue(\"\")\n        tempExp1.setValue(\"\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        exp.setValue(\"1-(abs(r)+abs(g)+abs(b))\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)\n        minorRadius.setVisible(False)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Size\")\n    elif userChoice == \"Dome\":\n        tempName0.setValue(\"sphere\")\n        tempExp0.setValue(\"1-(abs((r*r)+(g*g)+(b*b)))\")\n        tempName1.setValue(\"cube\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        tempExp1.setValue(\"smoothstep(0,0.1, clamp(1-abs(r)) +1) * smoothstep(0,0.1, clamp(1-abs(g+1)) ) * smoothstep(0,0.1, clamp(1-abs(b)) +1)\")\n        exp.setValue(\"(1-((cube*10)-sphere))/2\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)\n        minorRadius.setVisible(False)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Radius\")\n    elif userChoice == \"Pyramid\":\n        tempName0.setValue(\"octahedron\")\n        tempExp0.setValue(\"1-(abs(r)+abs(g)+abs(b))\")\n        tempName1.setValue(\"cube\")\n        tempExp1.setValue(\"smoothstep(0,1, clamp(1-abs(r)) +1) * smoothstep(0,1, clamp(1-abs(g+1)) ) * smoothstep(0,1, clamp(1-abs(b)) +1)\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        exp.setValue(\"(1-((cube*100)-octahedron))/2\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)\n        minorRadius.setVisible(False)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Size\")\n    elif userChoice == \"Cone\":\n        tempName0.setValue(\"\")\n        tempExp0.setValue(\"\")\n        tempName1.setValue(\"\")\n        tempExp1.setValue(\"\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        exp.setValue(\"clamp((1 - (sqrt(pow2(r) + pow2(b))) / max(max(abs(g), 0), 0)) * (1-min(abs(g) / coneHeightSLD, 1)) * (g >= 0) * (g <= coneHeightSLD), 0, 1)\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)\n        minorRadius.setVisible(False)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Height\")\n    elif userChoice == \"Cylinder\":\n        tempName0.setValue(\"\")\n        tempExp0.setValue(\"\")\n        tempName1.setValue(\"\")\n        tempExp1.setValue(\"\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        exp.setValue(\"(1 - clamp((sqrt(pow2(r) + pow2(b)) - 0.3) / 1, 0, 1)) * smoothstep(0,0.5, clamp(2-abs(g)))\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)\n        minorRadius.setVisible(False)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Radius\")\n    elif userChoice == \"Torus\":\n        tempName0.setValue(\"\")\n        tempExp0.setValue(\"\")\n        tempName1.setValue(\"\")\n        tempExp1.setValue(\"\")\n        tempName2.setValue(\"\")\n        tempExp2.setValue(\"\")\n        tempName3.setValue(\"\")\n        tempExp3.setValue(\"\")\n        exp.setValue(\"1 - sqrt((pow(sqrt(pow(r, 2) + pow(b, 2)) - 1, 2) + pow(g, 2)) / pow2(minorRadiusSLD))\")\n        ramp0.setVisible(False)\n        ramp1.setVisible(False)\n        minorRadius.setVisible(True)\n        center.setVisible(True)\n        radius.setVisible(True)\n        scale.setVisible(True)\n        rotation.setVisible(True)\n        radius.setLabel(\"Major Radius\")\n    elif userChoice == \"Ramp\":\n        tempName0.setValue(\"distance\")\n        tempExp0.setValue(\"sqrt(pow2(r-rampEndCKNB.r) + pow2(g-rampEndCKNB.g) + pow2(b-rampEndCKNB.b))\")\n        tempName1.setValue(\"start\")\n        tempExp1.setValue(\"sqrt(pow2(r-rampEndCKNB.r-(rampStartCKNB.r-rampEndCKNB.r)) + pow2(g-rampEndCKNB.g-(rampStartCKNB.g-rampEndCKNB.g)) + pow2(b-rampEndCKNB.b-(rampStartCKNB.b-rampEndCKNB.b)))\")\n        tempName2.setValue(\"length\")\n        tempExp2.setValue(\"sqrt(pow2(rampStartCKNB.r-rampEndCKNB.r) + pow2(rampStartCKNB.g-rampEndCKNB.g) + pow2(rampStartCKNB.b-rampEndCKNB.b))\")\n        tempName3.setValue(\"vector\")\n        tempExp3.setValue(\"acos( clamp((pow2(distance)-pow2(start)+pow2(length))/(2*distance*length),-1,1) )\")\n        exp.setValue(\"clamp((distance * cos(vector)) / length)\")\n        ramp0.setVisible(True)\n        ramp1.setVisible(True)\n        minorRadius.setVisible(False)\n        center.setVisible(False)\n        radius.setVisible(False)\n        scale.setVisible(False)\n        rotation.setVisible(False)\n        radius.setLabel(\"Radius\")\n        ramp0.setLabel(\"End (Black)\")\n        ramp1.setLabel(\"Start (White)\")"
+  xpos -1534
+  ypos -191
+  addUserKnob {20 User}
+  addUserKnob {18 rampStartCKNB l "Ramp Start"}
+  rampStartCKNB {0 0 {rampFalloffSLD+rampOffsetSLD}}
+  addUserKnob {6 rampStartCKNB_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 color_rgb_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {18 rampEndCKNB l "Ramp End"}
+  rampEndCKNB {0 0 {curve-rampFalloffSLD+rampOffsetSLD}}
+  addUserKnob {6 rampEndCKNB_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {7 rampFalloffSLD l "Ramp Falloff" R 0.001 1}
+  rampFalloffSLD 0.001
+  addUserKnob {7 rampOffsetSLD l "Ramp Offset" R -2 2}
+ }
+ Invert {
+  channels rgba
+  name Invert1
+  xpos -1534
+  ypos -154
+  disable {{!invertHoldoutCHK}}
+ }
+ Group {
+  name ErodeFine
+  help "Erode an image with fine controls, as opposed to Nuke's default erode node."
+  note_font "DejaVu Sans"
+  xpos -1534
+  ypos -65
+  addUserKnob {20 optionsTAB l Options}
+  addUserKnob {26 erodeTXT l <b>Erode}
+  addUserKnob {7 size l Size R -10 10}
+  size {{dilateFixSizeSLD}}
+  addUserKnob {26 maskTXT l <b>Mask}
+  addUserKnob {7 maskValueSLD l Value}
+  addUserKnob {6 maskInvertCHK l Invert -STARTLINE}
+ }
+  Input {
+   inputs 0
+   name Mask
+   xpos 348
+   ypos 1141
+   number 1
+  }
+  Shuffle {
+   name FixEmpty
+   selected true
+   xpos 348
+   ypos 1165
+  }
+  Input {
+   inputs 0
+   name Input
+   xpos -11
+   ypos 152
+  }
+  Dot {
+   name Dot15
+   tile_color 0xcccccc00
+   xpos 23
+   ypos 287
+  }
+set N5e50ec00 [stack 0]
+  Dilate {
+   channels rgba
+   size {{int(parent.size)}}
+   name Dilate4
+   xpos -11
+   ypos 434
+  }
+  AdjBBox {
+   numpixels 1
+   name AdjBBox2
+   xpos -11
+   ypos 568
+  }
+  Dot {
+   name Dot6
+   tile_color 0xcccccc00
+   xpos 23
+   ypos 678
+  }
+set N5e50f800 [stack 0]
+  Dot {
+   name Dot8
+   tile_color 0xcccccc00
+   xpos 175
+   ypos 678
+  }
+  Transform {
+   translate {{exp.expo(abs(parent.size-int(parent.size))*10)*-1} 0}
+   center {320 240}
+   black_outside false
+   shutteroffset centred
+   name Transform5
+   xpos 141
+   ypos 823
+  }
+push $N5e50f800
+  Dot {
+   name Dot7
+   tile_color 0xcccccc00
+   xpos -127
+   ypos 678
+  }
+  Transform {
+   translate {{exp.expo(abs(parent.size-int(parent.size))*10)} 0}
+   center {320 240}
+   black_outside false
+   shutteroffset centred
+   name Transform4
+   xpos -161
+   ypos 782
+  }
+push $N5e50f800
+  Merge2 {
+   inputs 2
+   operation {{parent.size>0?17:18}}
+   bbox B
+   also_merge all
+   name Merge2
+   xpos -11
+   ypos 782
+  }
+  Merge2 {
+   inputs 2
+   operation {{parent.size>0?17:18}}
+   bbox B
+   also_merge all
+   name Merge1
+   xpos -11
+   ypos 823
+  }
+  Dot {
+   name Dot9
+   xpos 23
+   ypos 910
+  }
+set N5e52f400 [stack 0]
+  Dot {
+   name Dot10
+   xpos 175
+   ypos 910
+  }
+  Transform {
+   translate {0 {exp.expo(abs(parent.size-int(parent.size))*10)*-1}}
+   center {320 240}
+   black_outside false
+   shutteroffset centred
+   name Transform6
+   xpos 141
+   ypos 1061
+  }
+push $N5e52f400
+  Dot {
+   name Dot11
+   xpos -127
+   ypos 910
+  }
+  Transform {
+   translate {0 {exp.expo(abs(parent.size-int(parent.size))*10)}}
+   center {320 240}
+   black_outside false
+   shutteroffset centred
+   name Transform7
+   xpos -161
+   ypos 1014
+  }
+push $N5e52f400
+  Merge2 {
+   inputs 2
+   operation {{parent.size>0?17:18}}
+   bbox B
+   also_merge all
+   name Merge3
+   xpos -11
+   ypos 1014
+  }
+  Merge2 {
+   inputs 2
+   operation {{parent.size>0?17:18}}
+   bbox B
+   also_merge all
+   name Merge4
+   xpos -11
+   ypos 1061
+  }
+  Multiply {
+   inputs 1+1
+   channels rgba
+   value {{maskValueSLD}}
+   invert_mask {{maskInvertCHK}}
+   name Multiply1
+   xpos -11
+   ypos 1165
+  }
+push $N5e50ec00
+  Dot {
+   name Dot13
+   tile_color 0xcccccc00
+   xpos -290
+   ypos 287
+  }
+  Dot {
+   name Dot12
+   tile_color 0xcccccc00
+   xpos -290
+   ypos 1261
+  }
+  NodeWrapper {
+   inputs 2
+   channels rgba
+   maskChannelMask none
+   name NodeWrapper1
+   xpos -11
+   ypos 1257
+  }
+  Output {
+   name Output1
+   xpos -11
+   ypos 1389
+  }
+  NoOp {
+   inputs 0
+   name exp
+   xpos 303
+   ypos 683
+   addUserKnob {20 User}
+   addUserKnob {7 expo}
+   expo {{parent.size>0?positive_curve:negative_curve}}
+   addUserKnob {7 positive_curve}
+   positive_curve {{curve 0 0.1037476063 0.1683235168 0.2209408283 0.2831250429 0.3357424736 0.3954704404 0.4731256962 0.5778000951 0.762029767 1}}
+   addUserKnob {7 negative_curve}
+   negative_curve {{curve 0 0.2209040523 0.3736710192 0.4841623592 0.5752981992 0.6541623592 0.7271137492 0.8043368459 0.8681262732 0.9249737263 1}}
+  }
+ end_group
+ EdgeBlur {
+  channels rgba
+  size {{edgeBlurSLD}}
+  edge_mult {{edgeFixFalloffSLD}}
+  name EdgeBlur
+  xpos -1534
+  ypos -6
+ }
+push $N5e421000
+ Multiply {
+  inputs 1+1
+  value 0
+  name Multiply3
+  xpos -1534
+  ypos 220
+ }
+push $N5e421000
+ Switch {
+  inputs 4
+  name HoldoutSwitch
+  knobChanged "## Callback variables\nthis_node = nuke.thisNode()\nthis_knob = nuke.thisKnob()\nthis_group = nuke.thisGroup()\n\n## Checks if the shapeTypesPDC knob has been used and runs statements\nif this_knob.name() in (\"holdoutTypePDC\"):\n    ## Variables\n    userChoice = nuke.thisNode().knob('holdoutTypePDC').value()\n    which = this_node.knob('which')\n    ## Functions for knob visibility\n    def wp_visibility(vis):\n        this_group.knobs()\['invertHoldoutCHK'].setVisible(vis)\n        this_group.knobs()\['dilateFixSizeSLD'].setVisible(vis)\n        this_group.knobs()\['rampOffsetSLD'].setVisible(vis)\n        this_group.knobs()\['rampFalloffSLD'].setVisible(vis)\n\t\n    def deep_visibility(vis):\n        this_group.knobs()\['dilateFixDeepSLD'].setVisible(vis)\n        this_group.knobs()\['deepInputTXT'].setVisible(vis)\n\t\n    def point_visibility(vis):\n        this_group.knobs()\['pointDetailSLD'].setVisible(vis)\n        this_group.knobs()\['pointSizeSLD'].setVisible(vis)\n        \n    def general_visibility(vis):\n        this_group.knobs()\['edgeBlurSLD'].setVisible(vis)\n        this_group.knobs()\['edgeFixFalloffSLD'].setVisible(vis)\n        \n    def look_visibility(vis):\n        this_group.knobs()\['lookAtCamTXT'].setEnabled(vis)\n        this_group.knobs()\['lookAtCamCHK'].setEnabled(vis)\n        this_group.knobs()\['lookStrengthSLD'].setEnabled(vis)\n        this_group.knobs()\['lookAxisPDC'].setEnabled(vis)\n        this_group.knobs()\['lookRotateXCHK'].setEnabled(vis)\n        this_group.knobs()\['lookRotateYCHK'].setEnabled(vis)\n        this_group.knobs()\['lookRotateZCHK'].setEnabled(vis)\n        this_group.knobs()\['lookUseQuaternionsCHK'].setEnabled(vis)\n\n        \n    \n    ## Changes expression type and top level knobs based on user choice \n    if userChoice == \"None\":\n        which.setValue(0)\n        wp_visibility(False)\n        deep_visibility(False)\n        point_visibility(False)\n        general_visibility(False)\n        #look_visibility(True)\n        this_group.knobs()\['pointCloudPreviewCHK'].setEnabled(True)\n\n    elif userChoice == \"World P (Fast)\":\n        which.setValue(1)\n        wp_visibility(True)\n        deep_visibility(False)\n        point_visibility(False)\n        general_visibility(True)\n        #look_visibility(False)\n        this_group.knobs()\['pointCloudPreviewCHK'].setEnabled(True)\n        this_group.knobs()\['lookAtCamCHK'].setValue(0)\n\n    elif userChoice == \"Deep (Medium)\":\n        which.setValue(2)\n        wp_visibility(False)\n        deep_visibility(True)\n        point_visibility(False)\n        general_visibility(True)\n        #look_visibility(True)\n        this_group.knobs()\['pointCloudPreviewCHK'].setEnabled(True)\n\n    elif userChoice == \"PointCloud (Slow)\":\n        which.setValue(3)\n        wp_visibility(False)\n        deep_visibility(False)\n        point_visibility(True)\n        general_visibility(True)\n        #look_visibility(True)\n        this_group.knobs()\['pointCloudPreviewCHK'].setEnabled(False)\n        this_group.knobs()\['pointCloudPreviewCHK'].setValue(1)"
+  xpos -1352
+  ypos 389
+  addUserKnob {20 User}
+  addUserKnob {4 holdoutTypePDC l Type M {None "World P (Fast)" "Deep (Medium)" "PointCloud (Slow)" "" "" "" "" ""}}
+ }
+ CopyBBox {
+  inputs 2
+  name CopyBBox1
+  xpos -1352
+  ypos 476
+ }
+ Multiply {
+  inputs 1+1
+  channels rgba
+  value {{maskValueSLD}}
+  invert_mask {{!maskInvertCHK}}
+  name MaskMult
+  xpos -1352
+  ypos 761
+  disable {{"\[expr \{\[exists parent.input1] ? 0 : 1\}]"}}
+ }
+ Merge2 {
+  inputs 2
+  operation under
+  Achannels rgb
+  mix {{"\$gui"}}
+  name PreviewMerge
+  xpos -1352
+  ypos 829
+  disable {{!useImageAlphaCHK}}
+ }
+ Output {
+  name Output
+  xpos -1352
+  ypos 1078
+ }
+ Axis2 {
+  inputs 0
+  display off
+  selectable false
+  rotate {{parent.TransformGeo1.rotate} {parent.TransformGeo1.rotate} {parent.TransformGeo1.rotate}}
+  name RotAxis
+  xpos -1644
+  ypos -232
+  hide_input true
+ }
+push $N5e2a1c00
+push $N5e289400
+push $N5e4b0400
+ DeepRecolor {
+  inputs 2
+  name DeepRecolor2
+  xpos -1345
+  ypos -1202
+ }
+ DeepToPoints {
+  inputs 2
+  selectable false
+  render_mode off
+  cast_shadow false
+  receive_shadow false
+  name DeepToPoints1
+  xpos -1345
+  ypos -1150
+  disable {{"holdoutTypePDC == 2 ? 0 : 1"}}
+ }
+push $N5e4d4400
+ NoOp {
+  name Sampler
+  xpos -2007
+  ypos -902
+  addUserKnob {20 User}
+  addUserKnob {18 positionSamplerCKNB l "Sample Pos"}
+  positionSamplerCKNB {0 0 0}
+  addUserKnob {6 positionSamplerCKNB_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 color_rgb_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+ }
+end_group

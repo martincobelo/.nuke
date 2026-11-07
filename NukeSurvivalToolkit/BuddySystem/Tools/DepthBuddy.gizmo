@@ -1,0 +1,858 @@
+Group {
+ name DepthBuddy
+ inputs 2
+ tile_color 0x9418ffff
+ label "\[value aovSelectionCHNKNB]"
+ addUserKnob {20 optionsTAB l Options}
+ addUserKnob {41 aovSelectionCHNKNB l AOV T InputAOVUser.in}
+ addUserKnob {6 enableInputAOVsCHK l All -STARTLINE}
+ enableInputAOVsCHK true
+ addUserKnob {6 previewCHK l Preview +STARTLINE}
+ previewCHK true
+ addUserKnob {6 edgeBlurCHK l "Edge Blur" -STARTLINE}
+ addUserKnob {6 edgeFixCHK l "Precision Fix" -STARTLINE}
+ addUserKnob {26 rampTXT l "<b><p style=\"color:#9E4CC7\">Ramp</p></b>"}
+ addUserKnob {41 axisPDC l Limit T TypeSwitch.axisPDC}
+ addUserKnob {6 Invert -STARTLINE}
+ addUserKnob {6 matteAlphaCHK l "Flood Alpha" -STARTLINE}
+ addUserKnob {41 rampAllStartCKNB l "Start (White)" T AllRamps.rampStartCKNB}
+ addUserKnob {41 rampAllEndCKNB l "End (Black)" T AllRamps.rampEndCKNB}
+ addUserKnob {41 zoneRZStartCKNB l "Start (White)" +HIDDEN T ZoneRedZ.whitepoint}
+ addUserKnob {41 zoneRZEndCKNB l "End (Black)" +HIDDEN T ZoneRedZ.blackpoint}
+ addUserKnob {41 zoneGStartCKNB l "Start (White)" +HIDDEN T ZoneGreen.whitepoint}
+ addUserKnob {41 zoneGEndCKNB l "End (Black)" +HIDDEN T ZoneGreen.blackpoint}
+ addUserKnob {41 zoneBStartCKNB l "Start (White)" +HIDDEN T ZoneBlue.whitepoint}
+ addUserKnob {41 zoneBEndCKNB l "End (Black)" +HIDDEN T ZoneBlue.blackpoint}
+ addUserKnob {6 color_rgba_panelDropped l "panel dropped state" +HIDDEN +STARTLINE}
+ addUserKnob {6 color_rgba_1_panelDropped l "panel dropped state" +HIDDEN +STARTLINE}
+ addUserKnob {6 color_rgba_2_panelDropped l "panel dropped state" +HIDDEN +STARTLINE}
+ addUserKnob {7 offsetSLD l Offset R -100 100}
+ addUserKnob {41 offsetScalePDC l "" -STARTLINE T Offset.offsetScalePDC}
+ addUserKnob {7 Falloff R 0.01 1}
+ Falloff 1
+ addUserKnob {41 falloffTypesPDC l "" -STARTLINE T FalloffTypes.falloffTypesPDC}
+ addUserKnob {41 advancedFalloffLUT l "&nbsp;" +HIDDEN T Advanced.lut}
+ addUserKnob {26 maskTXT l "<b><p style=\"color:#9E4CC7\">Mask</p></b>"}
+ addUserKnob {41 maskSelectionCHNKNB l "&nbsp;" T MultiplyMask.maskChannelMask}
+ addUserKnob {6 maskInvertCHK l Invert -STARTLINE}
+ addUserKnob {7 maskValueSLD l Value}
+ addUserKnob {20 advancedTAB l Advanced}
+ addUserKnob {26 fixesTXT l "<b><p style=\"color:#9E4CC7\">Fixes</p></b>"}
+ addUserKnob {6 clampNegativeValuesCHK l "Remove Negative Values" +STARTLINE}
+ addUserKnob {7 erodeSLD l Erode R -5 5}
+ addUserKnob {7 edgeBlurSLD l "Edge Blur" R 0 10}
+ edgeBlurSLD 2
+ addUserKnob {7 gammaSLD l "Blur Falloff"}
+ gammaSLD 0.2
+ addUserKnob {7 softenDataSLD l Smooth R 0 100}
+ addUserKnob {26 previewTXT l "<b><p style=\"color:#9E4CC7\">Preview</p></b>"}
+ addUserKnob {6 previewBwCHK l "Black and White" +STARTLINE}
+ previewBwCHK true
+ addUserKnob {6 previewClampCHK l Clamp -STARTLINE}
+ addUserKnob {18 previewColourKNB l Colour}
+ previewColourKNB {0.35 0.06 0.6}
+ addUserKnob {6 previewColourKNB_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {26 inputAOVsTXT l "<b><p style=\"color:#9E4CC7\">Input AOVs</p></b>"}
+ addUserKnob {6 unpremultCHK l Unpremult +STARTLINE}
+ addUserKnob {41 inputAOV1CHKNB l "&nbsp;" T Remove1.channels}
+ addUserKnob {41 inputAOV2CHKNB l "&nbsp;" T Remove1.channels2}
+ addUserKnob {41 inputAOV3CHKNB l "&nbsp;" T Remove1.channels3}
+ addUserKnob {41 inputAOV4CHKNB l "&nbsp;" T Remove1.channels4}
+ addUserKnob {26 calibrationTXT l "<b><p style=\"color:#9E4CC7\">Calibration</p></b>"}
+ addUserKnob {6 worldSpaceCHK l "Convert \"Z Up\" to \"Y Up\"" +STARTLINE}
+ addUserKnob {20 Info}
+ addUserKnob {26 aboutTXT l "&nbsp;" T "<h3>About</h3> \n<p>This is a tool that can create z depth or position based ramps\n<br>Useful for depth based colour correction, or adding sticky ramps to environments or characters</p> \n<hr>\n <h3>How To Use</h3> \n<p>Step 1: Connect the primary input to a render or pipe that contains Z/P data</p>\n<p>Step 2: Use the Start/End samplers while holding Ctrl+Alt to sample a depth value in your viewer </p>\n<p>Step 3: Plug the result into the mask input of other nodes to mask their output by the ramp</p>\n<hr>"}
+ addUserKnob {26 help1TXT l "&nbsp;" T "Press the "}
+ addUserKnob {22 helpBTN l Help -STARTLINE T "import webbrowser \nwebbrowser.open(\"https://www.hiramgifford.com/buddy-system/depthbuddy\")"}
+ addUserKnob {26 help2TXT l "&nbsp;" -STARTLINE T "button to view the full documentation"}
+ addUserKnob {26 classTXT l "&nbsp;" T "<font color=grey><i>DepthBuddy</i>"}
+ addUserKnob {26 versionTXT l "&nbsp;" -STARTLINE T "<font color=grey><i>v1.4</i>"}
+ addUserKnob {26 infoTXT l "&nbsp;" T "<font color=grey><i>Hiram Gifford - 17/05/2026 - hiramgifford.com</i>"}
+}
+ BackdropNode {
+  inputs 0
+  name BackdropNode1
+  tile_color 0x662474ff
+  label "<center>Depth Cue"
+  note_font_size 42
+  xpos -214
+  ypos -686
+  bdwidth 609
+  bdheight 1534
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode2
+  tile_color 0x662474ff
+  label <center>Mask
+  note_font_size 42
+  xpos -471
+  ypos -686
+  bdwidth 249
+  bdheight 1282
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode3
+  tile_color 0x662474ff
+  label <center>Preview
+  note_font_size 42
+  xpos -214
+  ypos 855
+  bdwidth 609
+  bdheight 531
+ }
+ Input {
+  inputs 0
+  name Input
+  xpos -49
+  ypos -608
+ }
+ Shuffle {
+  name FIX_EMPTY1
+  xpos -49
+  ypos -564
+ }
+ Dot {
+  name Dot9
+  xpos -15
+  ypos -526
+ }
+set N319c7c00 [stack 0]
+ Dot {
+  name Dot2
+  xpos 333
+  ypos -526
+ }
+ Dot {
+  name Dot6
+  xpos 333
+  ypos -430
+ }
+set Ne64b6400 [stack 0]
+ Dot {
+  name Dot1
+  xpos 333
+  ypos 427
+ }
+set Ne64b6800 [stack 0]
+ Expression {
+  channel0 rgba
+  expr0 "a == 0 ? 1 :0"
+  channel1 none
+  channel2 none
+  channel3 {none none none -rgba.alpha}
+  name CleanAlpha
+  xpos 140
+  ypos 423
+ }
+set Ne64b6c00 [stack 0]
+ Dot {
+  name Dot7
+  xpos 174
+  ypos 526
+ }
+ Input {
+  inputs 0
+  name Mask
+  xpos -392
+  ypos -602
+  number 1
+ }
+ Shuffle {
+  name FIX_EMPTY
+  xpos -392
+  ypos -564
+ }
+ Dot {
+  name Dot5
+  xpos -358
+  ypos 472
+ }
+push $Ne64b6c00
+push $Ne64b6400
+push $N319c7c00
+ Remove {
+  operation keep
+  channels none
+  name Remove1
+  xpos -49
+  ypos -478
+  disable {{enableInputAOVsCHK}}
+ }
+ Copy {
+  inputs 2
+  from0 rgba.alpha
+  to0 rgba.alpha
+  name Copy2
+  xpos -49
+  ypos -440
+ }
+ Shuffle {
+  in none
+  in2 rgba
+  alpha alpha2
+  name InputAOVUser
+  xpos -49
+  ypos -389
+ }
+ Shuffle {
+  in depth
+  in2 rgba
+  alpha red
+  name InputAOVDepth
+  xpos -49
+  ypos -353
+  disable {{"aovSelectionCHNKNB == 5? 0:1"}}
+ }
+ Unpremult {
+  name Unpremult
+  xpos -49
+  ypos -308
+  disable {{!unpremultCHK}}
+ }
+ ColorMatrix {
+  matrix {
+      {1 0 0}
+      {0 -4e-08 1}
+      {0 -1 -4e-08}
+    }
+  invert true
+  name YUpWorld
+  xpos -49
+  ypos -284
+  disable {{!worldSpaceCHK}}
+ }
+ Add {
+  channels rgba
+  value {{offsetSLD} {offsetSLD} {offsetSLD} {curve}}
+  name Offset
+  knobChanged "## Fixed variables\nthis_node = nuke.thisNode()\nthis_knob = nuke.thisKnob()\nthis_group = nuke.thisGroup()\n\n## Checks if the falloffTypesPDC knob has been used and runs statements\nif this_knob.name() in (\"offsetScalePDC\"):\n    userChoice = nuke.thisNode().knob('offsetScalePDC').value()\n    scale = this_group.knobs()\['offsetSLD']\n    if userChoice == \"Normalized\":\n        scale.setRange(0,1)\n    elif userChoice == \"Small\":\n        scale.setRange(-10,10)\n    elif userChoice == \"Medium\":\n        scale.setRange(-100,100)\n    elif userChoice == \"Large\":\n        scale.setRange(-1000,1000)"
+  xpos -49
+  ypos -247
+  addUserKnob {20 User}
+  addUserKnob {4 offsetScalePDC M {Normalized Small Medium Large "" ""}}
+  offsetScalePDC Medium
+ }
+ Blur {
+  channels rgb
+  size {{softenDataSLD}}
+  name SoftenData
+  xpos -49
+  ypos -208
+ }
+set Ne64d7c00 [stack 0]
+ Dot {
+  name Dot11
+  xpos 113
+  ypos -205
+ }
+set Ne6508000 [stack 0]
+ Dot {
+  name Dot3
+  xpos 238
+  ypos -205
+ }
+ Expression {
+  temp_name0 distance
+  temp_expr0 "sqrt(pow2(r-rampEndCKNB.r) + pow2(g-rampEndCKNB.g) + pow2(b-rampEndCKNB.b))"
+  temp_name1 start
+  temp_expr1 "sqrt(pow2(r-rampEndCKNB.r-(rampStartCKNB.r-rampEndCKNB.r)) + pow2(g-rampEndCKNB.g-(rampStartCKNB.g-rampEndCKNB.g)) + pow2(b-rampEndCKNB.b-(rampStartCKNB.b-rampEndCKNB.b)))"
+  temp_name2 length
+  temp_expr2 "sqrt(pow2(rampStartCKNB.r-rampEndCKNB.r) + pow2(rampStartCKNB.g-rampEndCKNB.g) + pow2(rampStartCKNB.b-rampEndCKNB.b))"
+  temp_name3 vector
+  temp_expr3 "acos( clamp((pow2(distance)-pow2(start)+pow2(length))/(2*distance*length),-1,1) )"
+  channel0 {rgba.red -rgba.green -rgba.blue none}
+  channel1 {-rgba.red rgba.green -rgba.blue none}
+  channel2 {-rgba.red -rgba.green rgba.blue none}
+  expr3 "clamp((distance * cos(vector)) / length)"
+  name AllRamps
+  xpos 204
+  ypos -122
+  addUserKnob {20 User}
+  addUserKnob {18 rampStartCKNB l "Ramp Start"}
+  rampStartCKNB {1000 1000 1000}
+  addUserKnob {6 rampStartCKNB_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 color_rgb_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {18 rampEndCKNB l "Ramp End"}
+  rampEndCKNB {0 0 0}
+  addUserKnob {6 rampEndCKNB_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+ }
+ Shuffle {
+  red alpha
+  green alpha
+  blue alpha
+  name AlphaOnly
+  xpos 204
+  ypos -87
+ }
+ Grade {
+  channels rgba
+  gamma {{Falloff}}
+  black_clamp false
+  name AllFalloff
+  xpos 204
+  ypos -53
+ }
+ Invert {
+  channels rgba
+  name Invert3
+  xpos 204
+  ypos -29
+  disable {{!Invert}}
+ }
+ Dot {
+  name Dot4
+  xpos 238
+  ypos 18
+ }
+push $Ne6508000
+ Shuffle {
+  red black
+  green black
+  alpha blue
+  name BlueOnly
+  xpos 79
+  ypos -122
+ }
+ Grade {
+  channels rgba
+  blackpoint {0 0 0 0}
+  whitepoint {0 0 0 0}
+  gamma {{Falloff}}
+  black_clamp false
+  name ZoneBlue
+  xpos 79
+  ypos -53
+ }
+ Invert {
+  channels {-rgba.red -rgba.green rgba.blue rgba.alpha}
+  name Invert2
+  xpos 79
+  ypos -29
+  disable {{!Invert}}
+ }
+push $Ne64d7c00
+ Shuffle {
+  red black
+  blue black
+  alpha green
+  name GreenOnly
+  xpos -49
+  ypos -122
+ }
+ Grade {
+  channels rgba
+  blackpoint {0 0 0 0}
+  whitepoint {0 0 0 0}
+  gamma {{Falloff}}
+  black_clamp false
+  name ZoneGreen
+  xpos -49
+  ypos -53
+ }
+ Invert {
+  channels {-rgba.red rgba.green -rgba.blue rgba.alpha}
+  name Invert1
+  xpos -49
+  ypos -29
+  disable {{!Invert}}
+ }
+push $Ne64d7c00
+ Dot {
+  name Dot10
+  xpos -142
+  ypos -204
+ }
+ Shuffle {
+  green black
+  blue black
+  alpha red
+  name RedOnly
+  xpos -176
+  ypos -122
+ }
+ Grade {
+  channels rgba
+  blackpoint {0 0 0 0}
+  whitepoint {0 0 0 0}
+  gamma {{Falloff}}
+  black_clamp false
+  name ZoneRedZ
+  xpos -176
+  ypos -53
+ }
+ Invert {
+  channels {rgba.red -rgba.green -rgba.blue rgba.alpha}
+  name Invert
+  xpos -176
+  ypos -29
+  disable {{!Invert}}
+ }
+ Dot {
+  name Dot8
+  xpos -142
+  ypos 19
+ }
+ Switch {
+  inputs 4
+  which 3
+  name TypeSwitch
+  knobChanged "## Callback Variables\nthis_node = nuke.thisNode()\nthis_knob = nuke.thisKnob()\nthis_group = nuke.thisGroup()\nuserChoiceAxis = nuke.thisNode().knob('axisPDC').value()\nwhich = this_node.knob('which')\naxis = this_group.knobs()\['axisPDC']\nzoneRZStart = this_group.knobs()\['zoneRZStartCKNB']\nzoneRZEnd = this_group.knobs()\['zoneRZEndCKNB']\nzoneGStart = this_group.knobs()\['zoneGStartCKNB']\nzoneGEnd = this_group.knobs()\['zoneGEndCKNB']\nzoneBStart = this_group.knobs()\['zoneBStartCKNB']\nzoneBEnd = this_group.knobs()\['zoneBEndCKNB']\nrampAllStart = this_group.knobs()\['rampAllStartCKNB']\nrampAllEnd = this_group.knobs()\['rampAllEndCKNB']\n\n## Checks if the axisPDC knob has been used and runs statements\nif this_knob.name() in (\"axisPDC\"):\n    ## Variables\n    userChoiceAxis = nuke.thisNode().knob('axisPDC').value()\n    \n    ## Changes Axis type and top level knobs based on user choice \n    if userChoiceAxis == \"X (Red)\":\n        which.setValue(0)\n        zoneRZStart.setVisible(True)\n        zoneRZEnd.setVisible(True)\n        zoneGStart.setVisible(False)\n        zoneGEnd.setVisible(False)\n        zoneBStart.setVisible(False)\n        zoneBEnd.setVisible(False)\n        rampAllStart.setVisible(False)\n        rampAllEnd.setVisible(False)\n        \n    elif userChoiceAxis == \"Y (Green)\":\n        which.setValue(1)\n        zoneRZStart.setVisible(False)\n        zoneRZEnd.setVisible(False)\n        zoneGStart.setVisible(True)\n        zoneGEnd.setVisible(True)\n        zoneBStart.setVisible(False)\n        zoneBEnd.setVisible(False)\n        rampAllStart.setVisible(False)\n        rampAllEnd.setVisible(False)\n        \n    elif userChoiceAxis == \"Z (Blue)\":\n        which.setValue(2)\n        zoneRZStart.setVisible(False)\n        zoneRZEnd.setVisible(False)\n        zoneGStart.setVisible(False)\n        zoneGEnd.setVisible(False)\n        zoneBStart.setVisible(True)\n        zoneBEnd.setVisible(True)\n        rampAllStart.setVisible(False)\n        rampAllEnd.setVisible(False)\n        \n    elif userChoiceAxis == \"None\":\n        which.setValue(3)\n        zoneRZStart.setVisible(False)\n        zoneRZEnd.setVisible(False)\n        zoneGStart.setVisible(False)\n        zoneGEnd.setVisible(False)\n        zoneBStart.setVisible(False)\n        zoneBEnd.setVisible(False)\n        rampAllStart.setVisible(True)\n        rampAllEnd.setVisible(True)"
+  xpos -49
+  ypos 16
+  addUserKnob {20 User}
+  addUserKnob {4 axisPDC l Limit M {None "X (Red)" "Y (Green)" "Z (Blue)" "" "" "" "" "" "" "" "" "" ""}}
+ }
+ Shuffle {
+  red alpha
+  green alpha
+  blue alpha
+  name ToAlpha
+  xpos -49
+  ypos 70
+ }
+ Clamp {
+  channels rgba
+  maximum_enable false
+  name ClampDepth
+  xpos -49
+  ypos 165
+  disable {{!clampNegativeValuesCHK}}
+ }
+ Expression {
+  channel3 rgba
+  expr3 smoothstep(0,1,a)
+  name FalloffTypes
+  knobChanged "## Fixed variables\nthis_node = nuke.thisNode()\nthis_knob = nuke.thisKnob()\nthis_group = nuke.thisGroup()\n\n## Checks if the falloffTypesPDC knob has been used and runs statements\nif this_knob.name() in (\"falloffTypesPDC\"):\n    userChoice = nuke.thisNode().knob('falloffTypesPDC').value()\n    adv = nuke.toNode(\"Advanced\")\n    exp3 = this_node.knob('expr3')\n    lut = this_group.knobs()\['advancedFalloffLUT']\n    if userChoice == \"Smooth\":\n        lut.setVisible(False)\n        adv.knob('disable').setValue(1)\n        exp3.setValue(\"smoothstep(0,1,a)\")\n    elif userChoice == \"Linear\":\n        lut.setVisible(False)\n        adv.knob('disable').setValue(1)\n        exp3.setValue(\"\")\n    elif userChoice == \"Quadratic\":\n        lut.setVisible(False)\n        adv.knob('disable').setValue(1)\n        exp3.setValue(\"clamp(pow2(a),0,1)\")\n    elif userChoice == \"Cubic\":\n        lut.setVisible(False)\n        adv.knob('disable').setValue(1)\n        exp3.setValue(\"clamp((a**3),0,1)\")\n    elif userChoice == \"Exponential\":\n        lut.setVisible(False)\n        adv.knob('disable').setValue(1)\n        exp3.setValue(\"pow(a,2)\")\n    elif userChoice == \"Advanced\":\n        lut.setVisible(True)\n        adv.knob('disable').setValue(0)\n        exp3.setValue(\"\")"
+  xpos -49
+  ypos 234
+  addUserKnob {20 User}
+  addUserKnob {4 falloffTypesPDC M {Smooth Linear Quadratic Cubic Exponential Advanced "" "" ""}}
+ }
+ ColorLookup {
+  lut {master {curve C k 0 s0 1 s0}
+    red {}
+    green {}
+    blue {}
+    alpha {}}
+  name Advanced
+  xpos -49
+  ypos 269
+  disable true
+ }
+ Merge2 {
+  inputs 2
+  operation disjoint-over
+  name Merge3
+  xpos -49
+  ypos 423
+  disable {{!matteAlphaCHK}}
+ }
+ Multiply {
+  inputs 1+1
+  channels rgba
+  value {{maskValueSLD}}
+  invert_mask {{!maskInvertCHK}}
+  name MultiplyMask
+  xpos -49
+  ypos 468
+  disable {{"\[expr \{\[exists parent.input1] ? 0 : 1\}]"}}
+ }
+ Multiply {
+  inputs 1+1
+  channels rgba
+  value 0
+  name MultAlpha
+  xpos -49
+  ypos 522
+  disable {{matteAlphaCHK}}
+ }
+ Clamp {
+  channels rgba
+  name Clamp3
+  xpos -49
+  ypos 577
+ }
+ Dilate {
+  channels rgba
+  size -1
+  name DilateFixIn
+  xpos -49
+  ypos 628
+  disable {{!edgeFixCHK}}
+ }
+ Dilate {
+  channels rgba
+  size 1
+  name DilateFixOut
+  xpos -49
+  ypos 657
+  disable {{!edgeFixCHK}}
+ }
+ Group {
+  name ErodeFine
+  help "Erode an image with fine controls, as opposed to Nuke's default erode node."
+  note_font "DejaVu Sans"
+  xpos -49
+  ypos 683
+  addUserKnob {20 optionsTAB l Options}
+  addUserKnob {26 erodeTXT l <b>Erode}
+  addUserKnob {7 size l Size R -10 10}
+  size {{erodeSLD}}
+  addUserKnob {26 maskTXT l <b>Mask}
+  addUserKnob {7 maskValueSLD l Value}
+  addUserKnob {6 maskInvertCHK l Invert -STARTLINE}
+ }
+  Input {
+   inputs 0
+   name Mask
+   xpos 348
+   ypos 1141
+   number 1
+  }
+  Shuffle {
+   name FixEmpty
+   xpos 348
+   ypos 1165
+  }
+  Input {
+   inputs 0
+   name Input
+   xpos -11
+   ypos 152
+  }
+  Dot {
+   name Dot15
+   tile_color 0xcccccc00
+   xpos 23
+   ypos 287
+  }
+set Ne677e000 [stack 0]
+  Dilate {
+   channels rgba
+   size {{int(parent.size)}}
+   name Dilate4
+   xpos -11
+   ypos 434
+  }
+  AdjBBox {
+   numpixels 1
+   name AdjBBox2
+   xpos -11
+   ypos 536
+  }
+  Dot {
+   name Dot6
+   tile_color 0xcccccc00
+   xpos 23
+   ypos 678
+  }
+set Ne677ec00 [stack 0]
+  Dot {
+   name Dot8
+   tile_color 0xcccccc00
+   xpos 175
+   ypos 678
+  }
+  Transform {
+   translate {{exp.expo(abs(parent.size-int(parent.size))*10)*-1} 0}
+   center {320 240}
+   black_outside false
+   shutteroffset centred
+   name Transform5
+   xpos 141
+   ypos 829
+  }
+push $Ne677ec00
+  Dot {
+   name Dot7
+   tile_color 0xcccccc00
+   xpos -127
+   ypos 678
+  }
+  Transform {
+   translate {{exp.expo(abs(parent.size-int(parent.size))*10)} 0}
+   center {320 240}
+   black_outside false
+   shutteroffset centred
+   name Transform4
+   xpos -161
+   ypos 789
+  }
+push $Ne677ec00
+  Merge2 {
+   inputs 2
+   operation {{parent.size>0?17:18}}
+   bbox B
+   also_merge all
+   name Merge2
+   xpos -11
+   ypos 789
+  }
+  Merge2 {
+   inputs 2
+   operation {{parent.size>0?17:18}}
+   bbox B
+   also_merge all
+   name Merge1
+   xpos -11
+   ypos 829
+  }
+  Dot {
+   name Dot9
+   xpos 23
+   ypos 910
+  }
+set Ne67a0800 [stack 0]
+  Dot {
+   name Dot10
+   xpos 175
+   ypos 910
+  }
+  Transform {
+   translate {0 {exp.expo(abs(parent.size-int(parent.size))*10)*-1}}
+   center {320 240}
+   black_outside false
+   shutteroffset centred
+   name Transform6
+   xpos 141
+   ypos 1067
+  }
+push $Ne67a0800
+  Dot {
+   name Dot11
+   xpos -127
+   ypos 910
+  }
+  Transform {
+   translate {0 {exp.expo(abs(parent.size-int(parent.size))*10)}}
+   center {320 240}
+   black_outside false
+   shutteroffset centred
+   name Transform7
+   xpos -161
+   ypos 1021
+  }
+push $Ne67a0800
+  Merge2 {
+   inputs 2
+   operation {{parent.size>0?17:18}}
+   bbox B
+   also_merge all
+   name Merge3
+   xpos -11
+   ypos 1021
+  }
+  Merge2 {
+   inputs 2
+   operation {{parent.size>0?17:18}}
+   bbox B
+   also_merge all
+   name Merge4
+   xpos -11
+   ypos 1067
+  }
+  Multiply {
+   inputs 1+1
+   channels rgba
+   value {{maskValueSLD}}
+   invert_mask {{maskInvertCHK}}
+   name Multiply1
+   xpos -11
+   ypos 1165
+  }
+push $Ne677e000
+  Dot {
+   name Dot13
+   tile_color 0xcccccc00
+   xpos -290
+   ypos 287
+  }
+  Dot {
+   name Dot12
+   tile_color 0xcccccc00
+   xpos -290
+   ypos 1261
+  }
+  NodeWrapper {
+   inputs 2
+   channels rgba
+   maskChannelMask none
+   name NodeWrapper1
+   xpos -11
+   ypos 1257
+  }
+  Output {
+   name Output1
+   xpos -11
+   ypos 1389
+  }
+  NoOp {
+   inputs 0
+   name exp
+   xpos 303
+   ypos 683
+   addUserKnob {20 User}
+   addUserKnob {7 expo}
+   expo {{parent.size>0?positive_curve:negative_curve}}
+   addUserKnob {7 positive_curve}
+   positive_curve {{curve 0 0.1037476063 0.1683235168 0.2209408283 0.2831250429 0.3357424736 0.3954704404 0.4731256962 0.5778000951 0.762029767 1}}
+   addUserKnob {7 negative_curve}
+   negative_curve {{curve 0 0.2209040523 0.3736710192 0.4841623592 0.5752981992 0.6541623592 0.7271137492 0.8043368459 0.8681262732 0.9249737263 1}}
+  }
+ end_group
+ EdgeBlur {
+  channels rgba
+  size {{edgeBlurSLD}}
+  edge_mult {{gammaSLD}}
+  name EdgeBlur
+  xpos -49
+  ypos 720
+  disable {{!edgeBlurCHK}}
+ }
+ Clamp {
+  channels rgba
+  name OutputClamp
+  xpos -49
+  ypos 772
+ }
+ Multiply {
+  channels rgba
+  value 0
+  name NoAOV
+  xpos -49
+  ypos 807
+  disable {{"aovSelectionCHNKNB == 0 ? 0:1"}}
+ }
+ Dot {
+  name Dot12
+  xpos -15
+  ypos 968
+ }
+set Nfc394800 [stack 0]
+ Dot {
+  name Dot16
+  xpos 124
+  ypos 968
+ }
+set Nfc394c00 [stack 0]
+push $Ne64b6800
+ Shuffle {
+  alpha black
+  name InputRGB
+  xpos 299
+  ypos 937
+ }
+ Saturation {
+  saturation 0
+  name InputSaturation
+  xpos 299
+  ypos 963
+  disable {{!previewBwCHK}}
+ }
+ Clamp {
+  channels rgba
+  name PreviewClamp
+  xpos 299
+  ypos 989
+  disable {{!previewClampCHK}}
+ }
+push $Nfc394c00
+ Dot {
+  name Dot14
+  xpos 208
+  ypos 968
+ }
+ Grade {
+  white {{previewColourKNB} {previewColourKNB} {previewColourKNB} 0}
+  white_clamp true
+  name PreviewCC
+  xpos 174
+  ypos 1018
+ }
+ Merge2 {
+  inputs 2
+  operation under
+  also_merge all
+  name Merge2
+  xpos 299
+  ypos 1018
+ }
+ Remove {
+  operation keep
+  channels rgb
+  name KeepRGB
+  xpos 299
+  ypos 1062
+ }
+ Dot {
+  name Dot15
+  xpos 333
+  ypos 1115
+ }
+ Copy {
+  inputs 2
+  from0 rgba.alpha
+  to0 rgba.alpha
+  name Copy1
+  xpos 90
+  ypos 1105
+ }
+ Remove {
+  channels rgb
+  name RemoveRGBFarm
+  xpos 90
+  ypos 1139
+  disable {{"\$gui"}}
+ }
+push $Nfc394800
+ Remove {
+  operation keep
+  channels alpha
+  name KeepAlpha1
+  xpos -49
+  ypos 1046
+ }
+set Nfc3c7800 [stack 0]
+ Shuffle {
+  red alpha
+  green alpha
+  blue alpha
+  name ToAlphaAll
+  xpos -49
+  ypos 1084
+ }
+ Switch {
+  inputs 2
+  which 1
+  name PreviewSwitch
+  xpos -49
+  ypos 1139
+  disable {{!previewCHK}}
+ }
+push $Nfc3c7800
+ Dot {
+  name Dot17
+  xpos -99
+  ypos 1055
+ }
+ Dot {
+  name Dot18
+  xpos -99
+  ypos 1194
+ }
+ Switch {
+  inputs 2
+  which {{"\$gui"}}
+  name RenderSwitch
+  tile_color 0x191919ff
+  xpos -49
+  ypos 1191
+ }
+ Output {
+  name Output
+  xpos -49
+  ypos 1348
+ }
+end_group
