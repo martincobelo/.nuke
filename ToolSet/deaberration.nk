@@ -1,0 +1,3744 @@
+set cut_paste_input [stack 0]
+version 15.1 v6
+push $cut_paste_input
+Group {
+ name CS_Deaberration2
+ knobChanged "import imp\nfrom csnuke_tools.trixter.snippets import deaberration\nimp.reload (deaberration)\ndeaberration.knob_changed()"
+ tile_color 0x1a3e56ff
+ note_font "Bitstream Vera Sans Bold"
+ note_font_size 15
+ selected true
+ xpos 29421
+ ypos -20102
+ addUserKnob {20 User l Deaberration}
+ addUserKnob {26 text_2 l <b>Plates T ""}
+ addUserKnob {22 check_reads l "<b><folnt color = white>Check Selected Reads Status" t "Check if Selected Read nodes do have deaberration assigned to them.\n1 Deaberration found - cyan\n2 Deaberration not found - magenta\n3 Lens Info not stored properly - Red\n\nRed - Talk to coordination, Info should be stored on the shot level, see the documentation." T "import imp\nfrom csnuke_tools.trixter.snippets import deaberration\nimp.reload (deaberration)\ndeaberration.check_reads()" +STARTLINE}
+ addUserKnob {22 sort_reads l "Sort Reads by sequence" -STARTLINE T "import imp\nfrom csnuke_tools.trixter.snippets import deaberration\nimp.reload (deaberration)\ndeaberration.sort(x_offset = 100, y_offset = 100, upwards=True)\n\n          \n"}
+ addUserKnob {22 python_button l "Ftrack Labels" t "add Ftrack information for camera and lens. Use it only if you know what you are doing" -STARTLINE T "ask = nuke.ask(\"Please proceed only and only you really know what you are doing, you did check what values will be changed and you 100% sure!\")\nif ask:\n    from csnuke.utils.node import get_wrapped_node\n    with nuke.root():\n        print(\"\")\n        for node in nuke.selectedNodes(\"Read\"):\n            cs_node = get_wrapped_node(node)\n            asset_version = cs_node.asset_version()\n            shot = asset_version.shot\n            meta = node.metadata()\n         \n            dic = \{\"cam_lens\": meta.get('exr/FocalLength', \"not found\"),\n                   \"cam_focus\": meta.get('exr/FocusDistance', \"not found\"),\n                   \"cam_lens_serial_num\": meta.get('exr/LensModel', \"not found\"),\n                   \"cam_body\": meta.get('exr/CameraModel', \"not found\"),\n                   \"cam_format\": meta.get('exr/CameraFormat', \"not found\"),\n                   \"cam_fps\": meta.get('exr/SensorFps', \"not found\"),\n                   \"cam_f_stop\": meta.get('exr/T-Stop', \"not found\"),\n                   \"cam_iso\": meta.get('exr/ISO', \"not found\"),\n                   \"shutter\": meta.get('exr/ShutterAngle', \"not found\")\n                   \}\n            for key in dic:\n                shot.set(key, dic\[key])\n            print(f\"\{shot\} is set\")"}
+ addUserKnob {22 bring_grids l "<b><font color = orange>Try to Bring Corresponding Lens Grids" t "Try to fetch from Ftrack lens grids corresponding to connected plate" T "import imp\nfrom csnuke_tools.trixter.snippets import deaberration\nimp.reload (deaberration)\ndeaberration.bring_grids(nuke.thisNode())\n\n\n    " +STARTLINE}
+ addUserKnob {3 characters l "<big><b><font color = white>&#x2664;" t "\n<b>Last characters  of serial number to compare to</b>\n\nhere we will tell how many characters we would like to take from the serial number in order to compare with lens grids in Ftrack.\n\nWhy?\nBecause labels of the Grids are mildly different from labels of lenses in shots and mostly last characters are similar.\nIt is a little hack that may save you Ftrack trip" -STARTLINE}
+ characters 5
+ addUserKnob {26 text_1 l <b>Input T ""}
+ addUserKnob {41 firstFrame l "Frame Hold" T FrameHold2.firstFrame}
+ addUserKnob {41 setToCurrentFrame l "Set to Current Frame" -STARTLINE T FrameHold2.setToCurrentFrame}
+ addUserKnob {41 cs_reformat_refresh l "Refresh Format" t "set format based on the Plate input" T CsShowReformat.cs_reformat_refresh}
+ addUserKnob {41 format l " reformat" +INVISIBLE T Main_reformat.format}
+ addUserKnob {41 resize l "resize type" +INVISIBLE T Main_reformat.resize}
+ addUserKnob {41 type -STARTLINE +INVISIBLE T Main_reformat.type}
+ addUserKnob {41 anamorphic -STARTLINE +INVISIBLE T VECTOR_SETTINGS.anamorphic}
+ addUserKnob {26 MapTweaks l "<b>Tweak STmap" T ""}
+ addUserKnob {4 Output t "Switch the output to different grade node to make vector data visible & more easy to tweak. Don't forget to set the it to Lensmap when you're done tweaking the vectors.\n\nAvailable outputs:\n-Lensmap (main output)\n-Grid detection (input feature detection)\n-Vector raw data (raw vector data of the whole input)\nVector * grid detection (raw vectors premultiplied by the feature detection)\n-Vector edge extend (Vector data extended using the feature detection as a mask)\n-Vector smoothed (Final vector data, smoothed and blurred)" M {"Vector raw data" "Grid detection" "Vector edge extend" "Smoothed vector" De-aberrate De-vignette "" "" "" "" "" "" "" "" "" "" "" "" ""}}
+ addUserKnob {22 grid_plate l "<b><font color=Salmon>Plate" -STARTLINE T "tg = nuke.thisGroup()\nntk = nuke.thisKnob()\nlab = ntk.label()\nu = \"<b><font color=Aquamarine>Grid\"\nd = \"<b><font color=Salmon>Plate\"\n\nwith tg:\n    switch = nuke.toNode(\"Switch1\")\n    if \"Plate\" in lab:\n        ntk.setLabel(u)\n        switch\['which'].setValue(0)\n    elif \"Grid\" in lab:\n        ntk.setLabel(d)\n        switch\['which'].setValue(1)"}
+ addUserKnob {6 focus l "Focus " t "separate and enlarge corners of the frame to get good overview" -STARTLINE}
+ addUserKnob {20 lens_map l "de - aberration" n 1}
+ addUserKnob {7 v_detail l "<b><font color = white>Vector Detail" t "Adjust density of calculated vector field.\nKeep it at <b>1</b> by default"}
+ v_detail 1
+ addUserKnob {7 v_strength l "<b><font color = white>Vector Strength" t "Strength of the calculated vector\nKeep it at <b>1</b> by default" R 0 5}
+ v_strength 1
+ addUserKnob {7 grid_treshold l "<b><font color = gray>Grid Treshold" R 0 10}
+ grid_treshold 0.4
+ addUserKnob {7 grid_clean l "<b><font color = gray>Grid Clean" R 0 10}
+ grid_clean 2.1
+ addUserKnob {7 extend_vector l "<b><font color = gray>Extend Vector" R 0 500}
+ extend_vector 27
+ addUserKnob {7 blur_vector l "<b><font color = gray>Blur Vector" R 0 1000}
+ blur_vector 840
+ addUserKnob {26 ""}
+ addUserKnob {18 color_rgb l "<b><font color = gray>Intensity"}
+ color_rgb {1 0 1}
+ addUserKnob {6 color_rgb_panelDropped l "panel dropped state" +HIDDEN +STARTLINE}
+ addUserKnob {26 ""}
+ addUserKnob {22 add_tweaks l "Add manual Tweaks" -STARTLINE T "import imp\nfrom csnuke_tools.trixter.snippets import deaberration\nimp.reload (deaberration)\ndeaberration.add_tweaks()\n\n\n\n"}
+ addUserKnob {6 disable_vectors -STARTLINE}
+ addUserKnob {41 intensityredadd l Red t "default value 1" +INVISIBLE T Multiply_red.value}
+ addUserKnob {41 intensityblueadd l Blue t "default value 1" +INVISIBLE T Multiply_blue.value}
+ addUserKnob {41 intensitygreenadd l Green t "default value 0\nyou probably dont want to touch that one, try to operate mostly on red and blue" +INVISIBLE T Multiply_green.value}
+ addUserKnob {20 endGroup_1 l endGroup n -1}
+ addUserKnob {20 devignette l "de - vignette" +HIDDEN n 1}
+ addUserKnob {6 preview_matte l "Preview matte" +STARTLINE}
+ preview_matte true
+ addUserKnob {7 gain}
+ gain 1
+ addUserKnob {7 gamma}
+ gamma 1
+ addUserKnob {41 aspect T Vignette1.aspect}
+ addUserKnob {41 img_format l "image format" -STARTLINE T Vignette1.img_format}
+ addUserKnob {12 translate}
+ addUserKnob {41 size l scale T Vignette1.size}
+ addUserKnob {41 falloff T Vignette1.falloff}
+ addUserKnob {20 endGroup n -1}
+ addUserKnob {26 ""}
+ addUserKnob {22 render l Render T "import imp\nfrom csnuke_tools.trixter.snippets import deaberration\nimp.reload (deaberration)\ndeaberration.render()\n\n\n" +STARTLINE}
+ addUserKnob {22 publish l Publish -STARTLINE T "import imp\nfrom csnuke_tools.trixter.snippets import deaberration\nimp.reload (deaberration)\ndeaberration.publish()"}
+ addUserKnob {22 bring l Bring -STARTLINE T "import imp\nfrom csnuke_tools.trixter.snippets import deaberration\nimp.reload (deaberration)\ndeaberration.bring()\n\n\n"}
+ addUserKnob {1 lens +INVISIBLE}
+ lens T40mm
+ addUserKnob {1 lens_serial l "lens serial" +INVISIBLE}
+ lens_serial T40mm_ANA_T-series_MAIN_SN:T40-138
+ addUserKnob {1 output +INVISIBLE}
+ output "\[value Output]"
+ addUserKnob {6 disablator t "fake disable" +INVISIBLE +STARTLINE}
+ disablator true
+ addUserKnob {6 invertAb l "Invert Aberration" t "check that box if you're getting rid of the aberraiton on the plate (as a part of the de-aberraiton/re-aberration workflow)" -STARTLINE +INVISIBLE}
+ invertAb true
+ addUserKnob {26 text_disabled l "" +STARTLINE +HIDDEN T "<b><font color = red><font size = 20>Disabled"}
+}
+ BackdropNode {
+  inputs 0
+  name BackdropNode9
+  tile_color 0xff0000ff
+  label "lensmap generation process"
+  note_font "Bitstream Vera Sans Bold"
+  note_font_size 100
+  xpos -666
+  ypos -5110
+  appearance Border
+  bdwidth 3948
+  bdheight 5077
+  z_order -1
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode2
+  tile_color 0x4d4d3eff
+  label "STMAP MODIFICATION"
+  note_font "Bitstream Vera Sans Bold"
+  note_font_size 150
+  xpos -25
+  ypos 3725
+  bdwidth 2993
+  bdheight 2211
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode71
+  tile_color 0x1c1f19ff
+  label "Reformat to work format"
+  note_font_size 42
+  xpos 1564
+  ypos -5022
+  bdwidth 672
+  bdheight 169
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode72
+  tile_color 0x1c1f19ff
+  label "separating rgb channels into frames"
+  note_font_size 42
+  xpos 1351
+  ypos -4322
+  bdwidth 861
+  bdheight 416
+ }
+ BackdropNode {
+  inputs 0
+  name manual_backdrop
+  tile_color 0x382b6801
+  label "<b>manual adjustment, content of this backdrop will be pasted outside of the group when called                ."
+  note_font "Helvetica Bold"
+  note_font_size 10
+  xpos -300
+  ypos -3969
+  bookmark false
+  bdwidth 424
+  bdheight 508
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode1
+  tile_color 0x8e6071ff
+  label "multiplying intensity + fetching metadata"
+  note_font_size 42
+  xpos 482
+  ypos 5332
+  bdwidth 2003
+  bdheight 236
+  z_order 1
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode89
+  tile_color 0x1c1f19ff
+  label "ST-MAP uniformization"
+  note_font_size 42
+  xpos 1223
+  ypos -2481
+  bdwidth 1366
+  bdheight 1811
+  z_order 1
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode91
+  tile_color 0x1c1f19ff
+  label "r-g-b shift detection"
+  note_font_size 42
+  xpos 1351
+  ypos -3572
+  bdwidth 861
+  bdheight 811
+  z_order 1
+ }
+ Input {
+  inputs 0
+  name Grid
+  xpos 1725
+  ypos -5429
+ }
+ Dot {
+  name Dot50
+  label IN
+  note_font "Bitstream Vera Sans Bold"
+  note_font_size 50
+  xpos 1759
+  ypos -5319
+ }
+ FrameHold {
+  firstFrame 1001
+  name FrameHold2
+  xpos 1725
+  ypos -5227
+ }
+ Dot {
+  name Dot401
+  xpos 1759
+  ypos -5048
+ }
+set N313ec290 [stack 0]
+ CsShowReformat {
+  name CsShowReformat
+  tile_color 0xff7f0001
+  xpos 1725
+  ypos -4930
+  input_tags working
+  input_format_name APE_unknown
+  input_crop_name APE_unknown/work
+  output_format 0
+  output_crop_name APE_working/work
+  output_crop_width 4312
+  output_crop_height 2204
+  output_filter Lanczos4
+  advanced_crop_to work
+  trigger_expression {{"\[python cs_nuke_show_formats.trigger_reformat_node(nuke.thisNode())]"}}
+  current_width 640
+  current_height 480
+  current_par 1
+ }
+ Dot {
+  name Dot11
+  xpos 1759
+  ypos -4726
+ }
+set N313f53b0 [stack 0]
+ Dot {
+  name Dot403
+  xpos 1759
+  ypos -4419
+ }
+set N314d5ec0 [stack 0]
+ Dot {
+  name Dot409
+  xpos 1758
+  ypos -4173
+ }
+set N314dbb90 [stack 0]
+ Dot {
+  name Dot410
+  xpos 1972
+  ypos -4173
+ }
+ Shuffle {
+  red blue
+  green blue
+  alpha blue
+  name Shuffle43
+  xpos 1938
+  ypos -4128
+ }
+ Dot {
+  name Dot411
+  xpos 1972
+  ypos -4034
+ }
+push $N314dbb90
+ Dot {
+  name Dot412
+  xpos 1538
+  ypos -4173
+ }
+ Shuffle {
+  green red
+  blue red
+  alpha red
+  name Shuffle44
+  xpos 1504
+  ypos -4126
+ }
+ Dot {
+  name Dot413
+  xpos 1538
+  ypos -4035
+ }
+push $N314dbb90
+ Shuffle {
+  red green
+  blue green
+  alpha green
+  name Shuffle45
+  xpos 1724
+  ypos -4127
+ }
+ Switch {
+  inputs 3
+  which {{curve L x1000 1 0 1 2 1}}
+  name Switch19
+  xpos 1724
+  ypos -4039
+ }
+ FrameRange {
+  first_frame 1000
+  last_frame 1004
+  time ""
+  name FrameRange7
+  xpos 1724
+  ypos -3976
+ }
+ Dot {
+  name Dot414
+  xpos 1758
+  ypos -3493
+ }
+set N315433d0 [stack 0]
+ Dot {
+  name Dot415
+  xpos 1435
+  ypos -3493
+ }
+ Expression {
+  expr0 (x+0.5)/width
+  expr1 (y+0.5)/height
+  expr2 0
+  expr3 0
+  name Expression22
+  xpos 1401
+  ypos -3391
+ }
+ Dot {
+  name Dot416
+  xpos 1435
+  ypos -3314
+ }
+set N3155e090 [stack 0]
+push $N315433d0
+ SmartVector {
+  vectorDetailReg {{parent.v_strength}}
+  strengthReg {{parent.v_detail}}
+  name MainSmartVector
+  xpos 1724
+  ypos -3425
+  addUserKnob {20 cs_tab l Cinesite}
+  addUserKnob {22 export_cs_write l "Export CsWrite" T "node = nuke.thisNode()\n\nfrom Image.CsWrite import create_CsWriteNode\ncs_write = create_CsWriteNode()\ncs_write.setInput(0, node)\ncs_write\[\"elements\"].setValue(\"other\")\ncs_write\[\"elementLabel\"].setValue(\"smartvector\")\ncs_write\[\"fileFormat\"].setValue(\"exr\")\ncs_write\[\"channels\"].setValue(\"all\")\ncs_write\[\"datatype\"].setValue(\"16 bit half\")\ncs_write\[\"metadata\"].setValue(\"all metadata except input/*\")\ncs_write\[\"interleave\"].setValue(\"channels\")\ncs_write\[\"write_full_layer_names\"].setValue(True)\n\ncs_write.autoplace()" +STARTLINE}
+ }
+ VectorDistort {
+  inputs 2
+  referenceFrame 1002
+  reference_frame_set true
+  imageFilter Lanczos4
+  name MainVectorDistort
+  xpos 1724
+  ypos -3318
+ }
+ Dot {
+  name Dot423
+  xpos 1758
+  ypos -3232
+ }
+set N335248d0 [stack 0]
+ Expression {
+  expr0 (x+0.5)/width
+  expr1 (y+0.5)/height
+  expr2 0
+  expr3 0
+  name Expression23
+  xpos 1724
+  ypos -3140
+ }
+ StickyNote {
+  inputs 0
+  name StickyNote177
+  tile_color 0x545434ff
+  label WalkThrough
+  note_font "Bitstream Vera Sans Bold"
+  note_font_size 100
+  xpos 2313
+  ypos -4233
+ }
+ StickyNote {
+  inputs 0
+  name StickyNote211
+  tile_color 0x545434ff
+  label "Simple edge extend with premult/blur/unpremult technic\nto fill the data gap"
+  note_font_size 30
+  xpos 2109
+  ypos -1685
+ }
+ StickyNote {
+  inputs 0
+  name StickyNote209
+  tile_color 0x545434ff
+  label "edge detect grid interesection"
+  note_font_size 30
+  xpos 2515
+  ypos -2237
+ }
+ StickyNote {
+  inputs 0
+  name StickyNote210
+  tile_color 0x545434ff
+  label "scale down and scale up\nto get rid of irregularities\nand blur to uniformize "
+  note_font_size 30
+  xpos 1914
+  ypos -1047
+ }
+ StickyNote {
+  inputs 0
+  name StickyNote178
+  tile_color 0x545434ff
+  label "step one, separate r,g,b and set them as individual frames\nand put red and blue one inbetween green frame"
+  note_font_size 30
+  xpos 2244
+  ypos -4085
+ }
+ StickyNote {
+  inputs 0
+  name StickyNote207
+  tile_color 0x545434ff
+  label "detect the difference between frames (and thus the channel) with smart vectors\nand applied it to a blank STmap"
+  note_font_size 30
+  xpos 1871
+  ypos -3419
+ }
+ StickyNote {
+  inputs 0
+  name StickyNote206
+  tile_color 0x545434ff
+  label "Store the stmap for the red distortion in the r and g channels,\nand the stmap for the blue distortion in the b and a channel"
+  note_font_size 30
+  xpos 1977
+  ypos -3105
+ }
+ StickyNote {
+  inputs 0
+  name StickyNote3
+  label "Expression is REVERSING stmap difference\n(reverse means undoing something, so here we don't do the opposite of the stmap ,\nwe undo the aberration by reversing st map distortion)"
+  xpos 2397
+  ypos 5559
+ }
+ StickyNote {
+  inputs 0
+  name StickyNote1
+  label "Reformating STmap to input's format"
+  xpos 1815
+  ypos 3541
+ }
+ StickyNote {
+  inputs 0
+  name StickyNote4
+  label "creates a clean stmap"
+  xpos 233
+  ypos 4321
+ }
+ StickyNote {
+  inputs 0
+  name StickyNote2
+  label "expression INVERSING stmap\n(inverse means the opposite direction so were making the stmap distort the other way)"
+  xpos 1834
+  ypos 3954
+ }
+ Multiply {
+  inputs 0
+  value {{invertAb==0?1:0}}
+  name invert_condition
+  xpos 589
+  ypos 5452
+ }
+ Multiply {
+  inputs 0
+  value {{parent.color_rgb.b}}
+  name Multiply_blue
+  xpos 857
+  ypos 5457
+ }
+ Multiply {
+  inputs 0
+  value {{parent.color_rgb.g}}
+  name Multiply_green
+  xpos 1413
+  ypos 5447
+ }
+ Multiply {
+  inputs 0
+  value {{parent.color_rgb.r}}
+  name Multiply_red
+  xpos 2028
+  ypos 5435
+ }
+push $N314d5ec0
+ Dot {
+  name Dot404
+  xpos 2275
+  ypos -4419
+ }
+ Dot {
+  name Dot419
+  xpos 2275
+  ypos -2570
+ }
+set N335b67c0 [stack 0]
+ Shuffle2 {
+  fromInput1 {{0} B}
+  fromInput2 {{0} B}
+  mappings "4 rgba.green 0 1 rgba.red 0 0 rgba.green 0 1 rgba.green 0 1 rgba.green 0 1 rgba.blue 0 2 rgba.green 0 1 rgba.alpha 0 3"
+  name Shuffle47
+  xpos 2241
+  ypos -2422
+ }
+ EdgeDetectWrapper {
+  threshold {{parent.VECTOR_SETTINGS.Grid_treshold}}
+  name EdgeDetect7
+  xpos 2241
+  ypos -2377
+ }
+ FilterErode {
+  size {{parent.VECTOR_SETTINGS.Grid_clean} {"VECTOR_SETTINGS.anamorphic == 1 ? size.w/2 :  size.w"}}
+  name GRID_ERODE8
+  note_font "Bitstream Vera Sans Bold"
+  note_font_size 25
+  note_font_color 0x930000ff
+  xpos 2241
+  ypos -2306
+ }
+ FilterErode {
+  size {{-parent.GRID_ERODE8.size} {"VECTOR_SETTINGS.anamorphic == 1 ? size.w/2 : size.w"}}
+  name FilterErode22
+  xpos 2241
+  ypos -2210
+ }
+ Grade {
+  channels alpha
+  blackpoint {{whitepoint}}
+  whitepoint 0.28
+  white_clamp true
+  name Grade49
+  xpos 2241
+  ypos -2156
+ }
+ FilterErode {
+  size {-2 {"VECTOR_SETTINGS.anamorphic == 1 ? size.w/2 : size.w"}}
+  name FilterErode23
+  xpos 2241
+  ypos -2104
+ }
+ Dot {
+  name Dot420
+  label "grid\ndetection"
+  note_font "Bitstream Vera Sans Bold"
+  note_font_size 25
+  xpos 2275
+  ypos -2022
+ }
+ Dot {
+  name Dot4
+  xpos 2275
+  ypos -1959
+ }
+set N33619bc0 [stack 0]
+ Dot {
+  name Dot421
+  xpos 2275
+  ypos -1866
+ }
+set N3361f670 [stack 0]
+ Dot {
+  name Dot422
+  xpos 2275
+  ypos -1758
+ }
+push $N3155e090
+ Shuffle2 {
+  fromInput1 {{0} B}
+  fromInput2 {{0} B}
+  mappings "4 rgba.red 0 0 rgba.red 0 0 rgba.green 0 1 rgba.green 0 1 rgba.red 0 0 rgba.blue 0 2 rgba.green 0 1 rgba.alpha 0 3"
+  name Shuffle46
+  xpos 1401
+  ypos -2296
+ }
+ Dot {
+  name Dot417
+  xpos 1435
+  ypos -2236
+ }
+set N33635c10 [stack 0]
+push $N335248d0
+ Dot {
+  name Dot424
+  xpos 1648
+  ypos -3232
+ }
+ FrameHold {
+  firstFrame 1001
+  name FrameHold59
+  xpos 1614
+  ypos -3181
+ }
+ Dot {
+  name Dot425
+  xpos 1648
+  ypos -3095
+ }
+push $N335248d0
+ Dot {
+  name Dot426
+  xpos 1868
+  ypos -3232
+ }
+ FrameHold {
+  firstFrame 1003
+  name FrameHold60
+  xpos 1834
+  ypos -3179
+ }
+ Dot {
+  name Dot427
+  xpos 1868
+  ypos -3097
+ }
+ ShuffleCopy {
+  inputs 2
+  red red
+  green green
+  blue red2
+  alpha green2
+  name ShuffleCopy7
+  xpos 1724
+  ypos -3026
+ }
+ Remove {
+  operation keep
+  channels rgba
+  name Remove13
+  xpos 1724
+  ypos -2956
+ }
+ FrameHold {
+  firstFrame 1001
+  name FrameHold61
+  xpos 1724
+  ypos -2911
+ }
+ Merge2 {
+  inputs 2
+  operation from
+  name Merge36
+  xpos 1724
+  ypos -2234
+ }
+ Dot {
+  name Dot428
+  xpos 1758
+  ypos -2118
+ }
+set N336a0a40 [stack 0]
+ Dot {
+  name Dot429
+  xpos 2012
+  ypos -2118
+ }
+ Shuffle2 {
+  fromInput1 {{0} B}
+  fromInput2 {{0} B}
+  mappings "4 black -1 -1 rgba.blue 0 2 black -1 -1 rgba.alpha 0 3 rgba.blue 0 2 rgba.red 0 0 rgba.alpha 0 3 rgba.green 0 1"
+  name Shuffle48
+  xpos 1978
+  ypos -2037
+ }
+ Copy {
+  inputs 2
+  from0 rgba.alpha
+  to0 rgba.alpha
+  name Copy47
+  xpos 1978
+  ypos -1770
+ }
+ Premult {
+  name Premult36
+  xpos 1978
+  ypos -1710
+ }
+ Dot {
+  name Dot430
+  xpos 2012
+  ypos -1562
+ }
+set N336cf770 [stack 0]
+push $N3361f670
+push $N336a0a40
+ Copy {
+  inputs 2
+  from0 rgba.alpha
+  to0 rgba.alpha
+  name Copy48
+  xpos 1724
+  ypos -1878
+ }
+ Premult {
+  name Premult37
+  xpos 1724
+  ypos -1820
+ }
+ Dot {
+  name Dot432
+  xpos 1758
+  ypos -1659
+ }
+set N336ee780 [stack 0]
+ Dot {
+  name Dot455
+  xpos 7069
+  ypos -1677
+ }
+ Copy {
+  inputs 2
+  from0 rgba.red
+  to0 rgba.blue
+  from1 rgba.green
+  to1 rgba.alpha
+  name Copy52
+  xpos 7035
+  ypos -1599
+ }
+ Grade {
+  channels rgba
+  whitepoint 0.001
+  name GRID_VECTOR_DATA
+  note_font "Bitstream Vera Sans Bold"
+  note_font_size 25
+  xpos 7035
+  ypos -863
+ }
+ Dot {
+  name Dot53
+  label GRID-VECTORS_OUTPUT
+  note_font "Bitstream Vera Sans Bold"
+  note_font_size 25
+  xpos 7069
+  ypos -475
+ }
+ Dot {
+  name Dot17
+  xpos 6041
+  ypos 7362
+ }
+ Input {
+  inputs 0
+  name Plate
+  xpos 5115
+  ypos -5150
+  number 1
+ }
+push $N313f53b0
+ Switch {
+  inputs 2
+  which 1
+  name Switch1
+  xpos 5115
+  ypos -4730
+ }
+set N3372e2f0 [stack 0]
+ Dot {
+  name Dot42
+  xpos 5764
+  ypos 7107
+ }
+set N337392c0 [stack 0]
+push $N337392c0
+ Group {
+  name Vignette1
+  help "apVignette v0.4 - apEssentials by Adrian Pueyo\n\nSimple and lightweight vignetting gizmo.\n\nadrianpueyo.com, 2014-2018"
+  tile_color 0x8c8c8cff
+  xpos 6564
+  ypos 7393
+  addUserKnob {20 apeVignette}
+  addUserKnob {7 aspect t "Aspect ratio multiplier for the vignetting." R 0 4}
+  aspect 1
+  addUserKnob {6 img_format l "image format" t "...otherwise spherical.\nThis also gets affected by the aspect multiplier." -STARTLINE}
+  img_format true
+  addUserKnob {12 scale}
+  scale {1 1}
+  addUserKnob {7 size l "uniform scale" t "Shutter size multiplier relative to the plate width." R 0 2}
+  size 1.2
+  addUserKnob {7 falloff t "Gamma of the effect's alpha." R 0 3}
+  falloff 4
+  addUserKnob {26 ""}
+  addUserKnob {7 amount t "Multiplier for the effect's alpha." R 0 2}
+  amount 1
+  addUserKnob {41 color t "Multiplier for the image, through the resulting alpha." T Multiply1.value}
+  addUserKnob {6 output_alpha l "output matte in alpha" +STARTLINE}
+  output_alpha true
+  addUserKnob {26 version_author l "" t "apeVignette v0.4\n2014-2018" +STARTLINE T "<span style=\"color:#666\"><br/><b>apeVignette v0.4</b> - <a href=\"http://www.adrianpueyo.com\" style=\"color:#666;text-decoration: none;\">adrianpueyo.com</a>, 2014-2018</span>"}
+ }
+  Input {
+   inputs 0
+   name Input
+   xpos 110
+   ypos -138
+  }
+set N3374a4d0 [stack 0]
+  Radial {
+   output alpha
+   replace true
+   invert true
+   area {{"width/2 * (1 - parent.size*scale.x)+translate.x"} {height/2-(parent.img_format?height:width)/(2*parent.aspect)*parent.size*scale.y+translate.y} {"width/2 * (1 + parent.size*scale.x)+translate.x"} {height/2+(parent.img_format?height:width)/(2*parent.aspect)*parent.size*scale.y+translate.y}}
+   name Radial1
+   xpos 220
+   ypos -51
+   addUserKnob {20 User}
+   addUserKnob {12 translate}
+   translate {{parent.parent.translate} {parent.parent.translate}}
+  }
+  Gamma {
+   channels alpha
+   value {{1/parent.falloff}}
+   name Gamma1
+   xpos 220
+   ypos 1
+  }
+  Multiply {
+   channels alpha
+   value {{parent.amount}}
+   name Multiply2
+   xpos 220
+   ypos 50
+  }
+set N33772500 [stack 0]
+push $N33772500
+push $N3374a4d0
+  Multiply {
+   inputs 1+1
+   channels rgb
+   value 0
+   name Multiply1
+   xpos 110
+   ypos 88
+  }
+  Copy {
+   inputs 2
+   from0 rgba.alpha
+   to0 rgba.alpha
+   from1 rgba.alpha
+   to1 rgba.red
+   from2 rgba.alpha
+   to2 rgba.blue
+   from3 rgba.alpha
+   to3 rgba.green
+   name CopyA
+   xpos 110
+   ypos 112
+   disable {{!parent.output_alpha}}
+  }
+  Output {
+   name Output1
+   xpos 110
+   ypos 199
+  }
+ end_group
+set N3373f4a0 [stack 0]
+ Shuffle {
+  red alpha
+  green alpha
+  blue alpha
+  name Shuffle6
+  xpos 6965
+  ypos 7474
+ }
+set N337a3a50 [stack 0]
+push $N3373f4a0
+ Reformat {
+  inputs 0
+  type "to box"
+  box_width {{parent.Gather_Input_Data.myWidth}}
+  box_height {{parent.Gather_Input_Data.myHeight}}
+  box_fixed true
+  box_pixel_aspect {{"anamorphic ? 2:1"}}
+  resize distort
+  name Reformat3
+  xpos 380
+  ypos 4215
+ }
+ Crop {
+  box {-5 -5 {parent.Reformat3.box_width+5} {parent.Reformat3.box_height+5}}
+  crop false
+  name Crop2
+  xpos 380
+  ypos 4274
+ }
+ Expression {
+  expr0 (x+0.5)/width
+  expr1 (y+0.5)/height
+  name Expression2
+  xpos 380
+  ypos 4323
+ }
+ Dot {
+  name Dot12
+  xpos 414
+  ypos 4978
+ }
+set N337e2c40 [stack 0]
+ Dot {
+  name Dot28
+  xpos 414
+  ypos 5658
+ }
+ Dot {
+  name Dot34
+  xpos 1060
+  ypos 5658
+ }
+set N337ee520 [stack 0]
+push $N337e2c40
+ Dot {
+  name Dot32
+  xpos 1050
+  ypos 4978
+ }
+set N337f4290 [stack 0]
+ Input {
+  inputs 0
+  name Manual
+  xpos 370
+  ypos 695
+  number 2
+ }
+ Dot {
+  name Dot31
+  xpos 404
+  ypos 857
+ }
+ Dot {
+  name Dot22
+  xpos 404
+  ypos 952
+ }
+set N33807110 [stack 0]
+ Group {
+  name UV_Map2
+  help "Create an uvmap from the input format or the selected format that can be used for example for baking transformations and applying them through a STmap node.\nUse the overscan to create values outside of the viewing window and the 0-1 range."
+  tile_color 0x578100ff
+  note_font "Bitstream Vera Sans"
+  note_font_color 0xffffffff
+  xpos 370
+  ypos 1015
+  mapsize {0.15 0.15}
+  addUserKnob {20 tab l "UV Map"}
+  addUserKnob {41 format T Constant1.format}
+  addUserKnob {41 scale l overscan T Reformat1.scale}
+  addUserKnob {6 alpha l "alpha 1" +STARTLINE}
+  addUserKnob {41 black_outside l "black outside" -STARTLINE T Reformat2.black_outside}
+ }
+  Input {
+   inputs 0
+   name Input
+   xpos 620
+   ypos -370
+  }
+  Shuffle {
+   red black
+   green black
+   blue black
+   alpha black
+   name Shuffle1
+   xpos 620
+   ypos -309
+  }
+  Constant {
+   inputs 0
+   name Constant1
+   xpos 479
+   ypos -214
+  }
+  Switch {
+   inputs 2
+   which {{"\[exists parent.input0]"}}
+   name Switch1
+   xpos 620
+   ypos -190
+  }
+  Reformat {
+   type scale
+   scale 1.05
+   resize none
+   pbb true
+   name Reformat1
+   xpos 620
+   ypos -71
+  }
+  Reformat {
+   type scale
+   scale {{1/Reformat1.scale} {1/Reformat1.scale}}
+   resize none
+   black_outside true
+   pbb true
+   name Reformat2
+   xpos 620
+   ypos -45
+  }
+  Shuffle {
+   alpha white
+   name Shuffle13
+   tile_color 0xffffff00
+   label "\[value in]"
+   xpos 620
+   ypos 12
+   disable {{!parent.alpha}}
+  }
+  Expression {
+   expr0 (x+0.5)/width
+   expr1 (y+0.5)/height
+   name Expression2
+   xpos 620
+   ypos 75
+  }
+  Output {
+   name Output1
+   xpos 620
+   ypos 127
+  }
+ end_group
+set N3380cdf0 [stack 0]
+push $N33807110
+ Dot {
+  name Dot21
+  xpos 188
+  ypos 952
+ }
+set N33892170 [stack 0]
+add_layer {manual_stmap manual_stmap.red manual_stmap.green manual_stmap.blue manual_stmap.alpha}
+ Shuffle {
+  in manual_stmap
+  blue black
+  alpha black
+  name Shuffle1
+  xpos 154
+  ypos 1003
+ }
+ Merge2 {
+  inputs 2
+  operation from
+  name Merge3
+  xpos 154
+  ypos 1135
+  addUserKnob {20 TRX}
+  addUserKnob {22 swap l "swap to Merge All Node" -STARTLINE T "from csnuke_tools.trixter.snippets import convertMergeToAll as convertMergeToAll;convertMergeToAll.convToAll()"}
+ }
+push $N3380cdf0
+push $N33892170
+ Dot {
+  name Dot23
+  xpos -66
+  ypos 952
+ }
+ Shuffle {
+  in manual_stmap
+  red blue
+  green alpha
+  blue black
+  alpha black
+  name Shuffle2
+  xpos -100
+  ypos 1002
+ }
+ Merge2 {
+  inputs 2
+  operation from
+  name Merge1
+  xpos -100
+  ypos 1156
+  addUserKnob {20 TRX}
+  addUserKnob {22 swap l "swap to Merge All Node" -STARTLINE T "from csnuke_tools.trixter.snippets import convertMergeToAll as convertMergeToAll;convertMergeToAll.convToAll()"}
+ }
+ Dot {
+  name Dot24
+  xpos -66
+  ypos 1254
+ }
+ Shuffle {
+  red black
+  green black
+  blue red
+  alpha green
+  name Shuffle3
+  xpos 44
+  ypos 1244
+ }
+ Merge2 {
+  inputs 2
+  operation plus
+  name Merge9
+  xpos 154
+  ypos 1250
+  addUserKnob {20 TRX}
+  addUserKnob {22 swap l "swap to Merge All Node" -STARTLINE T "from csnuke_tools.trixter.snippets import convertMergeToAll as convertMergeToAll;convertMergeToAll.convToAll()"}
+ }
+push $N3380cdf0
+ Shuffle {
+  red black
+  green black
+  blue red
+  alpha green
+  name Shuffle5
+  xpos 403
+  ypos 1077
+ }
+push $N3380cdf0
+ Merge2 {
+  inputs 2
+  operation plus
+  name Merge10
+  xpos 526
+  ypos 1015
+  addUserKnob {20 TRX}
+  addUserKnob {22 swap l "swap to Merge All Node" -STARTLINE T "from csnuke_tools.trixter.snippets import convertMergeToAll as convertMergeToAll;convertMergeToAll.convToAll()"}
+ }
+push $N33635c10
+ Dot {
+  name Dot418
+  xpos 1436
+  ypos -700
+ }
+push $N336cf770
+ Blur {
+  size {{parent.BLUR_EXTEND8.size.w} {"VECTOR_SETTINGS.anamorphic == 1 ? size.w/2 : size.w"}}
+  invert_mask true
+  name Blur25
+  xpos 1910
+  ypos -1412
+ }
+ Unpremult {
+  name Unpremult13
+  xpos 1910
+  ypos -1365
+ }
+ Dot {
+  name Dot431
+  xpos 1944
+  ypos -1284
+ }
+push $N336ee780
+ Blur {
+  size {{parent.VECTOR_SETTINGS.blur_extend} {"VECTOR_SETTINGS.anamorphic == 1 ? size.w/2 : size.w"}}
+  invert_mask true
+  name BLUR_EXTEND8
+  note_font "DejaVu Sans Bold"
+  note_font_size 25
+  note_font_color 0x930000ff
+  xpos 1656
+  ypos -1427
+ }
+ Unpremult {
+  name Unpremult14
+  xpos 1656
+  ypos -1339
+ }
+ Copy {
+  inputs 2
+  from0 rgba.red
+  to0 rgba.blue
+  from1 rgba.green
+  to1 rgba.alpha
+  name Copy49
+  xpos 1656
+  ypos -1300
+ }
+ Dot {
+  name Dot433
+  xpos 1690
+  ypos -1127
+ }
+set N33984890 [stack 0]
+ Crop {
+  box {0 0 {width} {height}}
+  crop false
+  name Crop7
+  xpos 1725
+  ypos -1086
+ }
+ Reformat {
+  type scale
+  scale 0.01
+  name Reformat10
+  xpos 1725
+  ypos -1060
+ }
+ Grade {
+  black_clamp false
+  name Grade50
+  xpos 1725
+  ypos -1034
+ }
+ Reformat {
+  format {{{parent.CsShowReformat1.output_format}}}
+  resize distort
+  name reformat2
+  note_font "Bitstream Vera Sans Bold"
+  note_font_size 25
+  note_font_color 0x930000ff
+  xpos 1725
+  ypos -964
+ }
+ Blur {
+  size {{parent.VECTOR_SETTINGS.uniform_blur} {size.w/2}}
+  filter quadratic
+  name UNIFORM_BLUR8
+  note_font "Bitstream Vera Sans Bold"
+  note_font_size 25
+  note_font_color 0x930000ff
+  xpos 1725
+  ypos -899
+ }
+ Dot {
+  name Dot434
+  xpos 1759
+  ypos -790
+ }
+set N339d9b90 [stack 0]
+ Merge2 {
+  inputs 2
+  operation plus
+  name Merge37
+  xpos 1725
+  ypos -704
+ }
+ Dot {
+  name Dot25
+  xpos 1759
+  ypos 917
+ }
+ Switch {
+  inputs 2
+  which {{parent.disable_vectors}}
+  name Switch2
+  xpos 1725
+  ypos 1015
+ }
+ Merge2 {
+  inputs 2
+  operation plus
+  name Merge4
+  xpos 1725
+  ypos 1250
+  disable {{"!\[exists input2]"}}
+  addUserKnob {20 TRX}
+  addUserKnob {22 swap l "swap to Merge All Node" -STARTLINE T "from csnuke_tools.trixter.snippets import convertMergeToAll as convertMergeToAll;convertMergeToAll.convToAll()"}
+ }
+ Dot {
+  name Dot5
+  label STMAP
+  note_font "Bitstream Vera Sans Bold"
+  note_font_size 25
+  xpos 1759
+  ypos 3187
+ }
+set N33a16f10 [stack 0]
+ Reformat {
+  type "to box"
+  box_width {{parent.Gather_Input_Data.myWidth}}
+  box_height {{parent.Gather_Input_Data.myHeight}}
+  box_fixed true
+  box_pixel_aspect {{"anamorphic ? 2:1"}}
+  resize distort
+  name Reformat2
+  xpos 1735
+  ypos 3910
+ }
+ Expression {
+  expr0 ((x+0.5)/width)-r+((x+0.5)/width)
+  expr1 ((y+0.5)/height)-g+((y+0.5)/height)
+  name Expression1
+  xpos 1735
+  ypos 3955
+ }
+ Crop {
+  box {-5 -5 {width+5} {height+5}}
+  crop false
+  name Crop9
+  xpos 1735
+  ypos 4055
+ }
+ Dot {
+  name Dot41
+  xpos 1769
+  ypos 4414
+ }
+set N1fb33970 [stack 0]
+ Dot {
+  name Dot43
+  xpos 1158
+  ypos 4414
+ }
+ Shuffle {
+  red blue
+  green alpha
+  blue black
+  alpha black
+  name Shuffle4
+  xpos 1124
+  ypos 4791
+ }
+ Merge2 {
+  inputs 2
+  operation from
+  Achannels {rgba.red rgba.green rgba.blue -rgba.alpha}
+  Bchannels {rgba.red rgba.green rgba.blue -rgba.alpha}
+  output {rgba.red rgba.green rgba.blue -rgba.alpha}
+  name Merge5
+  xpos 1124
+  ypos 5050
+ }
+ Dot {
+  name Dot2
+  xpos 1158
+  ypos 5241
+ }
+set N33a83d70 [stack 0]
+ Multiply {
+  channels rgb
+  value {{invert_condition.value==0?-parent.Multiply_blue.value:parent.Multiply_blue.value}}
+  name MultiplyBlue
+  xpos 1124
+  ypos 5487
+ }
+ Merge2 {
+  inputs 2
+  operation plus
+  Achannels {rgba.red rgba.green rgba.blue -rgba.alpha}
+  Bchannels {rgba.red rgba.green rgba.blue -rgba.alpha}
+  output {rgba.red rgba.green rgba.blue -rgba.alpha}
+  name Merge6
+  xpos 1124
+  ypos 5705
+ }
+ Dot {
+  name Dot30
+  xpos 1158
+  ypos 6387
+ }
+push $N1fb33970
+ Dot {
+  name Dot13
+  xpos 2319
+  ypos 4414
+ }
+set N33aaf120 [stack 0]
+push $N3372e2f0
+ OCIOLogConvert {
+  operation "lin to log"
+  name OCIOLogConvert3
+  xpos 4971
+  ypos 3115
+ }
+ Dot {
+  name Dot14
+  xpos 5005
+  ypos 3499
+ }
+set N33ac2710 [stack 0]
+ Dot {
+  name Dot7
+  xpos 5005
+  ypos 4071
+ }
+set N33ac82f0 [stack 0]
+ Dot {
+  name Dot44
+  xpos 3795
+  ypos 4071
+ }
+add_layer {lens_matte lens_matte.red lens_matte.green lens_matte.blue lens_matte.alpha}
+ Copy {
+  inputs 2
+  from0 -rgba.alpha
+  to0 -rgba.alpha
+  channels lens_matte
+  name Copy3
+  xpos 3761
+  ypos 4395
+ }
+ Dot {
+  name Dot45
+  xpos 3795
+  ypos 5780
+ }
+set N33ae4080 [stack 0]
+ Dot {
+  name Dot46
+  xpos 4168
+  ypos 5780
+ }
+ Shuffle {
+  red blue
+  green blue
+  alpha blue
+  name Shuffle15
+  xpos 4134
+  ypos 5866
+ }
+ STMap {
+  inputs 2
+  channels rgb
+  uv rgb
+  blur_scale 0
+  name STMap6
+  xpos 4134
+  ypos 6382
+  disable {{"parent.MultiplyBlue.value == 0 ? 1:0"}}
+ }
+ Dot {
+  name Dot47
+  xpos 4168
+  ypos 6666
+ }
+push $N337ee520
+ Dot {
+  name Dot35
+  xpos 1631
+  ypos 5658
+ }
+set N33b13640 [stack 0]
+ Dot {
+  name Dot36
+  xpos 2213
+  ypos 5658
+ }
+push $N337f4290
+ Dot {
+  name Dot33
+  xpos 2236
+  ypos 4978
+ }
+push $N33aaf120
+ Shuffle {
+  in2 rgba
+  blue red2
+  alpha green2
+  name Shuffle16
+  xpos 2285
+  ypos 4779
+ }
+ Merge2 {
+  inputs 2
+  operation from
+  Achannels {rgba.red rgba.green rgba.blue -rgba.alpha}
+  Bchannels {rgba.red rgba.green rgba.blue -rgba.alpha}
+  output {rgba.red rgba.green rgba.blue -rgba.alpha}
+  name Merge7
+  xpos 2285
+  ypos 5042
+ }
+ Dot {
+  name Dot1
+  xpos 2319
+  ypos 5241
+ }
+set N33b498b0 [stack 0]
+ Multiply {
+  channels rgb
+  value {{invert_condition.value==0?-parent.Multiply_red.value:parent.Multiply_red.value}}
+  name MultiplyRed
+  xpos 2285
+  ypos 5446
+ }
+ Merge2 {
+  inputs 2
+  operation plus
+  Achannels {rgba.red rgba.green rgba.blue -rgba.alpha}
+  Bchannels {rgba.red rgba.green rgba.blue -rgba.alpha}
+  output {rgba.red rgba.green rgba.blue -rgba.alpha}
+  name Merge8
+  xpos 2285
+  ypos 5715
+ }
+ Dot {
+  name Dot29
+  xpos 2319
+  ypos 6062
+ }
+push $N33ae4080
+ Dot {
+  name Dot51
+  xpos 3387
+  ypos 5780
+ }
+ Shuffle {
+  green red
+  blue red
+  alpha red
+  name Shuffle18
+  xpos 3353
+  ypos 5866
+ }
+ STMap {
+  inputs 2
+  channels rgb
+  uv rgb
+  blur_scale 0
+  name STMap3
+  xpos 3353
+  ypos 6058
+  disable {{"parent.MultiplyRed.value == 0 ? 1:0"}}
+ }
+ Dot {
+  name Dot3
+  xpos 3387
+  ypos 6507
+ }
+push $N33b13640
+push $N33a83d70
+push $N33b498b0
+ Dissolve {
+  inputs 2
+  which 0.5
+  name Dissolve2
+  xpos 1684
+  ypos 5231
+ }
+ Multiply {
+  channels rgb
+  value {{invert_condition.value==0?-parent.Multiply_green.value:parent.Multiply_green.value}}
+  name MultiplyGreen
+  xpos 1684
+  ypos 5462
+ }
+ Merge2 {
+  inputs 2
+  operation plus
+  Achannels {rgba.red rgba.green rgba.blue -rgba.alpha}
+  Bchannels {rgba.red rgba.green rgba.blue -rgba.alpha}
+  output {rgba.red rgba.green rgba.blue -rgba.alpha}
+  name Merge2
+  xpos 1684
+  ypos 5730
+ }
+ Dot {
+  name Dot27
+  xpos 1718
+  ypos 6213
+ }
+push $N33ae4080
+ Shuffle {
+  red green
+  blue green
+  alpha green
+  name Shuffle19
+  xpos 3761
+  ypos 5871
+ }
+ STMap {
+  inputs 2
+  channels rgb
+  uv rgb
+  blur_scale 0
+  name STMap5
+  xpos 3761
+  ypos 6208
+  disable {{"parent.MultiplyGreen.value == 0 ? 1:0"}}
+ }
+ Copy {
+  inputs 2
+  from0 rgba.red
+  to0 rgba.red
+  name Copy1
+  xpos 3761
+  ypos 6497
+ }
+ Copy {
+  inputs 2
+  from0 rgba.blue
+  to0 rgba.blue
+  name Copy2
+  xpos 3761
+  ypos 6656
+ }
+ Dot {
+  name Dot6
+  xpos 3795
+  ypos 6928
+ }
+push $N33ac82f0
+ Copy {
+  inputs 2
+  from0 rgba.red
+  to0 rgba.red
+  from1 rgba.green
+  to1 rgba.green
+  from2 rgba.blue
+  to2 rgba.blue
+  name Copy4
+  xpos 4971
+  ypos 6906
+ }
+ Crop {
+  box {-5 -5 {parent.Gather_Input_Data.myWidth+5} {parent.Gather_Input_Data.myHeight+5}}
+  name Crop1
+  xpos 4971
+  ypos 7274
+ }
+ OCIOLogConvert {
+  operation "log to lin"
+  name OCIOLogConvert2
+  xpos 4971
+  ypos 7341
+ }
+set N33c31970 [stack 0]
+ Group {
+  inputs 2
+  name OLY_MAGIC_VIGNETTE_REVERSE
+  tile_color 0x4119ff
+  label "mask stored in channel\nOLY_vignette.red"
+  xpos 6495
+  ypos 7547
+  addUserKnob {20 User}
+  addUserKnob {26 Steps}
+  addUserKnob {26 step1 l 1. T "check the mask input and make sure it matches the plate's vignette"}
+  addUserKnob {26 step2 l 2. T "Use gain and gamma to get rid of the vignette on the plate"}
+  addUserKnob {41 gain T OLY_VIgnette_KnobChanged.gain}
+  addUserKnob {41 gamma T OLY_VIgnette_KnobChanged.gamma}
+  addUserKnob {26 info l "" t "Gamma and gain are linked to a grade set in 'reverse'.\n\nThe values are stored in the metadata, and the vignette mask in the channel  OLY_vignette.red.\n\nThe point is to keep the values streamlined so it can be used by the gizmo \"OLY_MAGIC_VIGNETTE_APPLY\" at the end of the comp, just before the grain/aberration" +STARTLINE T "                (hover for info)"}
+ }
+  Input {
+   inputs 0
+   name rgba
+   xpos 574
+   ypos -416
+  }
+  Dot {
+   name Dot1
+   xpos 608
+   ypos -366
+  }
+  Dot {
+   name OLY_VIgnette_KnobChanged
+   tile_color 0xff66ff
+   xpos 608
+   ypos -311
+   addUserKnob {20 User}
+   addUserKnob {7 gain}
+   gain {{parent.parent.gain}}
+   addUserKnob {7 gamma}
+   gamma {{parent.parent.gamma}}
+  }
+  Dot {
+   name Dot8
+   xpos 608
+   ypos -212
+  }
+set N33c5e120 [stack 0]
+add_layer {OLY_vignette OLY_vignette.red OLY_vignette.green OLY_vignette.blue}
+  Shuffle2 {
+   fromInput1 {{0} B}
+   in1 OLY_vignette
+   fromInput2 {{0} B}
+   mappings "4 OLY_vignette.red 0 0 rgba.red 0 0 OLY_vignette.red 0 0 rgba.green 0 1 OLY_vignette.red 0 0 rgba.blue 0 2 OLY_vignette.red 0 0 rgba.alpha 0 3"
+   name Shuffle6
+   xpos 474
+   ypos -216
+  }
+  Input {
+   inputs 0
+   name Mask
+   xpos 333
+   ypos -421
+   number 1
+  }
+  Dot {
+   name Dot1168
+   xpos 367
+   ypos -381
+  }
+  Switch {
+   inputs 2
+   name Switch1
+   xpos 333
+   ypos -216
+  }
+  Dot {
+   name Dot6
+   xpos 367
+   ypos -98
+  }
+set N33c84ad0 [stack 0]
+  Dot {
+   name Dot10
+   xpos 367
+   ypos -2
+  }
+push $N33c84ad0
+push $N33c5e120
+  Dot {
+   name Dot9
+   xpos 756
+   ypos -212
+  }
+  Grade {
+   white {{parent.OLY_VIgnette_KnobChanged.gain}}
+   gamma {{parent.OLY_VIgnette_KnobChanged.gamma}}
+   reverse true
+   name OLY_Vignette_Grade
+   xpos 722
+   ypos -173
+  }
+  OCIOLogConvert {
+   operation "lin to log"
+   name OCIOLogConvert4
+   xpos 722
+   ypos -139
+  }
+  Dot {
+   name Dot7
+   xpos 756
+   ypos -98
+  }
+push $N33c5e120
+  OCIOLogConvert {
+   operation "lin to log"
+   name OCIOLogConvert1
+   xpos 574
+   ypos -153
+  }
+  Keymix {
+   inputs 3
+   channels rgba
+   name Keymix1
+   xpos 574
+   ypos -102
+  }
+  OCIOLogConvert {
+   operation "log to lin"
+   name OCIOLogConvert3
+   xpos 574
+   ypos -55
+  }
+  Shuffle2 {
+   inputs 2
+   fromInput1 {{1} B A}
+   out1 OLY_vignette
+   fromInput2 {{0} B A}
+   mappings "3 rgba.alpha 0 3 OLY_vignette.red 0 0 black -1 -1 OLY_vignette.green 0 1 black -1 -1 OLY_vignette.blue 0 2"
+   name Shuffle4
+   xpos 574
+   ypos -6
+  }
+  Dot {
+   name Dot1170
+   xpos 608
+   ypos 122
+  }
+  Output {
+   name Output1
+   xpos 574
+   ypos 226
+  }
+ end_group
+ Switch {
+  inputs 2
+  which {{parent.preview_matte}}
+  name Switch3
+  xpos 6495
+  ypos 7629
+ }
+push $N33c31970
+ Dot {
+  name Dot56
+  xpos 5005
+  ypos 7420
+ }
+push $N339d9b90
+ Dot {
+  name Dot460
+  xpos 7298
+  ypos -822
+ }
+ Grade {
+  channels rgba
+  whitepoint 0.001
+  name UNIFORM_VECTORS
+  note_font "Bitstream Vera Sans Bold"
+  note_font_size 25
+  xpos 7264
+  ypos -722
+ }
+ Dot {
+  name Dot55
+  label UNIFORM-VECTORS_OUTPUT
+  note_font "Bitstream Vera Sans Bold"
+  note_font_size 25
+  xpos 7298
+  ypos -331
+ }
+ Dot {
+  name Dot19
+  xpos 6161
+  ypos 7407
+ }
+push $N33984890
+ Dot {
+  name Dot456
+  xpos 7090
+  ypos -1159
+ }
+ Grade {
+  channels rgba
+  whitepoint 0.001
+  name EDGE_EXTEND7
+  note_font "Bitstream Vera Sans Bold"
+  note_font_size 25
+  xpos 7056
+  ypos -794
+ }
+ Dot {
+  name Dot54
+  label EDGE-EXTEND_OUTPUT
+  note_font "Bitstream Vera Sans Bold"
+  note_font_size 25
+  xpos 7090
+  ypos -396
+ }
+ Dot {
+  name Dot18
+  xpos 6113
+  ypos 7402
+ }
+push $N33619bc0
+push $N335b67c0
+ Dot {
+  name Dot453
+  xpos 6710
+  ypos -2570
+ }
+ Grade {
+  inputs 1+1
+  black {0 1 0 0}
+  black_panelDropped true
+  name Grade53
+  xpos 6676
+  ypos -1964
+ }
+ Grade {
+  channels rgba
+  name GRID
+  note_font "Bitstream Vera Sans Bold"
+  note_font_size 25
+  xpos 6676
+  ypos -980
+ }
+ Dot {
+  name Dot49
+  label GRID_OUTPUT
+  note_font "Bitstream Vera Sans Bold"
+  note_font_size 25
+  xpos 6710
+  ypos -607
+ }
+ Dot {
+  name Dot16
+  xpos 6038
+  ypos 7412
+ }
+push $N336a0a40
+ Dot {
+  name Dot454
+  xpos 6868
+  ypos -2118
+ }
+ Grade {
+  channels rgba
+  whitepoint 0.001
+  name VECTORS
+  note_font "Bitstream Vera Sans Bold"
+  note_font_size 25
+  xpos 6834
+  ypos -916
+ }
+ Dot {
+  name Dot52
+  label VECTORS_OUTPUT
+  note_font "Bitstream Vera Sans Bold"
+  note_font_size 25
+  xpos 6868
+  ypos -534
+ }
+ Dot {
+  name Dot15
+  xpos 5988
+  ypos 7414
+ }
+ Switch {
+  inputs 6
+  which {{Output}}
+  name Switch_Viz
+  xpos 5989
+  ypos 7680
+ }
+ Switch {
+  inputs 2
+  name SwitchDisable
+  xpos 5750
+  ypos 7816
+ }
+ Dot {
+  name Dot20
+  xpos 5784
+  ypos 8093
+ }
+set N33dc3fe0 [stack 0]
+ Dot {
+  name crops_input
+  label "dont erase"
+  xpos 5652
+  ypos 8093
+ }
+ Group {
+  name crops
+  xpos 5618
+  ypos 8129
+ }
+  Input {
+   inputs 0
+   name Input1
+   xpos 565
+   ypos 245
+  }
+  Dot {
+   name pixel_aspect_dot
+   xpos 594
+   ypos 316
+  }
+set N33de0590 [stack 0]
+  Dot {
+   name Dot10
+   xpos 777
+   ypos 316
+  }
+set N33de6210 [stack 0]
+  Dot {
+   name Dot2
+   xpos 875
+   ypos 316
+  }
+set N33debff0 [stack 0]
+  Dot {
+   name Dot6
+   xpos 996
+   ypos 316
+  }
+  Dot {
+   name Dot7
+   xpos 996
+   ypos 496
+  }
+set N33df7a50 [stack 0]
+  Dot {
+   name Dot8
+   xpos 996
+   ypos 637
+  }
+  Crop {
+   box {{"width - width/size"} 0 {width} {height/size}}
+   reformat true
+   crop false
+   name Crop4
+   xpos 861
+   ypos 633
+   addUserKnob {20 User}
+   addUserKnob {3 size}
+   size 10
+  }
+  Group {
+   name setPixelAspect_trx4
+   xpos 861
+   ypos 659
+   addUserKnob {20 tab1 l TNT_SetPixelAspect}
+   addUserKnob {4 type M {set convert}}
+   addUserKnob {4 keep -STARTLINE M {" " width height "" "" ""}}
+   addUserKnob {7 aspect R 0.0001 2}
+   aspect 1
+   addUserKnob {41 filter T Reformat22.filter}
+   addUserKnob {41 clamp -STARTLINE T Reformat22.clamp}
+   addUserKnob {41 black_outside l "black outside" -STARTLINE T Reformat22.black_outside}
+   addUserKnob {41 pbb l "preserve bounding box" -STARTLINE T Reformat22.pbb}
+  }
+   Input {
+    inputs 0
+    name Input1
+    xpos 380
+    ypos -10
+   }
+   Reformat {
+    type scale
+    scale {{"parent.aspect < 1? 1/parent.aspect : 1"} {"parent.aspect > 1? parent.aspect : 1"}}
+    resize distort
+    filter impulse
+    name Reformat1
+    note_font "Bitstream Vera Sans"
+    xpos 380
+    ypos 50
+    disable {{!parent.type}}
+   }
+set N33e22fa0 [stack 0]
+   Reformat {
+    type "to box"
+    box_height {{Input1.height}}
+    resize height
+    name Reformat3
+    xpos 500
+    ypos 80
+   }
+push $N33e22fa0
+   Reformat {
+    type "to box"
+    box_width {{Input1.width}}
+    name Reformat2
+    xpos 260
+    ypos 80
+   }
+push $N33e22fa0
+   Switch {
+    inputs 3
+    which {{parent.keep}}
+    name Switch1
+    label "\[value which]"
+    xpos 380
+    ypos 134
+    disable {{!parent.type}}
+   }
+   Reformat {
+    type "to box"
+    box_width {{input0.width}}
+    box_height {{input0.height}}
+    box_fixed true
+    box_pixel_aspect {{parent.aspect}}
+    resize none
+    black_outside true
+    name Reformat22
+    xpos 380
+    ypos 200
+   }
+   Output {
+    name Output1
+    xpos 380
+    ypos 260
+   }
+  end_group
+push $N33de6210
+  Crop {
+   box {{width/2-width/size/2} 0 {width/size/2+width/2} {height/size}}
+   reformat true
+   crop false
+   name Crop7
+   xpos 658
+   ypos 538
+   addUserKnob {20 User}
+   addUserKnob {3 size}
+   size 10
+  }
+  Group {
+   name setPixelAspect_trx6
+   xpos 658
+   ypos 564
+   addUserKnob {20 tab1 l TNT_SetPixelAspect}
+   addUserKnob {4 type M {set convert}}
+   addUserKnob {4 keep -STARTLINE M {" " width height "" "" ""}}
+   addUserKnob {7 aspect R 0.0001 2}
+   aspect 1
+   addUserKnob {41 filter T Reformat22.filter}
+   addUserKnob {41 clamp -STARTLINE T Reformat22.clamp}
+   addUserKnob {41 black_outside l "black outside" -STARTLINE T Reformat22.black_outside}
+   addUserKnob {41 pbb l "preserve bounding box" -STARTLINE T Reformat22.pbb}
+  }
+   Input {
+    inputs 0
+    name Input1
+    xpos 380
+    ypos -10
+   }
+   Reformat {
+    type scale
+    scale {{"parent.aspect < 1? 1/parent.aspect : 1"} {"parent.aspect > 1? parent.aspect : 1"}}
+    resize distort
+    filter impulse
+    name Reformat1
+    note_font "Bitstream Vera Sans"
+    xpos 380
+    ypos 50
+    disable {{!parent.type}}
+   }
+set N33e98c90 [stack 0]
+   Reformat {
+    type "to box"
+    box_height {{Input1.height}}
+    resize height
+    name Reformat3
+    xpos 500
+    ypos 80
+   }
+push $N33e98c90
+   Reformat {
+    type "to box"
+    box_width {{Input1.width}}
+    name Reformat2
+    xpos 260
+    ypos 80
+   }
+push $N33e98c90
+   Switch {
+    inputs 3
+    which {{parent.keep}}
+    name Switch1
+    label "\[value which]"
+    xpos 380
+    ypos 134
+    disable {{!parent.type}}
+   }
+   Reformat {
+    type "to box"
+    box_width {{input0.width}}
+    box_height {{input0.height}}
+    box_fixed true
+    box_pixel_aspect {{parent.aspect}}
+    resize none
+    black_outside true
+    name Reformat22
+    xpos 380
+    ypos 200
+   }
+   Output {
+    name Output1
+    xpos 380
+    ypos 260
+   }
+  end_group
+push $N33de0590
+  Dot {
+   name Dot9
+   xpos 439
+   ypos 316
+  }
+set N33eefe80 [stack 0]
+  Dot {
+   name Dot1
+   xpos 362
+   ypos 316
+  }
+set N33ef5a20 [stack 0]
+  Dot {
+   name Dot3
+   xpos 215
+   ypos 316
+  }
+  Dot {
+   name Dot4
+   xpos 215
+   ypos 529
+  }
+set N33f01480 [stack 0]
+  Dot {
+   name Dot5
+   xpos 215
+   ypos 642
+  }
+  Crop {
+   box {0 0 {width/size} {height/size}}
+   reformat true
+   crop false
+   name Crop1
+   xpos 297
+   ypos 638
+   addUserKnob {20 User}
+   addUserKnob {3 size}
+   size 10
+  }
+  Group {
+   name setPixelAspect_trx8
+   xpos 297
+   ypos 664
+   addUserKnob {20 tab1 l TNT_SetPixelAspect}
+   addUserKnob {4 type M {set convert}}
+   addUserKnob {4 keep -STARTLINE M {" " width height "" "" ""}}
+   addUserKnob {7 aspect R 0.0001 2}
+   aspect 1
+   addUserKnob {41 filter T Reformat22.filter}
+   addUserKnob {41 clamp -STARTLINE T Reformat22.clamp}
+   addUserKnob {41 black_outside l "black outside" -STARTLINE T Reformat22.black_outside}
+   addUserKnob {41 pbb l "preserve bounding box" -STARTLINE T Reformat22.pbb}
+  }
+   Input {
+    inputs 0
+    name Input1
+    xpos 380
+    ypos -10
+   }
+   Reformat {
+    type scale
+    scale {{"parent.aspect < 1? 1/parent.aspect : 1"} {"parent.aspect > 1? parent.aspect : 1"}}
+    resize distort
+    filter impulse
+    name Reformat1
+    note_font "Bitstream Vera Sans"
+    xpos 380
+    ypos 50
+    disable {{!parent.type}}
+   }
+set N33f2bb80 [stack 0]
+   Reformat {
+    type "to box"
+    box_height {{Input1.height}}
+    resize height
+    name Reformat3
+    xpos 500
+    ypos 80
+   }
+push $N33f2bb80
+   Reformat {
+    type "to box"
+    box_width {{Input1.width}}
+    name Reformat2
+    xpos 260
+    ypos 80
+   }
+push $N33f2bb80
+   Switch {
+    inputs 3
+    which {{parent.keep}}
+    name Switch1
+    label "\[value which]"
+    xpos 380
+    ypos 134
+    disable {{!parent.type}}
+   }
+   Reformat {
+    type "to box"
+    box_width {{input0.width}}
+    box_height {{input0.height}}
+    box_fixed true
+    box_pixel_aspect {{parent.aspect}}
+    resize none
+    black_outside true
+    name Reformat22
+    xpos 380
+    ypos 200
+   }
+   Output {
+    name Output1
+    xpos 380
+    ypos 260
+   }
+  end_group
+push $N33df7a50
+  Crop {
+   box {{width-width/size} {height/2-height/size/2} {width} {height/2+height/size/2}}
+   reformat true
+   crop false
+   name Crop9
+   xpos 849
+   ypos 492
+   addUserKnob {20 User}
+   addUserKnob {3 size}
+   size 10
+  }
+  Group {
+   name setPixelAspect_trx3
+   xpos 849
+   ypos 552
+   addUserKnob {20 tab1 l TNT_SetPixelAspect}
+   addUserKnob {4 type M {set convert}}
+   addUserKnob {4 keep -STARTLINE M {" " width height "" "" ""}}
+   addUserKnob {7 aspect R 0.0001 2}
+   aspect 1
+   addUserKnob {41 filter T Reformat22.filter}
+   addUserKnob {41 clamp -STARTLINE T Reformat22.clamp}
+   addUserKnob {41 black_outside l "black outside" -STARTLINE T Reformat22.black_outside}
+   addUserKnob {41 pbb l "preserve bounding box" -STARTLINE T Reformat22.pbb}
+  }
+   Input {
+    inputs 0
+    name Input1
+    xpos 380
+    ypos -10
+   }
+   Reformat {
+    type scale
+    scale {{"parent.aspect < 1? 1/parent.aspect : 1"} {"parent.aspect > 1? parent.aspect : 1"}}
+    resize distort
+    filter impulse
+    name Reformat1
+    note_font "Bitstream Vera Sans"
+    xpos 380
+    ypos 50
+    disable {{!parent.type}}
+   }
+set N33fa2040 [stack 0]
+   Reformat {
+    type "to box"
+    box_height {{Input1.height}}
+    resize height
+    name Reformat3
+    xpos 500
+    ypos 80
+   }
+push $N33fa2040
+   Reformat {
+    type "to box"
+    box_width {{Input1.width}}
+    name Reformat2
+    xpos 260
+    ypos 80
+   }
+push $N33fa2040
+   Switch {
+    inputs 3
+    which {{parent.keep}}
+    name Switch1
+    label "\[value which]"
+    xpos 380
+    ypos 134
+    disable {{!parent.type}}
+   }
+   Reformat {
+    type "to box"
+    box_width {{input0.width}}
+    box_height {{input0.height}}
+    box_fixed true
+    box_pixel_aspect {{parent.aspect}}
+    resize none
+    black_outside true
+    name Reformat22
+    xpos 380
+    ypos 200
+   }
+   Output {
+    name Output1
+    xpos 380
+    ypos 260
+   }
+  end_group
+push $N33de0590
+  Crop {
+   box {{width/2-width/size/2} {height/2-height/size/2} {width/2+width/size/2} {height/2+height/size/2}}
+   reformat true
+   crop false
+   name Crop5
+   xpos 560
+   ypos 481
+   addUserKnob {20 User}
+   addUserKnob {3 size}
+   size 10
+  }
+  Group {
+   name setPixelAspect_trx5
+   xpos 560
+   ypos 526
+   addUserKnob {20 tab1 l TNT_SetPixelAspect}
+   addUserKnob {4 type M {set convert}}
+   addUserKnob {4 keep -STARTLINE M {" " width height "" "" ""}}
+   addUserKnob {7 aspect R 0.0001 2}
+   aspect 1
+   addUserKnob {41 filter T Reformat22.filter}
+   addUserKnob {41 clamp -STARTLINE T Reformat22.clamp}
+   addUserKnob {41 black_outside l "black outside" -STARTLINE T Reformat22.black_outside}
+   addUserKnob {41 pbb l "preserve bounding box" -STARTLINE T Reformat22.pbb}
+  }
+   Input {
+    inputs 0
+    name Input1
+    xpos 380
+    ypos -10
+   }
+   Reformat {
+    type scale
+    scale {{"parent.aspect < 1? 1/parent.aspect : 1"} {"parent.aspect > 1? parent.aspect : 1"}}
+    resize distort
+    filter impulse
+    name Reformat1
+    note_font "Bitstream Vera Sans"
+    xpos 380
+    ypos 50
+    disable {{!parent.type}}
+   }
+set N340183f0 [stack 0]
+   Reformat {
+    type "to box"
+    box_height {{Input1.height}}
+    resize height
+    name Reformat3
+    xpos 500
+    ypos 80
+   }
+push $N340183f0
+   Reformat {
+    type "to box"
+    box_width {{Input1.width}}
+    name Reformat2
+    xpos 260
+    ypos 80
+   }
+push $N340183f0
+   Switch {
+    inputs 3
+    which {{parent.keep}}
+    name Switch1
+    label "\[value which]"
+    xpos 380
+    ypos 134
+    disable {{!parent.type}}
+   }
+   Reformat {
+    type "to box"
+    box_width {{input0.width}}
+    box_height {{input0.height}}
+    box_fixed true
+    box_pixel_aspect {{parent.aspect}}
+    resize none
+    black_outside true
+    name Reformat22
+    xpos 380
+    ypos 200
+   }
+   Output {
+    name Output1
+    xpos 380
+    ypos 260
+   }
+  end_group
+push $N33f01480
+  Crop {
+   box {0 {height/2-height/size/2} {width/size} {height/2+height/size/2}}
+   reformat true
+   crop false
+   name Crop6
+   xpos 289
+   ypos 525
+   addUserKnob {20 User}
+   addUserKnob {3 size}
+   size 10
+  }
+  Group {
+   name setPixelAspect_trx7
+   xpos 289
+   ypos 581
+   addUserKnob {20 tab1 l TNT_SetPixelAspect}
+   addUserKnob {4 type M {set convert}}
+   addUserKnob {4 keep -STARTLINE M {" " width height "" "" ""}}
+   addUserKnob {7 aspect R 0.0001 2}
+   aspect 1
+   addUserKnob {41 filter T Reformat22.filter}
+   addUserKnob {41 clamp -STARTLINE T Reformat22.clamp}
+   addUserKnob {41 black_outside l "black outside" -STARTLINE T Reformat22.black_outside}
+   addUserKnob {41 pbb l "preserve bounding box" -STARTLINE T Reformat22.pbb}
+  }
+   Input {
+    inputs 0
+    name Input1
+    xpos 380
+    ypos -10
+   }
+   Reformat {
+    type scale
+    scale {{"parent.aspect < 1? 1/parent.aspect : 1"} {"parent.aspect > 1? parent.aspect : 1"}}
+    resize distort
+    filter impulse
+    name Reformat1
+    note_font "Bitstream Vera Sans"
+    xpos 380
+    ypos 50
+    disable {{!parent.type}}
+   }
+set N3408e4f0 [stack 0]
+   Reformat {
+    type "to box"
+    box_height {{Input1.height}}
+    resize height
+    name Reformat3
+    xpos 500
+    ypos 80
+   }
+push $N3408e4f0
+   Reformat {
+    type "to box"
+    box_width {{Input1.width}}
+    name Reformat2
+    xpos 260
+    ypos 80
+   }
+push $N3408e4f0
+   Switch {
+    inputs 3
+    which {{parent.keep}}
+    name Switch1
+    label "\[value which]"
+    xpos 380
+    ypos 134
+    disable {{!parent.type}}
+   }
+   Reformat {
+    type "to box"
+    box_width {{input0.width}}
+    box_height {{input0.height}}
+    box_fixed true
+    box_pixel_aspect {{parent.aspect}}
+    resize none
+    black_outside true
+    name Reformat22
+    xpos 380
+    ypos 200
+   }
+   Output {
+    name Output1
+    xpos 380
+    ypos 260
+   }
+  end_group
+push $N33debff0
+  Crop {
+   box {{"width - width/size"} {"height- height/size"} {width} {height}}
+   reformat true
+   crop false
+   name Crop3
+   xpos 841
+   ypos 359
+   addUserKnob {20 User}
+   addUserKnob {3 size}
+   size 10
+  }
+  Group {
+   name setPixelAspect_trx2
+   xpos 874
+   ypos 409
+   addUserKnob {20 tab1 l TNT_SetPixelAspect}
+   addUserKnob {4 type M {set convert}}
+   addUserKnob {4 keep -STARTLINE M {" " width height "" "" ""}}
+   addUserKnob {7 aspect R 0.0001 2}
+   aspect 1
+   addUserKnob {41 filter T Reformat22.filter}
+   addUserKnob {41 clamp -STARTLINE T Reformat22.clamp}
+   addUserKnob {41 black_outside l "black outside" -STARTLINE T Reformat22.black_outside}
+   addUserKnob {41 pbb l "preserve bounding box" -STARTLINE T Reformat22.pbb}
+  }
+   Input {
+    inputs 0
+    name Input1
+    xpos 380
+    ypos -10
+   }
+   Reformat {
+    type scale
+    scale {{"parent.aspect < 1? 1/parent.aspect : 1"} {"parent.aspect > 1? parent.aspect : 1"}}
+    resize distort
+    filter impulse
+    name Reformat1
+    note_font "Bitstream Vera Sans"
+    xpos 380
+    ypos 50
+    disable {{!parent.type}}
+   }
+set N341048a0 [stack 0]
+   Reformat {
+    type "to box"
+    box_height {{Input1.height}}
+    resize height
+    name Reformat3
+    xpos 500
+    ypos 80
+   }
+push $N341048a0
+   Reformat {
+    type "to box"
+    box_width {{Input1.width}}
+    name Reformat2
+    xpos 260
+    ypos 80
+   }
+push $N341048a0
+   Switch {
+    inputs 3
+    which {{parent.keep}}
+    name Switch1
+    label "\[value which]"
+    xpos 380
+    ypos 134
+    disable {{!parent.type}}
+   }
+   Reformat {
+    type "to box"
+    box_width {{input0.width}}
+    box_height {{input0.height}}
+    box_fixed true
+    box_pixel_aspect {{parent.aspect}}
+    resize none
+    black_outside true
+    name Reformat22
+    xpos 380
+    ypos 200
+   }
+   Output {
+    name Output1
+    xpos 380
+    ypos 260
+   }
+  end_group
+push $N33eefe80
+  Crop {
+   box {{width/2-width/size/2} {"height - height/size"} {width/size/2+width/2} {height}}
+   reformat true
+   crop false
+   name Crop8
+   xpos 488
+   ypos 388
+   addUserKnob {20 User}
+   addUserKnob {3 size}
+   size 10
+  }
+  Group {
+   name setPixelAspect_trx1
+   xpos 488
+   ypos 414
+   addUserKnob {20 tab1 l TNT_SetPixelAspect}
+   addUserKnob {4 type M {set convert}}
+   addUserKnob {4 keep -STARTLINE M {" " width height "" "" ""}}
+   addUserKnob {7 aspect R 0.0001 2}
+   aspect 1
+   addUserKnob {41 filter T Reformat22.filter}
+   addUserKnob {41 clamp -STARTLINE T Reformat22.clamp}
+   addUserKnob {41 black_outside l "black outside" -STARTLINE T Reformat22.black_outside}
+   addUserKnob {41 pbb l "preserve bounding box" -STARTLINE T Reformat22.pbb}
+  }
+   Input {
+    inputs 0
+    name Input1
+    xpos 380
+    ypos -10
+   }
+   Reformat {
+    type scale
+    scale {{"parent.aspect < 1? 1/parent.aspect : 1"} {"parent.aspect > 1? parent.aspect : 1"}}
+    resize distort
+    filter impulse
+    name Reformat1
+    note_font "Bitstream Vera Sans"
+    xpos 380
+    ypos 50
+    disable {{!parent.type}}
+   }
+set N3417af00 [stack 0]
+   Reformat {
+    type "to box"
+    box_height {{Input1.height}}
+    resize height
+    name Reformat3
+    xpos 500
+    ypos 80
+   }
+push $N3417af00
+   Reformat {
+    type "to box"
+    box_width {{Input1.width}}
+    name Reformat2
+    xpos 260
+    ypos 80
+   }
+push $N3417af00
+   Switch {
+    inputs 3
+    which {{parent.keep}}
+    name Switch1
+    label "\[value which]"
+    xpos 380
+    ypos 134
+    disable {{!parent.type}}
+   }
+   Reformat {
+    type "to box"
+    box_width {{input0.width}}
+    box_height {{input0.height}}
+    box_fixed true
+    box_pixel_aspect {{parent.aspect}}
+    resize none
+    black_outside true
+    name Reformat22
+    xpos 380
+    ypos 200
+   }
+   Output {
+    name Output1
+    xpos 380
+    ypos 260
+   }
+  end_group
+push $N33ef5a20
+  Crop {
+   box {0 {height} {width/size} {"height - height/size"}}
+   reformat true
+   crop false
+   name Crop2
+   xpos 328
+   ypos 367
+   addUserKnob {20 User}
+   addUserKnob {3 size}
+   size 10
+  }
+  Group {
+   name setPixelAspect_trx
+   xpos 328
+   ypos 408
+   addUserKnob {20 tab1 l TNT_SetPixelAspect}
+   addUserKnob {4 type M {set convert}}
+   addUserKnob {4 keep -STARTLINE M {" " width height "" "" ""}}
+   addUserKnob {7 aspect R 0.0001 2}
+   aspect 1
+   addUserKnob {41 filter T Reformat22.filter}
+   addUserKnob {41 clamp -STARTLINE T Reformat22.clamp}
+   addUserKnob {41 black_outside l "black outside" -STARTLINE T Reformat22.black_outside}
+   addUserKnob {41 pbb l "preserve bounding box" -STARTLINE T Reformat22.pbb}
+  }
+   Input {
+    inputs 0
+    name Input1
+    xpos 380
+    ypos -10
+   }
+   Reformat {
+    type scale
+    scale {{"parent.aspect < 1? 1/parent.aspect : 1"} {"parent.aspect > 1? parent.aspect : 1"}}
+    resize distort
+    filter impulse
+    name Reformat1
+    note_font "Bitstream Vera Sans"
+    xpos 380
+    ypos 50
+    disable {{!parent.type}}
+   }
+set N341f12b0 [stack 0]
+   Reformat {
+    type "to box"
+    box_height {{Input1.height}}
+    resize height
+    name Reformat3
+    xpos 500
+    ypos 80
+   }
+push $N341f12b0
+   Reformat {
+    type "to box"
+    box_width {{Input1.width}}
+    name Reformat2
+    xpos 260
+    ypos 80
+   }
+push $N341f12b0
+   Switch {
+    inputs 3
+    which {{parent.keep}}
+    name Switch1
+    label "\[value which]"
+    xpos 380
+    ypos 134
+    disable {{!parent.type}}
+   }
+   Reformat {
+    type "to box"
+    box_width {{input0.width}}
+    box_height {{input0.height}}
+    box_fixed true
+    box_pixel_aspect {{parent.aspect}}
+    resize none
+    black_outside true
+    name Reformat22
+    xpos 380
+    ypos 200
+   }
+   Output {
+    name Output1
+    xpos 380
+    ypos 260
+   }
+  end_group
+  ContactSheet {
+   inputs 9
+   width {{input.width*columns*resMult}}
+   height {{input.height*rows*resMult}}
+   rows {{"\[expr \{int( (sqrt( \[numvalue inputs] ) ) )\} ] * \[expr \{int( ceil ( (\[numvalue inputs] /(sqrt( \[numvalue inputs] ) ) )) )\} ] < \[numvalue inputs]   ? \[expr \{int( (sqrt( \[numvalue inputs] ) ) )\} ] +1 : \[expr \{int( (sqrt( \[numvalue inputs] ) ) )\} ]"}}
+   columns {{"\[expr \{int( ceil ( (\[numvalue inputs] /(sqrt( \[numvalue inputs] )) )) )\} ]"}}
+   center true
+   roworder TopBottom
+   name ContactSheetAuto
+   tile_color 0xff69f7ff
+   xpos 553
+   ypos 678
+   addUserKnob {20 Settings}
+   addUserKnob {7 resMult l "Resolution Multiplier" R 0.1 2}
+   resMult 1
+  }
+  Grid {
+   number {{input0.rows} {input0.columns}}
+   size {3 {size.w*pixel_aspect_dot.pixel_aspect}}
+   color {0 0 0 1}
+   name Grid1
+   xpos 553
+   ypos 730
+  }
+  Output {
+   name Output1
+   xpos 553
+   ypos 799
+  }
+ end_group
+ Group {
+  name setPixelAspect_trx9
+  xpos 5618
+  ypos 8186
+  addUserKnob {20 tab1 l TNT_SetPixelAspect}
+  addUserKnob {4 type M {set convert}}
+  type convert
+  addUserKnob {4 keep -STARTLINE M {" " width height "" "" ""}}
+  addUserKnob {7 aspect R 0.0001 2}
+  aspect {{1/crops_input.pixel_aspect x1 1}}
+  addUserKnob {41 filter T Reformat22.filter}
+  addUserKnob {41 clamp -STARTLINE T Reformat22.clamp}
+  addUserKnob {41 black_outside l "black outside" -STARTLINE T Reformat22.black_outside}
+  addUserKnob {41 pbb l "preserve bounding box" -STARTLINE T Reformat22.pbb}
+ }
+  Input {
+   inputs 0
+   name Input1
+   xpos 380
+   ypos -10
+  }
+  Reformat {
+   type scale
+   scale {{"parent.aspect < 1? 1/parent.aspect : 1"} {"parent.aspect > 1? parent.aspect : 1"}}
+   resize distort
+   filter impulse
+   name Reformat1
+   note_font "Bitstream Vera Sans"
+   xpos 380
+   ypos 50
+   disable {{!parent.type}}
+  }
+set N342804d0 [stack 0]
+  Reformat {
+   type "to box"
+   box_height {{Input1.height}}
+   resize height
+   name Reformat3
+   xpos 500
+   ypos 80
+  }
+push $N342804d0
+  Reformat {
+   type "to box"
+   box_width {{Input1.width}}
+   name Reformat2
+   xpos 260
+   ypos 80
+  }
+push $N342804d0
+  Switch {
+   inputs 3
+   which {{parent.keep}}
+   name Switch1
+   label "\[value which]"
+   xpos 380
+   ypos 134
+   disable {{!parent.type}}
+  }
+  Reformat {
+   type "to box"
+   box_width {{input0.width}}
+   box_height {{input0.height}}
+   box_fixed true
+   box_pixel_aspect {{parent.aspect}}
+   resize none
+   black_outside true
+   name Reformat22
+   xpos 380
+   ypos 200
+  }
+  Output {
+   name Output1
+   xpos 380
+   ypos 260
+  }
+ end_group
+push $N33dc3fe0
+ Switch {
+  inputs 2
+  which {{parent.focus}}
+  name Focus
+  xpos 5750
+  ypos 8186
+ }
+ Output {
+  name Output
+  xpos 5750
+  ypos 8260
+ }
+ Group {
+  inputs 0
+  name UV_Map_format
+  help "Create an uvmap from the input format or the selected format that can be used for example for baking transformations and applying them through a STmap node.\nUse the overscan to create values outside of the viewing window and the 0-1 range."
+  tile_color 0x578100ff
+  note_font "Bitstream Vera Sans"
+  note_font_color 0xffffffff
+  xpos -119
+  ypos -3877
+  mapsize {0.15 0.15}
+  addUserKnob {20 tab l "UV Map"}
+  addUserKnob {41 format T Constant1.format}
+  addUserKnob {41 scale l overscan T Reformat1.scale}
+  addUserKnob {6 alpha l "alpha 1" +STARTLINE}
+  alpha true
+  addUserKnob {41 black_outside l "black outside" -STARTLINE T Reformat2.black_outside}
+ }
+  Input {
+   inputs 0
+   name Input
+   xpos 620
+   ypos -370
+  }
+  Shuffle {
+   red black
+   green black
+   blue black
+   alpha black
+   name Shuffle1
+   xpos 620
+   ypos -309
+  }
+  Constant {
+   inputs 0
+   name Constant1
+   xpos 479
+   ypos -214
+  }
+  Switch {
+   inputs 2
+   which {{"\[exists parent.input0]"}}
+   name Switch1
+   xpos 620
+   ypos -190
+  }
+  Reformat {
+   type scale
+   scale 1.05
+   resize none
+   pbb true
+   name Reformat1
+   xpos 620
+   ypos -71
+  }
+  Reformat {
+   type scale
+   scale {{1/Reformat1.scale} {1/Reformat1.scale}}
+   resize none
+   black_outside true
+   pbb true
+   name Reformat2
+   xpos 620
+   ypos -45
+  }
+  Shuffle {
+   alpha white
+   name Shuffle13
+   tile_color 0xffffff00
+   label "\[value in]"
+   xpos 620
+   ypos 12
+   disable {{!parent.alpha}}
+  }
+  Expression {
+   channel0 {manual_stmap.red -manual_stmap.green -manual_stmap.blue -manual_stmap.alpha}
+   expr0 (x+0.5)/width
+   channel1 {-manual_stmap.red manual_stmap.green -manual_stmap.blue -manual_stmap.alpha}
+   expr1 (y+0.5)/height
+   channel2 {-manual_stmap.red -manual_stmap.green manual_stmap.blue -manual_stmap.alpha}
+   expr2 (x+0.5)/width
+   channel3 {-manual_stmap.red -manual_stmap.green -manual_stmap.blue manual_stmap.alpha}
+   expr3 (y+0.5)/height
+   name Expression2
+   xpos 620
+   ypos 62
+  }
+  Output {
+   name Output1
+   xpos 620
+   ypos 127
+  }
+ end_group
+ Reformat {
+  type scale
+  scale 1.05
+  resize none
+  pbb true
+  name Reformat1
+  xpos -119
+  ypos -3851
+ }
+ Dot {
+  name Dot26
+  xpos -85
+  ypos -3790
+ }
+set N3437d330 [stack 0]
+ Dot {
+  name Dot38
+  xpos -229
+  ypos -3790
+ }
+ Dot {
+  name Dot39
+  xpos -229
+  ypos -3733
+ }
+set N34388b00 [stack 0]
+ Dot {
+  name Dot40
+  xpos -229
+  ypos -3642
+ }
+push $N34388b00
+push $N3437d330
+ Group {
+  inputs 2
+  name iTransform_ae
+  onCreate "n = nuke.thisNode()\nif n.knob('create').value() == False:\n    format = n.format()\n    center = \[format.width() / 2, format.height() / 2]\n    n.knob('center').setValue(center)\n    n.knob('create').setValue(1)"
+  knobChanged "n = nuke.thisNode()\nk = nuke.thisKnob()\nif k.name() == \"smart\":\n    s = n.knob('smart').getValue()\n    if s == 0: \n        groupNode = nuke.thisNode()\n        with groupNode:\n            m = nuke.toNode('mask')\n            s = nuke.toNode('STMap')\n            s.setInput(2, m)\n    else:\n        groupNode = nuke.thisNode()\n        with groupNode:\n            m = nuke.toNode('no_filter')\n            s = nuke.toNode('STMap')\n            s.setInput(2, m)"
+  autolabel "\"iTransform Red\""
+  tile_color 0xff0000ff
+  note_font "Verdana Bold"
+  note_font_color 0xffffffff
+  xpos -119
+  ypos -3737
+  addUserKnob {20 iTransform}
+  addUserKnob {41 channels T STMap.channels}
+  addUserKnob {26 ""}
+  addUserKnob {6 blackoutsideBefore l "black outside before" +STARTLINE}
+  addUserKnob {41 translate T inTransform2.translate}
+  addUserKnob {41 rotate_1 l rotate T inTransform2.rotate}
+  addUserKnob {41 scale_1 l scale T inTransform2.scale}
+  addUserKnob {41 skewX_1 l "skew X" T inTransform2.skewX}
+  addUserKnob {41 skewY_1 l "skew Y" T inTransform2.skewY}
+  addUserKnob {4 skewOrder l "skew order" M {XY YX}}
+  addUserKnob {41 center T inTransform2.center}
+  addUserKnob {22 set_center l "set center" -STARTLINE T "n = nuke.thisNode()\nw= n.width()\nh=n.height()\nn\['center'].setValue(\[w/2,h/2])"}
+  addUserKnob {4 filterN l filter M {impulse cubic keys Simon Rifman Mitchell Parzen Notch Lanczos4 Lanczos6 sinc4 "" "" "" ""}}
+  filterN cubic
+  addUserKnob {26 text_5_1 l "" -STARTLINE T "  "}
+  addUserKnob {26 text_5_1_1 l "" -STARTLINE T "  "}
+  addUserKnob {41 clamp -STARTLINE T inTransform2.clamp}
+  addUserKnob {26 ""}
+  addUserKnob {6 cropformat l "crop to format" +STARTLINE}
+  addUserKnob {26 text_5_2 l "" -STARTLINE T "     "}
+  addUserKnob {6 blackoutsideafter l "black outside after" -STARTLINE}
+  addUserKnob {14 addpixels R 0 100}
+  addUserKnob {7 mix}
+  mix 1
+  addUserKnob {26 text_5 l "" -STARTLINE T "    "}
+  addUserKnob {6 smart l "smart mask  " -STARTLINE}
+  smart true
+  addUserKnob {26 ""}
+  addUserKnob {6 create +INVISIBLE +STARTLINE}
+  create true
+  addUserKnob {26 about_1 l "" +STARTLINE T "<span style=\"color:#666\"><br/><b>iTransform v2.0</b> - <a  style=\"color:#666;text-decoration: none;\">Aitor Echeveste</a>  © 2021</span>"}
+  addUserKnob {20 About}
+  addUserKnob {26 text_1 l "" +STARTLINE T "   "}
+  addUserKnob {26 text_2 l "" +STARTLINE T "   "}
+  addUserKnob {26 text_4 l "" +STARTLINE T "<font color=#ffffff><font size=\"7\">iTransform </font><font size=\"6\"> v2.0</font>\n"}
+  addUserKnob {26 about_1_1 l "" +STARTLINE T "by Aitor Echeveste Izquierdo © 2021"}
+  addUserKnob {26 text_1_1 l "" +STARTLINE T "   "}
+  addUserKnob {26 ""}
+  addUserKnob {26 text_3 l "" +STARTLINE T "   "}
+  addUserKnob {26 website l "" +STARTLINE T "<b><a href=\"http://www.aitorecheveste.com\"><span style=\"color:#C8C8C8;\">www.aitorecheveste.com</span></a><b>"}
+ }
+  Input {
+   inputs 0
+   name crtlMask
+   xpos 606
+   ypos 531
+   number 1
+  }
+set N343ab060 [stack 0]
+  NoOp {
+   name mattebbox
+   xpos 606
+   ypos 555
+   addUserKnob {20 User}
+   addUserKnob {15 bbox}
+   bbox {{input.bbox.x} {input.bbox.y} {input.bbox.r} {input.bbox.t}}
+  }
+  Expression {
+   temp_name0 alpha_an
+   temp_expr0 a!=0?1:0
+   expr0 alpha_an
+   expr1 alpha_an
+   expr2 alpha_an
+   expr3 alpha_an
+   name no_filter
+   xpos 606
+   ypos 579
+  }
+set N343b4440 [stack 0]
+  Dot {
+   name Dot1
+   xpos 640
+   ypos 727
+  }
+push $N343b4440
+  Input {
+   inputs 0
+   name mask
+   xpos 221
+   ypos 507
+   number 2
+  }
+  Expression {
+   expr3 (1-a)
+   name invert
+   xpos 221
+   ypos 531
+  }
+  Input {
+   inputs 0
+   name img
+   xpos 121
+   ypos 344
+  }
+  BlackOutside {
+   name BlackOutsideBefore
+   xpos 121
+   ypos 370
+   disable {{!blackoutsideBefore}}
+  }
+set N343e5f60 [stack 0]
+  Crop {
+   box {{-input.format.width} {-input.format.height} {(input.format.width*2)} {(input.format.height*2)}}
+   crop false
+   name Crop1
+   xpos 474
+   ypos 370
+   addUserKnob {20 User}
+   addUserKnob {22 cropToBbox l "Crop to Bounding Box" -STARTLINE T codeBBox()}
+  }
+  Expression {
+   expr0 (x+0.5)/width
+   expr1 (y+.5)/height
+   name Expression1
+   xpos 474
+   ypos 418
+  }
+set N343fb460 [stack 0]
+  Dot {
+   name Dot2
+   xpos 343
+   ypos 421
+  }
+push $N343ab060
+push $N343fb460
+  Transform {
+   translate {{parent.inTransform2.translate} {parent.inTransform2.translate}}
+   rotate {{parent.inTransform2.rotate}}
+   scale {{parent.inTransform2.scale} {parent.inTransform2.scale}}
+   skewX {{parent.inTransform2.skewX}}
+   skewY {{parent.inTransform2.skewY}}
+   skew_order {{parent.skewOrder}}
+   center {{parent.inTransform2.center} {parent.inTransform2.center}}
+   invert_matrix {{parent.inTransform2.invert_matrix}}
+   filter {{parent.filterN}}
+   clamp {{parent.inTransform2.clamp}}
+   shutteroffset centred
+   name inTransform1
+   xpos 599
+   ypos 418
+  }
+push $N343fb460
+  Keymix {
+   inputs 3
+   name Keymix1
+   xpos 474
+   ypos 525
+  }
+  Keymix {
+   inputs 3
+   name Keymix2
+   xpos 309
+   ypos 525
+   disable {{"\[exists parent.input2]==1?smart==1?0:1:1" x1 0 x1001 1}}
+  }
+  Expression {
+   expr0 ((x+0.5)/width)
+   expr1 ((y+0.5)/height)
+   mix {{1-parent.mix}}
+   name mix
+   xpos 309
+   ypos 563
+  }
+push $N343e5f60
+  NoOp {
+   name inputbbox
+   xpos 121
+   ypos 626
+   addUserKnob {20 User}
+   addUserKnob {15 bbox}
+   bbox {{input.bbox.x} {input.bbox.y} {input.bbox.r} {input.bbox.t}}
+  }
+  Grade {
+   add 0.1
+   black_clamp false
+   name Grade1
+   label "concat break fix nuke 14"
+   xpos 121
+   ypos 679
+  }
+  Grade {
+   add -0.1
+   black_clamp false
+   name Grade2
+   label "concat break fix nuke 14"
+   xpos 121
+   ypos 717
+  }
+  STMap {
+   inputs 2+1
+   channels {manual_stmap.red manual_stmap.green -manual_stmap.blue -manual_stmap.alpha}
+   uv rgb
+   name STMap
+   xpos 309
+   ypos 723
+  }
+  Crop {
+   box {{"inputbbox.bbox<mattebbox.bbox?\n\ninputbbox.bbox-addpixels\n\n:inputbbox.bbox+(mattebbox.bbox- inputbbox.bbox)-addpixels\n\n"} {"inputbbox.bbox<mattebbox.bbox?\n\ninputbbox.bbox-addpixels\n\n:inputbbox.bbox+(mattebbox.bbox- inputbbox.bbox)-addpixels"} {"inputbbox.bbox>mattebbox.bbox?\n\ninputbbox.bbox+addpixels\n\n:inputbbox.bbox+(mattebbox.bbox- inputbbox.bbox)+addpixels"} {"inputbbox.bbox>mattebbox.bbox?\n\ninputbbox.bbox+addpixels\n:inputbbox.bbox+(mattebbox.bbox- inputbbox.bbox)+addpixels"}}
+   name Crop3
+   xpos 309
+   ypos 747
+   addUserKnob {20 User}
+   addUserKnob {22 cropToBbox l "Crop to Bounding Box" -STARTLINE T codeBBox()}
+  }
+  Reformat {
+   name Reformat2
+   xpos 309
+   ypos 771
+   disable {{!cropformat}}
+  }
+  BlackOutside {
+   name BlackOutsideAfter
+   xpos 309
+   ypos 797
+   disable {{!blackoutsideafter}}
+  }
+  Output {
+   name Output1
+   xpos 309
+   ypos 823
+  }
+  Transform {
+   inputs 0
+   skew_order {{parent.skewOrder}}
+   center {1920 805}
+   filter {{parent.filterN}}
+   shutteroffset centred
+   name inTransform2
+   xpos 715
+   ypos 417
+  }
+ end_group
+ GridWarp3 {
+  channels {manual_stmap.red manual_stmap.green -manual_stmap.blue -manual_stmap.alpha}
+  toolbar_visibility_auto false
+  toolbar_visibility_src false
+  toolbar_autokey false
+  divisions 3
+  source_grid_col   {
+    1 3 3 4 1 0
+    {default }
+    {
+      { {2 0 0} { {2 0 268.333}  {2 0 -268.333}  {2 640 0}  {2 -640 0} } } 
+      { {2 1920 0} { {2 0 268.333}  {2 0 -268.333}  {2 640 0}  {2 -640 0} } } 
+      { {2 3840 0} { {2 0 268.333}  {2 0 -268.333}  {2 640 0}  {2 -640 0} } } 
+      { {2 0 805} { {2 0 268.333}  {2 0 -268.333}  {2 640 0}  {2 -640 0} } } 
+      { {2 1920 805} { {2 0 268.333}  {2 0 -268.333}  {2 640 0}  {2 -640 0} } } 
+      { {2 3840 805} { {2 0 268.333}  {2 0 -268.333}  {2 640 0}  {2 -640 0} } } 
+      { {2 0 1610} { {2 0 268.333}  {2 0 -268.333}  {2 640 0}  {2 -640 0} } } 
+      { {2 1920 1610} { {2 0 268.333}  {2 0 -268.333}  {2 640 0}  {2 -640 0} } } 
+      { {2 3840 1610} { {2 0 268.333}  {2 0 -268.333}  {2 640 0}  {2 -640 0} } } 
+    }
+  }
+  destination_grid_col   {
+    1 3 3 4 1 0
+    {default }
+    {
+      { {2 0 0} { {2 0 268.333}  {2 0 -268.333}  {2 640 0}  {2 -640 0} } } 
+      { {2 1920 0} { {2 0 268.333}  {2 0 -268.333}  {2 640 0}  {2 -640 0} } } 
+      { {2 3840 0} { {2 0 268.333}  {2 0 -268.333}  {2 640 0}  {2 -640 0} } } 
+      { {2 0 805} { {2 0 268.333}  {2 0 -268.333}  {2 640 0}  {2 -640 0} } } 
+      { {2 1920 805} { {2 0 268.333}  {2 0 -268.333}  {2 640 0}  {2 -640 0} } } 
+      { {2 3840 805} { {2 0 268.333}  {2 0 -268.333}  {2 640 0}  {2 -640 0} } } 
+      { {2 0 1610} { {2 0 268.333}  {2 0 -268.333}  {2 640 0}  {2 -640 0} } } 
+      { {2 1920 1610} { {2 0 268.333}  {2 0 -268.333}  {2 640 0}  {2 -640 0} } } 
+      { {2 3840 1610} { {2 0 268.333}  {2 0 -268.333}  {2 640 0}  {2 -640 0} } } 
+    }
+  }
+  grids_manually_moved true
+  source_grid_transform_center {1920 805}
+  destination_grid_transform_center {1920 805}
+  source_color {1 0 0}
+  destination_color {1 0 0}
+  name GridWarp3_3
+  autolabel "\"Warp Red\""
+  tile_color 0xff0000ff
+  xpos -119
+  ypos -3693
+ }
+ Group {
+  inputs 2
+  name iTransform_ae1
+  onCreate "n = nuke.thisNode()\nif n.knob('create').value() == False:\n    format = n.format()\n    center = \[format.width() / 2, format.height() / 2]\n    n.knob('center').setValue(center)\n    n.knob('create').setValue(1)"
+  knobChanged "n = nuke.thisNode()\nk = nuke.thisKnob()\nif k.name() == \"smart\":\n    s = n.knob('smart').getValue()\n    if s == 0: \n        groupNode = nuke.thisNode()\n        with groupNode:\n            m = nuke.toNode('mask')\n            s = nuke.toNode('STMap')\n            s.setInput(2, m)\n    else:\n        groupNode = nuke.thisNode()\n        with groupNode:\n            m = nuke.toNode('no_filter')\n            s = nuke.toNode('STMap')\n            s.setInput(2, m)"
+  autolabel "\"iTransform Blue\""
+  tile_color 0xffff
+  note_font "Verdana Bold"
+  note_font_color 0xffffffff
+  xpos -119
+  ypos -3646
+  addUserKnob {20 iTransform}
+  addUserKnob {41 channels T STMap.channels}
+  addUserKnob {26 ""}
+  addUserKnob {6 blackoutsideBefore l "black outside before" +STARTLINE}
+  addUserKnob {41 translate T inTransform2.translate}
+  addUserKnob {41 rotate_1 l rotate T inTransform2.rotate}
+  addUserKnob {41 scale_1 l scale T inTransform2.scale}
+  addUserKnob {41 skewX_1 l "skew X" T inTransform2.skewX}
+  addUserKnob {41 skewY_1 l "skew Y" T inTransform2.skewY}
+  addUserKnob {4 skewOrder l "skew order" M {XY YX}}
+  addUserKnob {41 center T inTransform2.center}
+  addUserKnob {22 set_center l "set center" -STARTLINE T "n = nuke.thisNode()\nw= n.width()\nh=n.height()\nn\['center'].setValue(\[w/2,h/2])"}
+  addUserKnob {4 filterN l filter M {impulse cubic keys Simon Rifman Mitchell Parzen Notch Lanczos4 Lanczos6 sinc4 "" "" "" ""}}
+  filterN cubic
+  addUserKnob {26 text_5_1 l "" -STARTLINE T "  "}
+  addUserKnob {26 text_5_1_1 l "" -STARTLINE T "  "}
+  addUserKnob {41 clamp -STARTLINE T inTransform2.clamp}
+  addUserKnob {26 ""}
+  addUserKnob {6 cropformat l "crop to format" +STARTLINE}
+  addUserKnob {26 text_5_2 l "" -STARTLINE T "     "}
+  addUserKnob {6 blackoutsideafter l "black outside after" -STARTLINE}
+  addUserKnob {14 addpixels R 0 100}
+  addUserKnob {7 mix}
+  mix 1
+  addUserKnob {26 text_5 l "" -STARTLINE T "    "}
+  addUserKnob {6 smart l "smart mask  " -STARTLINE}
+  smart true
+  addUserKnob {26 ""}
+  addUserKnob {6 create +INVISIBLE +STARTLINE}
+  create true
+  addUserKnob {26 about_1 l "" +STARTLINE T "<span style=\"color:#666\"><br/><b>iTransform v2.0</b> - <a  style=\"color:#666;text-decoration: none;\">Aitor Echeveste</a>  © 2021</span>"}
+  addUserKnob {20 About}
+  addUserKnob {26 text_1 l "" +STARTLINE T "   "}
+  addUserKnob {26 text_2 l "" +STARTLINE T "   "}
+  addUserKnob {26 text_4 l "" +STARTLINE T "<font color=#ffffff><font size=\"7\">iTransform </font><font size=\"6\"> v2.0</font>\n"}
+  addUserKnob {26 about_1_1 l "" +STARTLINE T "by Aitor Echeveste Izquierdo © 2021"}
+  addUserKnob {26 text_1_1 l "" +STARTLINE T "   "}
+  addUserKnob {26 ""}
+  addUserKnob {26 text_3 l "" +STARTLINE T "   "}
+  addUserKnob {26 website l "" +STARTLINE T "<b><a href=\"http://www.aitorecheveste.com\"><span style=\"color:#C8C8C8;\">www.aitorecheveste.com</span></a><b>"}
+ }
+  Input {
+   inputs 0
+   name crtlMask
+   xpos 606
+   ypos 531
+   number 1
+  }
+set N344e5340 [stack 0]
+  NoOp {
+   name mattebbox
+   xpos 606
+   ypos 555
+   addUserKnob {20 User}
+   addUserKnob {15 bbox}
+   bbox {{input.bbox.x} {input.bbox.y} {input.bbox.r} {input.bbox.t}}
+  }
+  Expression {
+   temp_name0 alpha_an
+   temp_expr0 a!=0?1:0
+   expr0 alpha_an
+   expr1 alpha_an
+   expr2 alpha_an
+   expr3 alpha_an
+   name no_filter
+   xpos 606
+   ypos 579
+  }
+set N344e2180 [stack 0]
+  Dot {
+   name Dot1
+   xpos 640
+   ypos 727
+  }
+push $N344e2180
+  Input {
+   inputs 0
+   name mask
+   xpos 221
+   ypos 507
+   number 2
+  }
+  Expression {
+   expr3 (1-a)
+   name invert
+   xpos 221
+   ypos 531
+  }
+  Input {
+   inputs 0
+   name img
+   xpos 121
+   ypos 344
+  }
+  BlackOutside {
+   name BlackOutsideBefore
+   xpos 121
+   ypos 370
+   disable {{!blackoutsideBefore}}
+  }
+set N34552850 [stack 0]
+  Crop {
+   box {{-input.format.width} {-input.format.height} {(input.format.width*2)} {(input.format.height*2)}}
+   crop false
+   name Crop1
+   xpos 474
+   ypos 370
+   addUserKnob {20 User}
+   addUserKnob {22 cropToBbox l "Crop to Bounding Box" -STARTLINE T codeBBox()}
+  }
+  Expression {
+   expr0 (x+0.5)/width
+   expr1 (y+.5)/height
+   name Expression1
+   xpos 474
+   ypos 418
+  }
+set N34567bb0 [stack 0]
+  Dot {
+   name Dot2
+   xpos 343
+   ypos 421
+  }
+push $N344e5340
+push $N34567bb0
+  Transform {
+   translate {{parent.inTransform2.translate} {parent.inTransform2.translate}}
+   rotate {{parent.inTransform2.rotate}}
+   scale {{parent.inTransform2.scale} {parent.inTransform2.scale}}
+   skewX {{parent.inTransform2.skewX}}
+   skewY {{parent.inTransform2.skewY}}
+   skew_order {{parent.skewOrder}}
+   center {{parent.inTransform2.center} {parent.inTransform2.center}}
+   invert_matrix {{parent.inTransform2.invert_matrix}}
+   filter {{parent.filterN}}
+   clamp {{parent.inTransform2.clamp}}
+   shutteroffset centred
+   name inTransform1
+   xpos 599
+   ypos 418
+  }
+push $N34567bb0
+  Keymix {
+   inputs 3
+   name Keymix1
+   xpos 474
+   ypos 525
+  }
+  Keymix {
+   inputs 3
+   name Keymix2
+   xpos 309
+   ypos 525
+   disable {{"\[exists parent.input2]==1?smart==1?0:1:1" x1 0 x1001 1}}
+  }
+  Expression {
+   expr0 ((x+0.5)/width)
+   expr1 ((y+0.5)/height)
+   mix {{1-parent.mix}}
+   name mix
+   xpos 309
+   ypos 563
+  }
+push $N34552850
+  NoOp {
+   name inputbbox
+   xpos 121
+   ypos 626
+   addUserKnob {20 User}
+   addUserKnob {15 bbox}
+   bbox {{input.bbox.x} {input.bbox.y} {input.bbox.r} {input.bbox.t}}
+  }
+  Grade {
+   add 0.1
+   black_clamp false
+   name Grade1
+   label "concat break fix nuke 14"
+   xpos 121
+   ypos 679
+  }
+  Grade {
+   add -0.1
+   black_clamp false
+   name Grade2
+   label "concat break fix nuke 14"
+   xpos 121
+   ypos 717
+  }
+  STMap {
+   inputs 2+1
+   channels {-manual_stmap.red -manual_stmap.green manual_stmap.blue manual_stmap.alpha}
+   uv rgb
+   name STMap
+   xpos 309
+   ypos 723
+  }
+  Crop {
+   box {{"inputbbox.bbox<mattebbox.bbox?\n\ninputbbox.bbox-addpixels\n\n:inputbbox.bbox+(mattebbox.bbox- inputbbox.bbox)-addpixels\n\n"} {"inputbbox.bbox<mattebbox.bbox?\n\ninputbbox.bbox-addpixels\n\n:inputbbox.bbox+(mattebbox.bbox- inputbbox.bbox)-addpixels"} {"inputbbox.bbox>mattebbox.bbox?\n\ninputbbox.bbox+addpixels\n\n:inputbbox.bbox+(mattebbox.bbox- inputbbox.bbox)+addpixels"} {"inputbbox.bbox>mattebbox.bbox?\n\ninputbbox.bbox+addpixels\n:inputbbox.bbox+(mattebbox.bbox- inputbbox.bbox)+addpixels"}}
+   name Crop3
+   xpos 309
+   ypos 747
+   addUserKnob {20 User}
+   addUserKnob {22 cropToBbox l "Crop to Bounding Box" -STARTLINE T codeBBox()}
+  }
+  Reformat {
+   name Reformat2
+   xpos 309
+   ypos 771
+   disable {{!cropformat}}
+  }
+  BlackOutside {
+   name BlackOutsideAfter
+   xpos 309
+   ypos 797
+   disable {{!blackoutsideafter}}
+  }
+  Output {
+   name Output1
+   xpos 309
+   ypos 823
+  }
+  Transform {
+   inputs 0
+   skew_order {{parent.skewOrder}}
+   center {1920 805}
+   filter {{parent.filterN}}
+   shutteroffset centred
+   name inTransform2
+   xpos 715
+   ypos 417
+  }
+ end_group
+ GridWarp3 {
+  channels {-manual_stmap.red -manual_stmap.green manual_stmap.blue manual_stmap.alpha}
+  toolbar_visibility_auto false
+  toolbar_visibility_src false
+  toolbar_autokey false
+  divisions 3
+  source_grid_col   {
+    1 3 3 4 1 0
+    {default }
+    {
+      { {2 0 0} { {2 0 268.333}  {2 0 -268.333}  {2 640 0}  {2 -640 0} } } 
+      { {2 1920 0} { {2 0 268.333}  {2 0 -268.333}  {2 640 0}  {2 -640 0} } } 
+      { {2 3840 0} { {2 0 268.333}  {2 0 -268.333}  {2 640 0}  {2 -640 0} } } 
+      { {2 0 805} { {2 0 268.333}  {2 0 -268.333}  {2 640 0}  {2 -640 0} } } 
+      { {2 1920 805} { {2 0 268.333}  {2 0 -268.333}  {2 640 0}  {2 -640 0} } } 
+      { {2 3840 805} { {2 0 268.333}  {2 0 -268.333}  {2 640 0}  {2 -640 0} } } 
+      { {2 0 1610} { {2 0 268.333}  {2 0 -268.333}  {2 640 0}  {2 -640 0} } } 
+      { {2 1920 1610} { {2 0 268.333}  {2 0 -268.333}  {2 640 0}  {2 -640 0} } } 
+      { {2 3840 1610} { {2 0 268.333}  {2 0 -268.333}  {2 640 0}  {2 -640 0} } } 
+    }
+  }
+  destination_grid_col   {
+    1 3 3 4 1 0
+    {default }
+    {
+      { {2 0 0} { {2 0 268.333}  {2 0 -268.333}  {2 640 0}  {2 -640 0} } } 
+      { {2 1920 0} { {2 0 268.333}  {2 0 -268.333}  {2 640 0}  {2 -640 0} } } 
+      { {2 3840 0} { {2 0 268.333}  {2 0 -268.333}  {2 640 0}  {2 -640 0} } } 
+      { {2 0 805} { {2 0 268.333}  {2 0 -268.333}  {2 640 0}  {2 -640 0} } } 
+      { {2 1920 805} { {2 0 268.333}  {2 0 -268.333}  {2 640 0}  {2 -640 0} } } 
+      { {2 3840 805} { {2 0 268.333}  {2 0 -268.333}  {2 640 0}  {2 -640 0} } } 
+      { {2 0 1610} { {2 0 268.333}  {2 0 -268.333}  {2 640 0}  {2 -640 0} } } 
+      { {2 1920 1610} { {2 0 268.333}  {2 0 -268.333}  {2 640 0}  {2 -640 0} } } 
+      { {2 3840 1610} { {2 0 268.333}  {2 0 -268.333}  {2 640 0}  {2 -640 0} } } 
+    }
+  }
+  grids_manually_moved true
+  source_grid_transform_center {1920 805}
+  destination_grid_transform_center {1920 805}
+  source_color {0 0 1}
+  destination_color {0 0 1}
+  name GridWarp3_4
+  autolabel "\"Warp Blue\""
+  tile_color 0xffff
+  xpos -119
+  ypos -3605
+ }
+ Reformat {
+  type scale
+  scale 0.9523809524
+  resize none
+  pbb true
+  name Reformat4
+  xpos -119
+  ypos -3544
+ }
+ Dot {
+  name dot_out__
+  xpos -85
+  ypos -3505
+ }
+push $N313ec290
+ Reformat {
+  format {{{Main_reformat.format}}}
+  resize {{Main_reformat.resize x1001 3}}
+  filter Lanczos4
+  name reformat
+  note_font "Bitstream Vera Sans Bold"
+  note_font_size 25
+  note_font_color 0x930000ff
+  xpos 1559
+  ypos -4942
+  addUserKnob {20 User}
+ }
+push $N33ac2710
+ NoOp {
+  name Gather_Input_Data
+  xpos 1943
+  ypos 3495
+  addUserKnob {20 User}
+  addUserKnob {7 myWidth}
+  myWidth {{input.width}}
+  addUserKnob {7 myHeight}
+  myHeight {{input.height}}
+ }
+push $N337a3a50
+ Dot {
+  name Dot58
+  xpos 6999
+  ypos 8378
+ }
+push $N3372e2f0
+ Dot {
+  name Dot8
+  xpos 5294
+  ypos 7535
+ }
+ Dot {
+  name Dot57
+  xpos 5294
+  ypos 8042
+ }
+push $N33a16f10
+ Dot {
+  name Dot48
+  label STMAP_OUTPUT
+  note_font "Bitstream Vera Sans Bold"
+  note_font_size 25
+  xpos -1957
+  ypos 3187
+ }
+ Dot {
+  name Dot10
+  xpos -1957
+  ypos 8176
+ }
+ ModifyMetaData {
+  metadata {
+   {set exr/CS/chroma/intensityBLUE "\[value Multiply_blue.value]"}
+   {set exr/CS/chroma/intensityGREEN "\[value Multiply_green.value]"}
+   {set exr/CS/chroma/intensityRED "\[value Multiply_red.value]"}
+   {set exr/CS/chroma/intensityData 1}
+   {set exr/CS/vignette/gain "\[value OLY_MAGIC_VIGNETTE_REVERSE.gain]"}
+   {set exr/CS/vignette/gamma "\[value OLY_MAGIC_VIGNETTE_REVERSE.gamma]"}
+  }
+  name ModifyMetaData32
+  xpos 4653
+  ypos 8172
+ }
+ CopyMetaData {
+  inputs 2
+  metadatafilter exr/lens/
+  name CopyMetaData1
+  tile_color 0xffffff
+  xpos 4835
+  ypos 8294
+ }
+ Copy {
+  inputs 2
+  from0 rgba.alpha
+  to0 OLY_vignette.red
+  name Copy5
+  xpos 4836
+  ypos 8368
+ }
+ Dot {
+  name out
+  label OUT
+  note_font "Bitstream Vera Sans Bold"
+  note_font_size 50
+  xpos 4869
+  ypos 8473
+ }
+ Reformat {
+  inputs 0
+  format "3840 1610 0 0 3840 1610 1 ESX_working"
+  resize height
+  name Main_reformat
+  tile_color 0xff0000ff
+  label "set format here"
+  note_font "Bitstream Vera Sans Bold"
+  note_font_size 100
+  xpos -78
+  ypos -4906
+ }
+push $N313f53b0
+ Dot {
+  name Dot37
+  xpos 403
+  ypos -4726
+ }
+ NoOp {
+  name VECTOR_SETTINGS
+  tile_color 0xff0000ff
+  label "tweak vector data here"
+  note_font "Bitstream Vera Sans Bold"
+  note_font_size 100
+  xpos -90
+  ypos -4628
+  addUserKnob {20 User}
+  addUserKnob {6 anamorphic +STARTLINE}
+  anamorphic {{pixel_aspect==1?0:1}}
+  addUserKnob {7 Grid_treshold l "<font color = gray>Grid_treshold" R 0 10}
+  Grid_treshold {{parent.grid_treshold}}
+  addUserKnob {7 Grid_clean l "<font color = gray>Grid_clean" R 0 10}
+  Grid_clean {{parent.grid_clean}}
+  addUserKnob {7 blur_extend l "<font color = gray>blur_extend" R 0 500}
+  blur_extend {{parent.extend_vector}}
+  addUserKnob {7 uniform_blur l "<font color = gray>uniform_blur" R 0 1000}
+  uniform_blur {{parent.blur_vector}}
+ }
+end_group

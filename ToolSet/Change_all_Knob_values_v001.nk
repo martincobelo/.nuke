@@ -1,0 +1,18 @@
+set cut_paste_input [stack 0]
+version 15.1 v6
+push $cut_paste_input
+NoOp {
+ name change_all_Knob_Values
+ selected true
+ xpos -783
+ ypos -229
+ addUserKnob {20 User}
+ addUserKnob {1 NodeClass}
+ NodeClass DeepRecolor
+ addUserKnob {1 KnobName}
+ KnobName channels
+ addUserKnob {1 KnobValue}
+ KnobValue all
+ addUserKnob {22 changeallnodes T "import nuke\n\ndef update_node_knob():\n    \"\"\" \n    Finds all nodes matching TARGET_NODE_CLASS (including inside groups), \n    selects them, and updates the specified knob to TARGET_KNOB_VALUE \n    (with automatic type conversion for numbers like integer/float). \n    \"\"\"\n    # Get the current NoOp node\n    current_node = nuke.thisNode()\n    \n    # --- GET VALUES FROM THE NoOp KNOBS ---\n    TARGET_NODE_CLASS = current_node\['NodeClass'].value()\n    TARGET_KNOB_NAME = current_node\['KnobName'].value()\n    raw_value = current_node\['KnobValue'].value()\n    # ------------------------------------------------\n\n    # Automatically convert the input string to an int or float if possible (e.g. for Blur 'size' = 10 or 50)\n    TARGET_KNOB_VALUE = raw_value\n    try:\n        if '.' in raw_value:\n            TARGET_KNOB_VALUE = float(raw_value)\n        else:\n            TARGET_KNOB_VALUE = int(raw_value)\n    except ValueError:\n        # Keep it as string if it's not a valid number\n        pass\n\n    # Helper to recursively get all nodes including those inside groups\n    def get_all_nodes():\n        nodes = list(nuke.allNodes())\n        groups = \[n for n in nodes if n.Class() == 'Group']\n        for g in groups:\n            for i in g.nodes():\n                if i.Class() == 'Group':\n                    groups.append(i)\n        for g in groups:\n            for n in g.nodes():\n                nodes.append(n)\n        return nodes\n\n    # Clear current selection first\n    for n in nuke.allNodes():\n        n.setSelected(False)\n\n    all_nodes = get_all_nodes()\n    updated_count = 0\n\n    for node in all_nodes:\n        if node.Class() == TARGET_NODE_CLASS:\n            node.setSelected(True)\n            # Check if the target knob exists on the node and update it\n            if TARGET_KNOB_NAME in node.knobs():\n                try:\n                    node\[TARGET_KNOB_NAME].setValue(TARGET_KNOB_VALUE)\n                    print(f\"Updated '\{node.name()\}' \{TARGET_KNOB_NAME\} to '\{TARGET_KNOB_VALUE\}'.\")\n                    updated_count += 1\n                except Exception as e:\n                    print(f\"Could not update \{TARGET_KNOB_NAME\} for '\{node.name()\}': \{e\}\")\n            else:\n                print(f\"Node '\{node.name()\}' does not have a '\{TARGET_KNOB_NAME\}' knob.\")\n\n    print(f\"\\nSuccessfully updated \{updated_count\} '\{TARGET_NODE_CLASS\}' node(s).\")\n\n# Run the function\nupdate_node_knob()" +STARTLINE}
+ addUserKnob {26 Info l "" +STARTLINE T "\nChange Knob values of all the Nodes from the dsame class at once\n\nIn case of node that has multiples Knob with same name name  ex: ColorCorrection , use the full name of the Knob shadows.gain or master.gain"}
+}

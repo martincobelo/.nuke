@@ -1,0 +1,70 @@
+set cut_paste_input [stack 0]
+version 15.1 v6
+push $cut_paste_input
+Group {
+name ConvertDepth5
+label "\[value depthConv]"
+selected true
+xpos -2044
+ypos 29229
+addUserKnob {20 User l ConvertDepth}
+addUserKnob {26 info l "" +STARTLINE T "This node expects a depth.z channel."}
+addUserKnob {26 ""}
+addUserKnob {4 depthConv l "depth conversion:" M {"1/z to real" "real to 1/z"}}
+addUserKnob {26 ""}
+addUserKnob {7 zmax l "outside z value" R 0 1e+08}
+zmax 100000000
+addUserKnob {26 ""}
+}
+Input {
+inputs 0
+name Input
+xpos -480
+ypos -304
+}
+Dot {
+name Dot6
+xpos -446
+ypos -246
+}
+set N2d8c41f0 [stack 0]
+Expression {
+temp_name0 zmax
+temp_expr0 parent.zmax
+channel0 none
+channel1 none
+channel2 none
+channel3 depth
+expr3 "z < zmax ? 1/z : 0"
+name ConvertDepth2
+label "real to 1/z"
+xpos -370
+ypos -184
+}
+push $N2d8c41f0
+Expression {
+temp_name0 zmax
+temp_expr0 parent.zmax
+channel0 none
+channel1 none
+channel2 none
+channel3 depth
+expr3 "z > 0 ? 1/z : zmax"
+name ConvertDepth1
+label "1/z to real"
+xpos -590
+ypos -184
+}
+Switch {
+inputs 2
+which {{parent.depthConv}}
+name Switch1
+xpos -480
+ypos -106
+}
+Output {
+name Output1
+xpos -480
+ypos -58
+}
+end_group

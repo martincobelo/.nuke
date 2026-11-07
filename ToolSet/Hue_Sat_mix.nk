@@ -1,0 +1,144 @@
+set cut_paste_input [stack 0]
+version 15.1 v6
+push $cut_paste_input
+push 0
+Group {
+ inputs 2
+ name Hue_Sat_Mix2
+ help "Converts colorspace of inputs and transfers hue and saturation from A to B while ignoring luminance.\n\nUseful for mixing plate color into smoke or dust without altering brightness of element.\n"
+ tile_color 0x7aa9ff00
+ note_font "Bitstream Vera Sans"
+ selected true
+ xpos 3419
+ ypos 21575
+ addUserKnob {20 userTab l User}
+ addUserKnob {41 size l "Blur Source" t "Blurs A input prior to transferring hue and saturation" T Blur_BG.size}
+ addUserKnob {26 ""}
+ addUserKnob {7 hueIn l "Hue Shift" t "0 is hue of input, moving towards 1 cycles through colorwheel"}
+ addUserKnob {41 value l Saturation t "1 is 100% saturation" T Mult_Sat.value}
+ addUserKnob {26 ""}
+ addUserKnob {41 alpha l Mask t "Multiplies output by chosen channel" T Premult1.alpha}
+ addUserKnob {41 invert -STARTLINE T Premult1.invert}
+ addUserKnob {7 masterMix l Mix}
+ masterMix 1
+ addUserKnob {26 ""}
+}
+ Input {
+  inputs 0
+  name A
+  xpos -658
+  ypos 2
+  number 1
+ }
+ Blur {
+  name Blur_BG
+  xpos -658
+  ypos 65
+ }
+ Crop {
+  box {{curve i} {curve i} {width i} {height i}}
+  crop false
+  name Crop1
+  xpos -658
+  ypos 131
+ }
+ Colorspace {
+  colorspace_out HSV
+  name Colorspace1
+  xpos -658
+  ypos 192
+ }
+set Nf1943b90 [stack 0]
+ Dot {
+  name Dot3
+  xpos -624
+  ypos 272
+ }
+push $Nf1943b90
+ Input {
+  inputs 0
+  name B
+  xpos -500
+  ypos 1
+ }
+ Dot {
+  name Dot2
+  xpos -466
+  ypos 136
+ }
+set Nf19666e0 [stack 0]
+ Colorspace {
+  colorspace_out HSV
+  name Colorspace3
+  xpos -395
+  ypos 132
+ }
+ Copy {
+  inputs 2
+  from0 rgba.red
+  to0 rgba.red
+  name Hue
+  xpos -395
+  ypos 186
+ }
+ Copy {
+  inputs 2
+  from0 rgba.green
+  to0 rgba.green
+  name Saturation
+  xpos -395
+  ypos 262
+ }
+ Add {
+  channels {rgba.red -rgba.green -rgba.blue none}
+  value {{parent.hueIn}}
+  name Add_Hue
+  xpos -395
+  ypos 316
+ }
+ Multiply {
+  channels {-rgba.red rgba.green -rgba.blue none}
+  name Mult_Sat
+  xpos -395
+  ypos 358
+ }
+ Colorspace {
+  colorspace_in HSV
+  name Colorspace2
+  xpos -395
+  ypos 416
+ }
+push $Nf19666e0
+ Dot {
+  name Dot1
+  xpos -466
+  ypos 485
+ }
+ Dissolve {
+  inputs 2
+  which {{parent.masterMix}}
+  name Mix
+  xpos -395
+  ypos 475
+ }
+ Premult {
+  channels rgba
+  alpha none
+  name Premult1
+  xpos -395
+  ypos 543
+ }
+set Nf19ebcb0 [stack 0]
+ Output {
+  name Output1
+  xpos -395
+  ypos 669
+ }
+push $Nf19ebcb0
+ Viewer {
+  frame 1065
+  name Viewer1
+  xpos -669
+  ypos 543
+ }
+end_group

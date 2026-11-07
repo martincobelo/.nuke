@@ -1,0 +1,46 @@
+set cut_paste_input [stack 0]
+version 15.1 v6
+push 0
+push $cut_paste_input
+Group {
+inputs 2
+name Distance1
+selected true
+xpos 1046
+ypos 22113
+addUserKnob {20 User}
+addUserKnob {7 mixer l mix t "Mix between the calculated distance from camera of each axis. Useful for animating pull focus between Antman and Yellow Jacket"}
+addUserKnob {7 distance}
+distance {{mix(distanceAxis1,distanceAxis2,mixer)}}
+addUserKnob {7 distanceAxis1 l "Distance Axis 2"}
+distanceAxis1 {{"sqrt(((\[value \[topnode this.input1].translate.x] - \[value \[topnode this.input0].translate.x])*(\[value \[topnode this.input1].translate.x] - \[value \[topnode this.input0].translate.x])) + (( \[value \[topnode this.input1].translate.y] -  \[value \[topnode this.input0].translate.y])*( \[value \[topnode this.input1].translate.y] -  \[value \[topnode this.input0].translate.y]))+(( \[value \[topnode this.input1].translate.z] -  \[value \[topnode this.input0].translate.z])*( \[value \[topnode this.input1].translate.z] -  \[value \[topnode this.input0].translate.z])))"}}
+addUserKnob {7 distanceAxis2 l "Distance Axis 1"}
+distanceAxis2 {{"sqrt(((\[value \[topnode this.input2].translate.x] - \[value \[topnode this.input0].translate.x])*(\[value \[topnode this.input2].translate.x] - \[value \[topnode this.input0].translate.x])) + (( \[value \[topnode this.input2].translate.y] -  \[value \[topnode this.input0].translate.y])*( \[value \[topnode this.input2].translate.y] -  \[value \[topnode this.input0].translate.y]))+(( \[value \[topnode this.input2].translate.z] -  \[value \[topnode this.input0].translate.z])*( \[value \[topnode this.input2].translate.z] -  \[value \[topnode this.input0].translate.z])))"}}
+}
+Input {
+inputs 0
+name axis
+xpos 157
+ypos -4
+number 1
+}
+Input {
+inputs 0
+name secondary_axis
+xpos 386
+ypos -6
+number 2
+}
+Output {
+inputs 0
+name Output1
+xpos 0
+ypos 300
+}
+Input {
+inputs 0
+name cam
+xpos -108
+ypos -1
+}
+end_group

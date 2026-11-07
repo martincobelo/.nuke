@@ -1,0 +1,162 @@
+set cut_paste_input [stack 0]
+version 15.1 v6
+Dot {
+ inputs 0
+ name Dot127
+ selected true
+ xpos 6691
+ ypos 35351
+}
+Dot {
+ inputs 0
+ name Dot156
+ selected true
+ xpos 6676
+ ypos 35423
+}
+push $cut_paste_input
+Dot {
+ name Dot159
+ selected true
+ xpos 6843
+ ypos 35316
+}
+set Nf6e1bce0 [stack 0]
+EdgeExtend {
+ inputs 2+1
+ matte "Matte Alpha"
+ erode 3
+ premultiply false
+ name EdgeExtend1
+ selected true
+ xpos 6809
+ ypos 35419
+}
+set N50619160 [stack 0]
+push $Nf6e1bce0
+Dot {
+ name Dot160
+ selected true
+ xpos 6953
+ ypos 35316
+}
+Group {
+ inputs 2
+ name Detail_Colour2
+ selected true
+ xpos 6919
+ ypos 35419
+ addUserKnob {20 User}
+ addUserKnob {41 size T Blur2.size}
+ addUserKnob {6 inlog l "in log?" +STARTLINE}
+}
+ Input {
+  inputs 0
+  name detail
+  xpos -214
+  ypos 444
+ }
+ Log2Lin {
+  operation lin2log
+  name Log2Lin2
+  xpos -214
+  ypos 484
+  disable {{1-inlog}}
+ }
+ Dot {
+  name Dot7
+  xpos -180
+  ypos 522
+ }
+set N50643520 [stack 0]
+push $N50643520
+ Blur {
+  channels rgba
+  size 5
+  name Blur2
+  xpos -99
+  ypos 550
+ }
+ set C50649170 [stack 0]
+ Merge2 {
+  inputs 2
+  operation divide
+  name Merge3
+  xpos -214
+  ypos 602
+ }
+ Input {
+  inputs 0
+  name colour
+  xpos 37
+  ypos 453
+  number 1
+ }
+ Log2Lin {
+  operation lin2log
+  name Log2Lin1
+  xpos 37
+  ypos 489
+  disable {{1-inlog}}
+ }
+clone $C50649170 {
+  xpos 37
+  ypos 551
+  selected false
+ }
+ Merge2 {
+  inputs 2
+  operation multiply
+  name Merge6
+  xpos 37
+  ypos 602
+ }
+ Log2Lin {
+  name Log2Lin3
+  xpos 37
+  ypos 656
+  disable {{1-inlog}}
+ }
+ Output {
+  name Output1
+  xpos 37
+  ypos 702
+ }
+end_group
+Dot {
+ name Dot157
+ selected true
+ xpos 6953
+ ypos 35475
+}
+set N506bd590 [stack 0]
+Dot {
+ name Dot158
+ selected true
+ xpos 6953
+ ypos 35501
+}
+push $N506bd590
+push $N50619160
+Merge2 {
+ inputs 2
+ operation max
+ mix 0.5
+ name Merge81
+ selected true
+ xpos 6809
+ ypos 35471
+ addUserKnob {20 TRX}
+ addUserKnob {22 swap l "swap to Merge All Node" -STARTLINE T "from csnuke_tools.trixter.snippets import convertMergeToAll as convertMergeToAll;convertMergeToAll.convToAll()"}
+}
+Merge2 {
+ inputs 2
+ operation min
+ mix 0.2
+ name Merge86
+ selected true
+ xpos 6809
+ ypos 35497
+ addUserKnob {20 TRX}
+ addUserKnob {22 swap l "swap to Merge All Node" -STARTLINE T "from csnuke_tools.trixter.snippets import convertMergeToAll as convertMergeToAll;convertMergeToAll.convToAll()"}
+}

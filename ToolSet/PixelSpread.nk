@@ -1,0 +1,202 @@
+set cut_paste_input [stack 0]
+version 15.1 v6
+push $cut_paste_input
+Group {
+name PixelSpread4
+tile_color 0xffbf00ff
+selected true
+xpos 3459
+ypos -7212
+addUserKnob {20 User}
+addUserKnob {7 shrinkedge l "shrink edge" R 0 100}
+addUserKnob {7 spreadedge l "spread edge" R 0 100}
+spreadedge 800
+addUserKnob {7 mixedge l "mix edge" R 0 100}
+}
+Input {
+inputs 0
+name Input1
+xpos -383
+ypos -221
+}
+Dot {
+name Dot5
+xpos -349
+ypos -141
+}
+set N2bc85f10 [stack 0]
+Dot {
+name Dot6
+xpos -349
+ypos -83
+}
+set N2bc8bb10 [stack 0]
+Dot {
+name Dot3
+xpos -263
+ypos -83
+}
+Dot {
+name Dot4
+xpos -263
+ypos 556
+}
+push $N2bc8bb10
+Unpremult {
+name Unpremult6
+xpos -383
+ypos 172
+}
+Dilate {
+channels alpha
+size {{0-shrinkedge}}
+name Dilate1
+xpos -383
+ypos 265
+}
+set C2bca62e0 [stack 0]
+Blur {
+channels alpha
+size {{mixedge}}
+name Blur4
+xpos -383
+ypos 301
+}
+Premult {
+name Premult1
+xpos -383
+ypos 337
+}
+push $N2bc85f10
+clone $C2bca62e0 {
+xpos -636
+ypos -150
+selected false
+}
+Dot {
+name Dot7
+xpos -710
+ypos -141
+}
+Premult {
+name Premult7
+xpos -744
+ypos -44
+}
+set N2bcdde50 [stack 0]
+Blur {
+channels rgba
+size {{spreadedge}}
+filter quadratic
+name Blur1
+xpos -744
+ypos -7
+}
+Unpremult {
+name Unpremult1
+xpos -744
+ypos 48
+}
+Premult {
+name Premult2
+xpos -744
+ypos 72
+}
+Blur {
+channels rgba
+size {{parent.Blur1.size}}
+name Blur2
+xpos -744
+ypos 96
+}
+Unpremult {
+name Unpremult2
+xpos -744
+ypos 120
+}
+Premult {
+name Premult3
+xpos -744
+ypos 144
+}
+Blur {
+channels rgba
+size {{parent.Blur1.size}}
+name Blur3
+xpos -744
+ypos 168
+}
+Unpremult {
+name Unpremult3
+xpos -744
+ypos 192
+}
+Premult {
+name Premult8
+xpos -744
+ypos 216
+}
+Blur {
+channels rgba
+size {{parent.Blur1.size}}
+name Blur5
+xpos -744
+ypos 240
+}
+Unpremult {
+name Unpremult4
+xpos -744
+ypos 264
+}
+Premult {
+name Premult9
+xpos -744
+ypos 288
+}
+Blur {
+channels rgba
+size {{parent.Blur1.size}}
+name Blur6
+xpos -744
+ypos 312
+}
+Unpremult {
+name Unpremult5
+xpos -744
+ypos 336
+}
+Dot {
+name Dot1
+xpos -710
+ypos 436
+}
+Merge2 {
+inputs 2
+name Merge1
+xpos -383
+ypos 433
+}
+Copy {
+inputs 2
+from0 rgba.alpha
+to0 rgba.alpha
+name Copy2
+xpos -383
+ypos 547
+}
+Output {
+name Output1
+xpos -383
+ypos 663
+}
+push $N2bcdde50
+Viewer {
+frame_range 1001-1169
+near 0.9
+far 10000
+monitorOutNDISenderName "NukeX - TVA__1440__main__u003 - Viewer1"
+name Viewer1
+xpos -636
+ypos -112
+}
+end_group
